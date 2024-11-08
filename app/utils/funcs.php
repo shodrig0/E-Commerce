@@ -12,21 +12,24 @@ function darDatosSubmitted()
     return $datos;
 }
 
+function verEstructura($e)
+{
+    echo "<pre>";
+    print_r($e);
+    echo "</pre>";
+}
+
 spl_autoload_register(function ($class_name) {
-    $directories = array(
-        $_SERVER['ROOT'] . DIRECTORY_SEPARATOR . 'model' . DIRECTORY_SEPARATOR . 'classes',
-        $_SERVER['ROOT'] . DIRECTORY_SEPARATOR . 'model' . DIRECTORY_SEPARATOR . 'connection',
-        $_SERVER['ROOT'] . DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR . 'helpers',
-        $_SERVER['ROOT'] . DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR . 'services'
+    $directorys = array(
+        $_SESSION['ROOT'] . 'model/',
+        $_SESSION['ROOT'] . 'model/connector/',
+        $_SESSION['ROOT'] . 'control/',
     );
 
-    foreach ($directories as $directory) {
-        $file = $directory . DIRECTORY_SEPARATOR . $class_name . '.php';
-        if (file_exists($file)) {
-            require_once $file;
+    foreach ($directorys as $directory) {
+        if (file_exists($directory . $class_name . '.php')) {
+            require_once($directory . $class_name . '.php');
             return;
         }
     }
-
-    throw new Exception("No cargó clase: $class_name", E_USER_WARNING);
 });

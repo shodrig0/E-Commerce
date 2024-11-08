@@ -8,6 +8,8 @@ $ROOT = $_SERVER['DOCUMENT_ROOT'] . "/$PROYECTO/";
 
 include_once($ROOT . 'app/utils/funcs.php');
 
+include_once($ROOT . './vendor/autoload.php');
+
 // Variable que define la pagina de autenticacion del proyecto
 $INICIO = "Location:http://" . $_SERVER['HTTP_HOST'] . "/$PROYECTO/vista/login/login.php";
 
