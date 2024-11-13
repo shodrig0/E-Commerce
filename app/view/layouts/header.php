@@ -83,5 +83,5 @@ $baseURL = $protocolo . $host . $rutaProyecto;
             
         });
     </script>
-</body>
-</html>
+<!-- </body>
+</html> -->

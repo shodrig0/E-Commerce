@@ -20,10 +20,10 @@ class BaseDatos extends PDO
 
 
         $this->engine = 'mysql';
-        $this->host = getenv("DB_HOST");
-        $this->database = getenv("DB_NAME");
-        $this->user = getenv("DB_USER");
-        $this->pass = getenv("DB_PASS");
+        $this->host = "localhost";
+        $this->database ="bdcarritocompras";
+        $this->user = "root";
+        $this->pass = "";
         $this->debug = true;
         $this->error = "";
         $this->sql = "";
