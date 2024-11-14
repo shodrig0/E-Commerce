@@ -8,17 +8,18 @@ $conexion = new BaseDatos();
 
 $sql = "SELECT * FROM producto";
 $statement = $conexion->prepare($sql);
-var_dump($statement);
 $valor = $statement->execute();
 
 if ($valor){
     while ($resultado = $statement->fetch(PDO::FETCH_ASSOC)){
-        $data["pronombre"][] = $resultado;
+        $data["producto"][] = $resultado;
     }
-    echo json_encode($data);
-}else{
+    $datosJSON = json_encode($data);
+    echo $datosJSON;
+} else {
     echo "echo";
 }
 
 $statement->closeCursor();
 $conexion = null;
+

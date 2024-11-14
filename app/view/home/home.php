@@ -2,30 +2,26 @@
 include_once '../layouts/header.php';
 ?>
 
-<div class="conteiner" id="contein">
-    chau
+<div class="ui container">
+    <h2 class="ui header my-4">Productos</h2>
+    <div id="galeriaProductos" class="ui three column grid"></div>
 </div>
 
+<style>
+.imagen {
+    height: 230px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.producto-imagen {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+</style>
 
-<script type="text/javascript">
-
-    $(function(){
-        listar()
-    });
-
-    function listar(){
-        __ajax("./listar.php","").done(function(info){
-            console.log(info)
-        })
-    }
-
-    function __ajax(url,data){
-        var ajax=$.ajax({
-            "method":"POST",
-            "url": url,
-            "data": data
-        })
-        return ajax;
-    }
-</script>
+<script src="../js/mostrarProductos.js"></script>
