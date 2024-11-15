@@ -15,7 +15,7 @@ $baseURL = $protocolo . $host . $rutaProyecto;
     <link rel="stylesheet" href="<?php echo $baseURL ?>Semantic-UI/dist/semantic.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="<?php echo $baseURL ?>Semantic-UI/dist/semantic.min.js"></script>
-    <link rel="stylesheet" src="<?php echo $baseURL ?>app/view/css/style.css">
+    <link rel="stylesheet" href="<?php echo $baseURL ?>app/view/css/style.css">
 </head>
 <body>
     <div class="ui left vertical inverted sidebar labeled icon menu">
@@ -49,14 +49,17 @@ $baseURL = $protocolo . $host . $rutaProyecto;
                 </button>
             </div>
 
-            <div class="twelve wide column" style="text-align: center;">
+            <div class="eleven wide column" style="text-align: center;">
                 <img src="<?php echo $baseURL ?>app/view/assets/img/LogoFrenteFINALL.png" alt="Elixir Patagónico" style="height: 40px;">
             </div>
 
-            <div class="two wide column" style="text-align: right;">
-                <button class="ui icon button">
-                    <i class="shopping cart icon"></i>
-                </button>
+            <div class="three wide column" style="text-align: right;">
+                <div class="ui vertical animated button" tabindex="0">
+                    <div class="hidden content">Shop</div>
+                    <div class="visible content">
+                        <i class="shop icon"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </header>

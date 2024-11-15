@@ -37,16 +37,17 @@ $(document).ready(function() {
                 .addClass('producto-imagen');
             imgContainer.append(img);
 
+            // let descripcion = $('<div>').addClass('description').text(producto.prodetalle);
             // Cont de información de producto
             let infoProducto = $('<div>').addClass('content');
             let titulo = $('<a>').addClass('header').text(producto.pronombre);
-            let descripcion = $('<div>').addClass('description').text(producto.prodetalle);
+            let precio = $('<h3>').addClass('ui green text').text(`$${producto.precio}`)
 
             // Crea el contenedor extra de información (por ejemplo, stock)
             let masContenido = $('<div>').addClass('extra content');
             let stock = $('<span>').html(`<i class="box icon"></i> Stock: ${producto.procantstock}`);
 
-            infoProducto.append(titulo, descripcion);
+            infoProducto.append(titulo, precio);
             masContenido.append(stock);
             card.append(imgContainer, infoProducto, masContenido);
             divProducto.append(card);

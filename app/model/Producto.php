@@ -2,7 +2,6 @@
 
 class Producto
 {
-
     private $idProducto;
     private $proNombre;
     private $proDetalle;

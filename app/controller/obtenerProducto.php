@@ -1,26 +1,26 @@
 <?php
-
 include_once '../../model/connection/BaseDatos.php';
 include_once '../../model/Producto.php';
 
-$producto = new Producto();
-$productos = $producto->listar();
-$arregloProductos=[];
-
-foreach ($productos as $producto) {
-    $arregloProductos[] = array(
+    $id = intval($_POST['id']);
+    $producto = new Producto();
+    $producto->setIdProducto($id);
+    var_dump($producto);
+    $objProducto = $producto->buscar();
+    $prodFinal = [
         'idproducto' => $producto->getIdProducto(),
         'pronombre' => $producto->getPronombre(),
         'prodetalle' => $producto->getProdetalle(),
         'precio' => $producto->getPrecio(),
-        'procantstock' => $producto->getProcantstock(),
-    );
-}
+        'procantstock' => $producto->getProcantstock()
+    ];
 
-if(!empty($arregloProductos)){
-    $data = ["producto" => $arregloProductos];
+if(!empty($prodFinal)){
+    $data = ["producto" => $prodFinal];
     $datosJSON = json_encode($data);
     echo $datosJSON;
 } else {
     echo json_encode(["producto" => []]);
 }
+?>
+|
