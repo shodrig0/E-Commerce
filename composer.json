@@ -6,7 +6,7 @@
     "autoload": {
         "psr-4": {
             "model\\": "E-Commerce/model/",
-            "controller\\": "E-Commerce/controller"
+            "controller\\": "E-Commerce/controller/"
         }
     }
 }

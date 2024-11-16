@@ -1,7 +1,5 @@
 <?php
 
-// require_once '../../../configuracion.php';
-
 class Session
 {
     public function __construct()

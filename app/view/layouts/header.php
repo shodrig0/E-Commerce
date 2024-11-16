@@ -54,6 +54,14 @@ $baseURL = $protocolo . $host . $rutaProyecto;
             </div>
 
             <div class="three wide column" style="text-align: right;">
+            <div class="ui vertical animated button" tabindex="0">
+                <a href="<?php echo $baseURL ?>app/view/usuario/login.php">
+                <div class="hidden content">Login</div>
+                    <div class="visible content">
+                        <i class="user circle outline icon"></i>
+                    </div>
+                </div>
+                </a>
                 <div class="ui vertical animated button" tabindex="0">
                     <div class="hidden content">Shop</div>
                     <div class="visible content">

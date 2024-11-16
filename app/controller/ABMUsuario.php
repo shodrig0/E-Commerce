@@ -222,34 +222,30 @@ class ABMUsuario
      * @param string $usMail
      * @return array
      */
-    public function agregarNuevoUsuario($usNombre, $usPass, $usMail)
+    public function agregarNuevoUsuario($param)
     {
-        $salida = [];
-        $param['usnombre'] = $usNombre;
-        if (empty($this->buscar($param))) {
-            try {
-                $usuario = new Usuario();
-                $usuario->setUsNombre($usNombre);
-                //Encripto la password       
-                $usuario->setUsPass(Hash::encriptar_hash($usPass));
-                $usuario->setUsMail($usMail);
-
-
-
-                if ($usuario->insertar()) {
-                    $abmUsuarioRol = new AbmUsuarioRol();
-                    $abmUsuarioRol->setearRolDefault($usuario->getIdUsuario());
-                    $salida["mensaje"] = "Usuario registrado correctamente.";
-                }
-            } catch (PDOException $e) {
-                $salida["mensaje"] = "Error al registrar el usuario: " . $e->getMessage();
-                $salida["error"] = true;
+        $resp = false;
+        $busquedaUsuario = ["usnombre" => $param['usnombre']];
+        $busquedaCorreo = ["usmail" => $param['usmail']];
+        $existeUsuario = $this->buscar($busquedaUsuario);
+        $existeCorreo = $this->buscar($busquedaCorreo);
+        if (($existeUsuario == null && $existeCorreo == null)) {
+            $objUsuario = $this->cargarObjeto($param);
+            if ($objUsuario->insertar()) {
+                $resp = true;
             }
-        } else {
-            $salida["mensaje"] = "El usuario ya esta registrado.";
-            $salida["error"] = true;
         }
-        return $salida;
+        if ($resp) {
+            $usuarioNuevo = $this->buscar($busquedaUsuario);
+            $idUsuario = $usuarioNuevo[0]->getIdUsuario();
+            $idRolUsuario = $param['idrol'];
+
+            $arrayRolUsuario = ["idrol" => $idRolUsuario, "idusuario" => $idUsuario];
+
+            $abmUsuarioRol = new AbmUsuarioRol();
+            $abmUsuarioRol->agregarUsuarioRol($arrayRolUsuario);
+        }
+        return $resp;
     }
 
 
