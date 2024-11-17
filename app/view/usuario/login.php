@@ -1,4 +1,4 @@
-<p>aaaaaaaaaaaa cambio random</p><div class="ui middle aligned center aligned grid" style="height: 100vh; margin: 0;">
+<div class="ui middle aligned center aligned grid" style="height: 100vh; margin: 0;">
     <div class="column" style="max-width: 450px;">
         <div class="ui raised very padded text segment">
             <h2 class="ui teal image header">
@@ -7,7 +7,7 @@
             </h2>
             
             <div class="ui divider"></div>
-            <form action="./Action/verificacionLogin.php" method="POST" name="formulario" id="formulario" class="ui large form">
+            <form action="./Action/verificacionLogin.php" method="POST" name="formulario" id="formulario" class="ui large form" onsubmit="return formSubmit();">
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="field">
-                    <button type="submit" class="ui teal fluid fluid button" onclick="formSubmit()">Ingresar</button>
+                    <button type="submit" class="ui teal fluid fluid button">Ingresar</button>
                 </div>
                 <div class="field">
                     <a href="../home/home.php" class="ui secondary fluid button">Volver</a>
