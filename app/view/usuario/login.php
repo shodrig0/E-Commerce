@@ -1,10 +1,11 @@
-<div class="ui middle aligned center aligned grid" style="height: 100vh; margin: 0;">
+<p>aaaaaaaaaaaa cambio random</p><div class="ui middle aligned center aligned grid" style="height: 100vh; margin: 0;">
     <div class="column" style="max-width: 450px;">
         <div class="ui raised very padded text segment">
             <h2 class="ui teal image header">
                 <i class="user circle icon"></i>
                 <div class="content">Iniciar Sesión</div>
             </h2>
+            
             <div class="ui divider"></div>
             <form action="../actions/verificacionLogin.php" method="POST" name="formulario" id="formulario" class="ui large form">
                 <div class="field">
