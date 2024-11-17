@@ -8,14 +8,11 @@ include_once '../layouts/header.php';
 </div>
 
 <div class="ui bottom attached tab segment active" id="tab-login" data-tab="login">
-    <!-- Este contenido se cargará dinámicamente -->
 </div>
 <div class="ui bottom attached tab segment" id="tab-miembros" data-tab="miembros">
-    <!-- Este contenido se cargará dinámicamente -->
 </div>
 
 <script>
-    // Inicialización de tabs con Semantic UI
     $('.menu .item').tab();
 
     // Cargar dinámicamente el contenido al hacer clic en cada tab

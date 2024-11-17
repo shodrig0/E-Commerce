@@ -7,7 +7,7 @@
             </h2>
             
             <div class="ui divider"></div>
-            <form action="../actions/verificacionLogin.php" method="POST" name="formulario" id="formulario" class="ui large form">
+            <form action="./Action/verificacionLogin.php" method="POST" name="formulario" id="formulario" class="ui large form">
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="user icon"></i>

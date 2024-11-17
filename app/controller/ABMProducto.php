@@ -41,7 +41,6 @@ class AMBProducto {
     }
 
     public function agregarProducto() { //alta
-        $resp = 
     }
         /**
          * Carga un objeto Producto con los datos proporcionados
