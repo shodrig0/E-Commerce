@@ -1,29 +1,25 @@
 <?php
-
 class BaseDatos extends PDO
 {
-
     private $engine;
     private $host;
     private $database;
     private $user;
     private $pass;
     private $debug;
+    private $error;
+    private $sql;
     private $conec;
     private $indice;
     private $resultado;
-    private $error;
-    private $sql;
 
     public function __construct()
     {
-
-
         $this->engine = 'mysql';
-        $this->host = "localhost";
-        $this->database ="bdcarritocompras";
-        $this->user = "root";
-        $this->pass = "";
+        $this->host = 'localhost';
+        $this->database = 'bdcarritocompras';
+        $this->user = 'root';
+        $this->pass = '';
         $this->debug = true;
         $this->error = "";
         $this->sql = "";
@@ -38,8 +34,10 @@ class BaseDatos extends PDO
             $this->conec = false;
         }
     }
+
+
     /**
-     * Inicia la conexion con el Servidor y la  Base Datos Mysql.
+     * Inicia la coneccion con el Servidor y la  Base Datos Mysql.
      * Retorna true si la coneccion con el servidor se pudo establecer y false en caso contrario
      *
      * @return boolean
@@ -53,7 +51,6 @@ class BaseDatos extends PDO
     {
         return $this->conec;
     }
-
 
     public function setDebug($debug)
     {
@@ -140,8 +137,7 @@ class BaseDatos extends PDO
     }
 
     /**
-     * Devuelve la cantidad de filas afectadas por la ejecucion SQL. 
-     * Si el valor es <0 no se pudo realizar la opercion
+     * Devuelve la cantidad de filas afectadas por la ejecucion SQL. Si el valor es <0 no se pudo realizar la opercion
      * @return integer 
      * 
      */
@@ -176,6 +172,7 @@ class BaseDatos extends PDO
             $this->setIndice(0);
             $this->setResultado($arregloResult);
         }
+        // echo " La cantidad es " . $cant;
         return $cant;
     }
 
@@ -200,7 +197,8 @@ class BaseDatos extends PDO
                 $this->setIndice(-1);
             }
         }
-
+        // echo " El valor de fila actual es:";
+        // print_r($filaActual);
         return $filaActual;
     }
 

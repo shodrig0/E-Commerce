@@ -1,9 +1,9 @@
 <?php
 
-require_once '../../../configuracion.php';
-require_once '../../controller/helpers/Session.php';
-require_once '../../controller/services/AbmUsuario.php';
-require_once '../../model/classes/Usuario.php';
+require_once '../../../../config.php';
+require_once '../../../controller/Session.php';
+require_once '../../../controller/AbmUsuario.php';
+require_once '../../../model/Usuario.php';
 
 $datos = darDatosSubmitted();
 
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </button>
     </form>
-    <a href="../home/home.php">
+    <a href="../../home/home.php">
         <button class="ui blue button animated horizontal">
             <div class="visible content">
                 <i class="arrow left icon"></i>

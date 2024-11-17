@@ -1,4 +1,6 @@
 <?php
+
+// require_once '../../config.php';
 class AbmUsuario
 {
     private $msjError;

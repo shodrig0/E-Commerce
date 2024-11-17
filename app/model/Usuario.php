@@ -1,8 +1,8 @@
 <?php
 
+require_once __DIR__ . '/connection/BaseDatos.php';
 class Usuario
 {
-
     private $idUsuario;
     private $usNombre;
     private $usPass;

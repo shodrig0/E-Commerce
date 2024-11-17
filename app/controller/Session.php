@@ -1,6 +1,9 @@
 <?php
 
-require_once '../../../configuracion.php';
+// require_once $_SESSION['ROOT'] . 'controller/AbmUsuario.php';
+require_once __DIR__ . '/AbmUsuario.php'; // Esto carga AbmUsuario.php relativo a la ubicación de Session.php
+require_once __DIR__ . '/../model/Usuario.php'; // Esto carga AbmUsuario.php relativo a la ubicación de Session.php
+
 
 class Session
 {
@@ -35,6 +38,7 @@ class Session
         }
         return $resp;
     }
+
     /**
      * Valida si la sesión actual tiene usuario y psw válidos. Devuelve true o false.
      */
@@ -65,8 +69,10 @@ class Session
     {
         $usuario = null;
         if ($this->validar()) {
-            $obj = new ABMUsuario();
+            $obj = new AbmUsuario();
             $param['idusuario'] = $_SESSION['idusuario'];
+
+            // var_dump($_SESSION['ROOT']);
             $resultado = $obj->buscarUsuario($param);
             if ($resultado) {
                 $usuario = $resultado;
@@ -78,13 +84,14 @@ class Session
     /**
      * Devuelve el rol del usuario logeado.
      */
-    // public function getRol(){
+    // public function getRol()
+    // {
     //     $list_rol = null;
-    //     if($this->validar()){
-    //         $obj = new ABMUsuario();
-    //          $param['idusuario']=$_SESSION['idusuario'];
+    //     if ($this->validar()) {
+    //         $obj = new AbmUsuario();
+    //         $param['idusuario'] = $_SESSION['idusuario'];
     //         //  $resultado = $obj->darRoles($param);
-    //         if(count($resultado) > 0){
+    //         if (count($resultado) > 0) {
     //             $list_rol = $resultado;
     //         }
     //     }

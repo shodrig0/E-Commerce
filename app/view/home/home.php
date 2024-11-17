@@ -1,5 +1,23 @@
 <?php
 include_once '../layouts/header.php';
+
+require_once '../../controller/Session.php';
+// require_once '../../controller/AbmUsuario'
+
+$session = new Session();
+
+// Redirigir si no está logueado
+if (!$session->validar()) {
+    header("Location: login.php");
+    exit();
+}
+
+$usuario = $session->getUsuario();
+if ($usuario) {
+    echo "Bienvenido, " . htmlspecialchars($usuario->getUsNombre()) . ".";
+    echo '<a href="logout.php">Cerrar sesión</a>';
+}
+
 ?>
 
 <a href="../pages/menuProductos.php"><button>ABM PRODUCTO</button></a>
