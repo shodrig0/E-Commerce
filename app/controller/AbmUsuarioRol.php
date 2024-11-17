@@ -16,29 +16,15 @@ class AbmUsuarioRol
         $this->msjError = $msjError;
     }
 
-    public function cargarObjeto($arreglo){
-        $obj = null;
-        if (array_key_exists('idusuario', $arreglo) and array_key_exists('idrol', $arreglo)) {
-            $objusuario = new Usuario();
-            $objusuario->setIdUsuario($arreglo['idusuario']);
-            $objusuario->cargar($arreglo['idusuario'], $arreglo['usnombre'], $arreglo['uspass'], $arreglo['usmail'], $arreglo['usdeshabilitado'], $arreglo['idrol']);
-
-            $objrol = new Rol();
-            $objrol->cargar($arreglo['idrol'], $arreglo['rodescripcion']);
-
-            $obj = new UsuarioRol();
-            $obj->cargar($objusuario, $objrol);
-        }
-        return $obj;
-    }
-
-    public function buscarUsuarioRol()
+    public function buscarUsuarioRol($cond)
     {
+        if ($cond != null) {
+            $idUsuario = $cond;
+        } else {
+            $usuarioRolModelo = $this->obtenerDatosUsuarioRol();
+            $idUsuario = $usuarioRolModelo['idusuario'];
+        }
         $objUsuarioRol = null;
-
-        $usuarioRolModelo = $this->obtenerDatosUsuarioRol();
-        $idUsuario = $usuarioRolModelo['idusuario'];
-
         if ($idUsuario) {
             try {
                 $colUsuario = Usuario::listar("idusuario = '" . $idUsuario . "'");
@@ -52,16 +38,7 @@ class AbmUsuarioRol
         return $objUsuarioRol;
     }
 
-    public function agregarUsuarioRol($param) {
-        $resp = false;
-        //Creo objeto con los datos
-        $obj = $this->cargarObjeto($param);
-        //Verifico que el objeto no sea nulo y lo inserto en BD 
-        if ($obj != null and $obj->insertar()) {
-            $resp = true;
-        }
-        return $resp;
-    }
+    public function agregarUsuarioRol() {}
 
     private function obtenerDatosUsuarioRol()
     {
@@ -78,7 +55,8 @@ class AbmUsuarioRol
         $salida = false;
         $param['idusuario'] = $idUsuario;
         $abmRol = new AbmRol();
-        $rolCliente = $abmRol->obtenerRolAlumno();
+        $rolCliente = $abmRol->obtenerRolCliente();
+        var_dump($rolCliente);
         $param['idrol'] = $rolCliente->getIdRol();
 
         $obj = $this->cargarObjeto($param);
@@ -88,20 +66,20 @@ class AbmUsuarioRol
         return $salida;
     }
 
-    // private function cargarObjeto($param)
-    // {
-    //     $obj = null;
+    private function cargarObjeto($param)
+    {
+        $obj = null;
 
-    //     if (isset($param['idrol']) && isset($param['idusuario'])) {
-    //         $obj = new UsuarioRol();
-    //         $usuario = new Usuario();
-    //         $usuario->setIdUsuario($param['idusuario']);
+        if (isset($param['idrol']) && isset($param['idusuario'])) {
+            $obj = new UsuarioRol();
+            $usuario = new Usuario();
+            $usuario->setIdUsuario($param['idusuario']);
 
-    //         $rol = new Rol();
-    //         $rol->setIdRol($param['idrol']);
-    //         $obj->cargar($usuario, $rol);
-    //     }
+            $rol = new Rol();
+            $rol->setIdRol($param['idrol']);
+            $obj->cargar($usuario, $rol);
+        }
 
-    //     return $obj;
-    // }
+        return $obj;
+    }
 }

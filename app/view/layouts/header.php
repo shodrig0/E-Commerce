@@ -18,54 +18,34 @@ $baseURL = $protocolo . $host . $rutaProyecto;
     <link rel="stylesheet" href="<?php echo $baseURL ?>app/view/css/style.css">
 </head>
 <body>
-    <div class="ui left vertical inverted sidebar labeled icon menu">
-
-        <button class="ui icon button" id="xButton">
-            <i class="x icon"></i>
-        </button>
-        <a class="item">
-            <i class="user icon"></i>
-            Mi Cuenta
-        </a>
-        <a class="item">
-            <i class="home icon"></i>
-            Categorías <i class="arrow right icon"></i>
-        </a>
-        <a class="item">
-            <i class="grid layout icon"></i>
-            Contactos
-        </a>
-        <a class="item">
-            <i class="newspaper outline icon"></i>
-            Sobre nosotros
-        </a>
-    </div>
-
-    <!-- Header -->
+    <header>
         <div class="ui grid" style="align-items: center; padding: 1em;">
-            <div class="two wide column">
+            <!-- Columna izquierda con el botón de menú -->
+            <div class="two wide column" style="text-align: left;">
                 <button class="ui icon button" id="menuButton">
                     <i class="bars icon"></i>
                 </button>
             </div>
 
-            <div class="eleven wide column" style="text-align: center;">
-                <img src="<?php echo $baseURL ?>app/view/assets/img/LogoFrenteFINALL.png" alt="Elixir Patagónico" style="height: 40px;">
+            <!-- Columna central con la imagen -->
+            <div class="twelve wide column" style="text-align: center;">
+                <img src="<?php echo $baseURL ?>app/view/assets/img/LogoFrenteFINALL.png" alt="Elixir Patagónico" style="height: 42px;">
             </div>
 
-            <div class="three wide column" style="text-align: right;">
-            <div class="ui vertical animated button" tabindex="0">
-                <a href="<?php echo $baseURL ?>app/view/usuario/login.php">
-                <div class="hidden content">Login</div>
-                    <div class="visible content">
-                        <i class="user circle outline icon"></i>
-                    </div>
-                </div>
-                </a>
-                <div class="ui vertical animated button" tabindex="0">
-                    <div class="hidden content">Shop</div>
-                    <div class="visible content">
-                        <i class="shop icon"></i>
+            <!-- Columna derecha con los botones de Login y Shop -->
+            <div class="two wide column" style="text-align: right;">
+                <div class="ui buttons">
+                    <a href="<?php echo $baseURL ?>app/view/usuario/gestionUsuario.php" class="ui vertical animated button">
+                        <div class="hidden content">Login</div>
+                        <div class="visible content">
+                            <i class="user circle outline icon"></i>
+                        </div>
+                    </a>
+                    <div class="ui vertical animated button">
+                        <div class="hidden content">Shop</div>
+                        <div class="visible content">
+                            <i class="shop icon"></i>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,3 @@
-<?php 
-include_once '../layouts/header.php';
-?>
-
 <div class="ui middle aligned center aligned grid" style="height: 100vh; margin: 0;">
     <div class="column" style="max-width: 450px;">
         <div class="ui raised very padded text segment">

@@ -1,7 +1,6 @@
 <?php
 
 require_once('../../../../config.php');
-require_once '../../../model/connection/BaseDatos.php';
 require_once('../../../model/Usuario.php');
 require_once('../../../controller/AbmUsuario.php');
 require_once '../../../controller/AbmUsuarioRol.php';
@@ -11,14 +10,14 @@ require_once '../../../model/Rol.php';
 
 $datos = darDatosSubmitted();
 $salida = [];
-var_dump($datos);
 
-if (isset($datos['usnombre'], $datos['usmail'], $datos['uspass']) && $_SERVER["REQUEST_METHOD"] === "POST") {
+if (isset($datos['usnombre'], $datos['usemail'], $datos['uspass']) && $_SERVER["REQUEST_METHOD"] === "POST") {
     $userName = $datos['usnombre'];
-    $email = $datos['usmail'];
-    $passwordHash = $datos['uspass']; // ya viene hasheada
+    $email = $datos['usemail'];
+    $passwordHash = $datos['uspass'];
+
     $objAbmUsuario = new AbmUsuario();
-    $query = $objAbmUsuario->agregarNuevoUsuario($datos);
+    $query = $objAbmUsuario->agregarUsuario($userName, $email, $passwordHash);
 
     if (isset($query['error'])) {
         http_response_code(409);

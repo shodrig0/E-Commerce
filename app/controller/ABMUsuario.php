@@ -1,332 +1,103 @@
 <?php
-class ABMUsuario
+class AbmUsuario
 {
+    private $msjError;
 
-    public function abm($datos)
+    public function __construct() {}
+
+    public function getMsjError()
     {
-        $resp = false;
-        if ($datos['accion'] == 'editar') {
-            if ($this->modificacion($datos)) {
-                $resp = true;
+        return $this->msjError;
+    }
+
+    public function setMsjError($msjError)
+    {
+        $this->msjError = $msjError;
+    }
+
+    public function buscarUsuario($condicion)
+    {
+        // $objUsuario = new Usuario();
+        // $objUsuario->setIdUsuario($param);
+
+        $objUsuario = null;
+
+        try {
+            $colUsuario = Usuario::listar($condicion);
+            if (!empty($colUsuario)) {
+                $objUsuario = $colUsuario[0];
             }
+        } catch (PDOException $e) {
+            $this->setMsjError('Error PDO: ' . $e->getMessage());
         }
-        if ($datos['accion'] == 'borrar') {
-            if ($this->baja($datos)) {
-                $resp = true;
-            }
-        }
-        if ($datos['accion'] == 'nuevo') {
-            if ($this->alta($datos)) {
-                $resp = true;
-            }
-        }
-        if ($datos['accion'] == 'quitar_rol') {
-            if ($this->quitar_rol($datos)) {
-                $resp = true;
-            }
-        }
-        if ($datos['accion'] == 'asignar_rol') {
-            if ($this->asignar_rol($datos)) {
-                $resp = true;
-            }
-        }
-        return $resp;
-    }
-    /**
-     * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto
-     * @param array $param
-     * @return Usuario
-     */
-    private function cargarObjeto($param)
-    {
-        $obj = null;
 
-        if (
-            array_key_exists('idusuario', $param)  and array_key_exists('usnombre', $param) and array_key_exists('uspass', $param)
-            and array_key_exists('usmail', $param) and array_key_exists('usdeshabilitado', $param)
-        ) {
-            $obj = new Usuario();
-            $obj->cargar($param['idusuario'], $param['usnombre'], $param['uspass'], $param['usmail'], $param['usdeshabilitado']);
-        }
-        return $obj;
+        return $objUsuario;
     }
 
-    /**
-     * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto que son claves
-     * @param array $param
-     * @return Tabla
-     */
-
-    private function cargarObjetoConClave($param)
+    public function agregarUsuario($name, $email, $pass)
     {
-        $obj = null;
-        if (isset($param['idusuario'])) {
-            $obj = new Usuario();
-            $obj->cargar($param['idusuario'], null, null, null, null);
-        }
-        return $obj;
-    }
+        $msj = '';
 
-
-    /**
-     * Corrobora que dentro del arreglo asociativo estan seteados los campos claves
-     * @param array $param
-     * @return boolean
-     */
-
-    private function seteadosCamposClaves($param)
-    {
-        $resp = false;
-        if (isset($param['idusuario']))
-            $resp = true;
-        return $resp;
-    }
-
-    public function alta($param)
-    {
-        $resp = false;
-        $param['idusuario'] = null;
-        $elObjtTabla = $this->cargarObjeto($param);
-        if ($elObjtTabla != null and $elObjtTabla->insertar()) {
-            $resp = true;
-        }
-        return $resp;
-    }
-
-    public function quitar_rol($param)
-    {
-        $resp = false;
-        if (isset($param['idusuario']) && isset($param['idrol'])) {
-            $elObjtTabla = new UsuarioRol();
-            $rol = new Rol();
-            $rol->setIdRol($param['idrol']);
-            $elObjtTabla->setRol($rol);
-            $usuario = new Usuario();
-            $usuario->setIdUsuario($param['idusuario']);
-            $elObjtTabla->setUsuario($usuario);
-            $resp = $elObjtTabla->eliminar();
-        }
-
-        return $resp;
-    }
-
-    public function asignar_rol($param)
-    {
-        $resp = false;
-        if (isset($param['idusuario']) && isset($param['idrol'])) {
-            $elObjtTabla = new UsuarioRol();
-            $rol = new Rol();
-            $rol->setIdRol($param['idrol']);
-            $elObjtTabla->setRol($rol);
-            $usuario = new Usuario();
-            $usuario->setIdUsuario($param['idusuario']);
-            $elObjtTabla->setUsuario($usuario);
-            $resp = $elObjtTabla->insertar();
-        }
-
-        return $resp;
-    }
-    /**
-     * permite eliminar un objeto 
-     * @param array $param
-     * @return boolean
-     */
-    public function baja($param)
-    {
-        $resp = false;
-        if ($this->seteadosCamposClaves($param)) {
-            $elObjtTabla = $this->cargarObjetoConClave($param);
-            if ($elObjtTabla != null and $elObjtTabla->eliminar()) {
-                $resp = true;
-            }
-        }
-
-        return $resp;
-    }
-
-    /**
-     * permite modificar un objeto
-     * @param array $param
-     * @return boolean
-     */
-    public function modificacion($param)
-    {
-        $resp = false;
-        if ($this->seteadosCamposClaves($param)) {
-            $elObjtTabla = $this->cargarObjeto($param);
-            if ($elObjtTabla != null and $elObjtTabla->modificar()) {
-                $resp = true;
-            }
-        }
-        return $resp;
-    }
-
-    /**
-     * Devuelve un arreglo de objetos rol del idusuario pasado por parametro. como arreglo asociativo
-     */
-    public function darRoles($param)
-    {
-        $where = " true ";
-        if ($param <> NULL) {
-            if (isset($param['idusuario']))
-                $where .= " and idusuario =" . $param['idusuario'];
-            if (isset($param['idrol']))
-                $where .= " and idrol ='" . $param['idrol'] . "'";
-        }
-        $obj = new UsuarioRol();
-        $arreglo = $obj->listar($where);
-
-        $arreglo_obj_roles = array();
-        foreach ($arreglo as $obj) {
-            $rol = new Rol();
-            $rol->setIdRol($obj->getRol()->getIdRol());
-            $rol->buscar();
-            array_push($arreglo_obj_roles, $rol);
-        }
-
-        return $arreglo_obj_roles;
-    }
-
-
-    /**
-     * permite buscar un objeto
-     * @param array $param
-     * @return array
-     */
-    public function buscar($param)
-    {
-        $where = " true ";
-        if ($param <> NULL) {
-            if (isset($param['idusuario']))
-                $where .= " and idusuario =" . $param['idusuario'];
-            if (isset($param['usnombre']))
-                $where .= " and usnombre ='" . $param['usnombre'] . "'";
-            if (isset($param['usmail']))
-                $where .= " and usmail ='" . $param['usmail'] . "'";
-            if (isset($param['uspass']))
-                $where .= " and uspass ='" . $param['uspass'] . "'";
-            if (isset($param['usdeshabilitado']))
-                $where .= " and usdeshabilitado is null";
-        }
-        $obj = new Usuario();
-        $arreglo = $obj->listar($where);
-        return $arreglo;
-    }
-
-
-
-    /**
-     * Crea un usuario, le setea el rol default y devuelve un array asociativo con el mensaje
-     * @param string $usNombre
-     * @param string $usPass
-     * @param string $usMail
-     * @return array
-     */
-    public function agregarNuevoUsuario($param)
-    {
-        $resp = false;
-        $busquedaUsuario = ["usnombre" => $param['usnombre']];
-        $busquedaCorreo = ["usmail" => $param['usmail']];
-        $existeUsuario = $this->buscar($busquedaUsuario);
-        $existeCorreo = $this->buscar($busquedaCorreo);
-        if (($existeUsuario == null && $existeCorreo == null)) {
-            $objUsuario = $this->cargarObjeto($param);
-            if ($objUsuario->insertar()) {
-                $resp = true;
-            }
-        }
-        if ($resp) {
-            $usuarioNuevo = $this->buscar($busquedaUsuario);
-            $idUsuario = $usuarioNuevo[0]->getIdUsuario();
-            $idRolUsuario = $param['idrol'];
-
-            $arrayRolUsuario = ["idrol" => $idRolUsuario, "idusuario" => $idUsuario];
-
-            $abmUsuarioRol = new AbmUsuarioRol();
-            $abmUsuarioRol->agregarUsuarioRol($arrayRolUsuario);
-        }
-        return $resp;
-    }
-
-
-    /**
-     * Modifica la contraseña del usuario en la sesion actual
-     */
-    public function modificarPassword($usPass)
-    {
-        $session = new Session();
-        $usuario = $session->getUsuario();
-        $salida = [];
-        if ($session->validar()) {
-            $usuario->setUsPass(Hash::encriptar_hash($usPass));
-            $usuario->modificar();
-            $salida["mensaje"] = "Contraseña modificada correctamente.";
-            $salida["error"] = false;
-        } else {
-            $salida["mensaje"] = "Error al modificar la contraseña.";
-            $salida["error"] = true;
-        }
-        return $salida;
-    }
-
-
-    public function modificarEmail($email)
-    {
-        $session = new Session();
-        $usuario = $session->getUsuario();
-        $salida = [];
-        if ($session->validar()) {
-            $usuario->setUsMail($email);
-            $usuario->modificar();
-            $salida["mensaje"] = "Email modificado correctamente.";
-            $salida["error"] = false;
-        } else {
-            $salida["mensaje"] = "Error al modificar el email.";
-            $salida["error"] = true;
-        }
-        return $salida;
-    }
-
-
-    public function cargarComprasUser()
-    {
-        $session = new Session();
-        $salida = [];
-        $compra = new abmCompra();
-
-        if ($session->validar()) {
-            $usuario = $session->getUsuario();
-            $arr['idusuario'] =  $usuario->getIdUsuario();
-            $salida =  $compra->buscar($arr);
-        }
-        return $salida;
-    }
-
-    /**Devuelve un arreglo de compras que tienen estadotipo 0 
-     * y tienen fecha fin null de ese estado, (encarrito) */
-    public function cargarCarritoUser()
-    {
-
-        $session = new Session();
-        $idUser  = $session->getUsuario()->getIdUsuario();
-        $estado_en_carrito = [];
-        /*Obtengo desde la bd mediante una consulta las 
-        compras que tienen estadotipo 0 y 
-        tienen fecha fin null de ese estado
-        y tienen idusuario actual*/
-        $bd = new BaseDatos();
-        $sql = "SELECT * FROM compra c INNER JOIN compraestado ce ON c.idcompra = ce.idcompra WHERE ce.idcompraestadotipo = 0 AND ce.cefechafin IS NULL AND c.idusuario = " . $idUser;
-        $res = $bd->Ejecutar($sql);
-        if ($res > -1) {
-            if ($res > 0) {
-                while ($row = $bd->Registro()) {
-                    $obj = new Compra();
-                    $obj->setIdCompra($row['idcompra']);
-                    $obj->buscar();
-                    array_push($estado_en_carrito, $obj);
+        $usuarioModelo = $this->obtenerDatosUsuario();
+        $dato = $usuarioModelo['usnombre'];
+        $objUsuario = new Usuario();
+        if (empty($this->buscarUsuario("usnombre='" . $dato . "'"))) {
+            try {
+                $objUsuario->setUsNombre($usuarioModelo['usnombre']);
+                $objUsuario->setUsMail($usuarioModelo['usemail']);
+                $objUsuario->setUsPass($usuarioModelo['uspass']);
+                if ($objUsuario->insertar()) {
+                    $abmObjUsuarioRol = new AbmUsuarioRol();
+                    $abmObjUsuarioRol->setearRolDefault($objUsuario->getIdUsuario());
+                    $msj = 'Éxito';
                 }
+            } catch (PDOException $e) {
+                $this->setMsjError('Error PDO: ' . $e->getMessage());
+                $msj = 'Error';
+            }
+        } else {
+            $msj = 'Usuario existente';
+        }
+        return $msj;
+    }
+
+
+    public function modificarUsuario() {}
+
+    public function listarUsuarios($condicion = '')
+    {
+        try {
+            $colUsuarios = Usuario::listar($condicion);
+        } catch (PDOException $e) {
+            $this->setMsjError($e->getMessage());
+            $colUsuarios = [];
+        }
+        return $colUsuarios;
+    }
+
+    public function borrarLogico($idUsuario)
+    {
+        $resp = false;
+        $usuario = $this->buscarUsuario("idusuario = " . $idUsuario);
+
+        if ($usuario) {
+            if ($usuario->deshabilitar()) {
+                $resp = true;
             }
         }
-        return $estado_en_carrito;
+        return $resp;
+    }
+
+    private function obtenerDatosUsuario()
+    {
+        $datos = darDatosSubmitted();
+
+        return [
+            'idusuario' => $datos['idusuario'] ?? null,
+            'usnombre' => $datos['usnombre'] ?? null,
+            'uspass' => $datos['uspass'] ?? null,
+            'usemail' => $datos['usemail'] ?? null,
+            'usDeshab' => $datos['usDeshab'] ?? null
+        ];
     }
 }

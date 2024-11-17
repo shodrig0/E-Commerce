@@ -117,6 +117,7 @@ class Usuario
                     $this->setUsPass($row['uspass']);
                     $this->setUsMail($row['usmail']);
                     $this->setUsDeshabilitado($row['usdeshabilitado']);
+                    $resp = true;
                 }
             }
         } else {

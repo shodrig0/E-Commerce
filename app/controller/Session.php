@@ -1,26 +1,32 @@
 <?php
 
+require_once '../../../configuracion.php';
+
 class Session
 {
+
     public function __construct()
     {
         session_start();
     }
 
-    /**
-     * Actualiza las variables de sesión con los valores ingresados.
-     */
+
     public function iniciar($nombreUsuario, $psw)
     {
         $resp = false;
-        $objAbmUsuario = new ABMUsuario();
+        $objAbmUsuario = new AbmUsuario();
         $resultado = $objAbmUsuario->buscarUsuario("usnombre = '" . $nombreUsuario . "'");
 
         if ($resultado) {
             $usuario = $resultado;
-            if ($psw === $usuario->getUsPass()) {
-                $_SESSION['idusuario'] = $usuario->getIdUsuario();
-                $resp = true;
+
+            if (is_null($usuario->getUsDeshabilitado())) {
+                if ($psw === $usuario->getUsPass()) {
+                    $_SESSION['idusuario'] = $usuario->getIdUsuario();
+                    $resp = true;
+                } else {
+                    $this->cerrar();
+                }
             } else {
                 $this->cerrar();
             }
@@ -29,7 +35,6 @@ class Session
         }
         return $resp;
     }
-
     /**
      * Valida si la sesión actual tiene usuario y psw válidos. Devuelve true o false.
      */

@@ -1,75 +1,67 @@
 <?php
+require_once('../layouts/header.php');
 require_once('../../../config.php');
-include_once '../layouts/header.php';
 include_once '../../controller/AbmRol.php';
 include_once '../../model/Rol.php';
-include_once '../../model/connection/BaseDatos.php';
 
 $objAbmRol = new AbmRol();
 $roles = $objAbmRol->listarRoles();
+
 ?>
-
-
+<link rel="stylesheet" href="../../../Semantic-UI/dist/semantic.min.css">
 <div class="ui middle aligned center aligned grid" style="height: 100vh; margin: 0;">
     <div class="column" style="max-width: 450px;">
-        <h2 class="ui teal image header">
-            <div class="content">
-                Registrar Usuario
-            </div>
-        </h2>
-        <div class="ui stacked segment">
-            <form method="post" action="Action/actionRegistrarUsuario.php" name="formulario" id="formulario" class="ui form">
+        <div class="ui segment">
+            <form method="post" action="./Action/actionRegistrarUsuario.php" name="formulario" id="formulario">
                 <input id="accion" name="accion" value="login" type="hidden">
-                
+                <div>
+                    <div>
+                        <div>
+                            <label for="nombre">Nombre:</label>
+                            <div>
+                                <input id="usnombre" name="usnombre" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="field">
-                    <label for="usnombre">Nombre:</label>
                     <div class="ui left icon input">
                         <i class="user icon"></i>
-                        <input id="usnombre" name="usnombre" type="text" placeholder="Nombre de usuario">
+                        <input name="usemail" id="usemail" type="text" placeholder="example@example.com" aria-label="example">
                     </div>
                 </div>
 
-                <div class="field">
-                    <label for="usmail">Email:</label>
-                    <div class="ui left icon input">
-                        <i class="envelope icon"></i>
-                        <input name="usmail" id="usmail" type="text" placeholder="example@example.com" aria-label="example">
+                <div>
+                    <div>
+                        <div>
+                            <label for="uspass">Pass:</label>
+                            <div>
+                                <input id="uspass" name="uspass" type="password">
+                            </div>
+                        </div>
                     </div>
                 </div>
-
                 <div class="field">
-                    <label for="uspass">Contraseña:</label>
-                    <div class="ui left icon input">
-                        <i class="lock icon"></i>
-                        <input id="uspass" name="uspass" type="password" placeholder="Contraseña">
+                    <div>
+                        <label for="rol">Rol:</label>
                     </div>
-                </div>
-                
-                <div class="field">
-                    <label for="rol">Rol:</label>
-                    <select name="rol" id="rol" class="ui dropdown">
-                        <option value="">Selecciona un Rol</option>
+                    <select name="rol" id="rol">
+                        <option value="">Selecciona Rol</option>
                         <?php foreach ($roles as $rol): ?>
                             <option value="<?php echo htmlspecialchars($rol->getIdRol()); ?>">
                                 <?php echo htmlspecialchars($rol->getRoDescripcion()); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
+
                 </div>
-
-                <button type="button" class="ui teal fluid large button" onclick="formSubmit()">Registrar</button>
+                <input type="button" value="Registrar" onclick="formSubmit()">
             </form>
-        </div>
-
-        <div class="ui message">
-            ¿Ya tienes una cuenta? <a href="login.php">Inicia sesión</a>
         </div>
     </div>
 </div>
 
-<script src="../js/hasheo.js"></script>
-<script src="../../../Semantic-UI/dist/semantic.min.js"></script>
-<script>
-    // Inicialización del dropdown de Semantic UI
-    $('.ui.dropdown').dropdown();
+<script src="../js/api.js">
+
 </script>
