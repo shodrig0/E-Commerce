@@ -44,36 +44,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-?>
-
 <body>
 <div class="ui container" style="margin-top: 20px;">
-    <div class="ui two column grid">
-        <div class="column">
-            <form action="cerrar.php" method="post">
-                <button type="submit" class="ui red button animated fade">
-                    <div class="visible content">Cerrar Sesión</div>
-                    <div class="hidden content">
-                        <i class="power off icon"></i>
-                    </div>
-                </button>
-            </form>
-        </div>
-        <div class="column right aligned">
-        <?php if ($nuevaSesion->validar()) : ?>
-            <a href="../../home/home.php" class="ui blue button">
-                <i class="arrow left icon"></i> Volver
-            </a>
-        <?php endif; ?>
-
-        </div>
+    <div class="ui grid" style="display: flex; justify-content: center; gap: 10px;">
+        <form action="cerrar.php" method="post">
+            <button type="submit" class="ui red button animated fade">
+                <div class="visible content">Cerrar Sesión</div>
+                <div class="hidden content">
+                    <i class="power off icon"></i>
+                </div>
+            </button>
+        </form>
+        <a href="../../home/home.php" class="ui blue button animated fade">
+            <div class="visible content center">&nbsp;&nbsp;Volver</div>
+            <div class="hidden content">
+                <i class="arrow left icon"></i>
+            </div>
+        </a>
     </div>
-    <div class="ui container">
+    <div class="ui field container" style="margin-top: 20px;">
         <?php if (isset($mensaje)) echo $mensaje; ?>
     </div>
-
 </div>
-
 </body>
-
 </html>
