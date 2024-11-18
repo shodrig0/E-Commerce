@@ -26,10 +26,9 @@ if (isset($_POST['idUsuario'])) {
 
     if ($usuario) {
         ?>
-        <form id="formEditarUsuario" class="ui form">
+        <form id="formEliminarUsuario" class="ui form">
             <h4><i class="tag icon"></i>ID del Usuario: <?php echo htmlspecialchars($idUsuario); ?></h4>
-            <input type="hidden" value="<?php echo $idUsuario ?>" name="idUsuario" id="idUsuario">
-            <h4 class="ui dividing header">Editar Usuario</h4>
+            <h4 class="ui dividing header">Eliminar Usuario</h4>
             <div class="field">
                 <label>Nombre</label>
                 <input type="text" name="usNombre" value="<?php echo htmlspecialchars($usuario->getUsNombre()); ?>">
@@ -56,26 +55,8 @@ if (isset($_POST['idUsuario'])) {
                     <?php endforeach; ?>
                 </div>
             </div>
-            <div class="field">
-                <label>Agregar Roles</label>
-                <?php if (count($rolesDisponibles) !== count($rolesAsignados)) { ?>
-                    <select name="roles" id="roles">
-                        <option value="0" selected>Seleccionar</option>
-                        <?php foreach ($rolesDisponibles as $rol): ?>
-                            <?php if (!in_array($rol, $rolesAsignados)): ?>
-                                <option value="<?php echo $rol->getIdRol(); ?>">
-                                    <?php echo htmlspecialchars($rol->getRoDescripcion()); ?>
-                                </option>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </select>
-                <?php } else { ?>
-                    <div class="ui green message">Todos los Roles disponibles se le han sido asignados a este usuario</div>
-                <?php } ?>
-            </div>
+            <button type="button" class="ui button primary" onclick="borradoLogico(<?php echo $idUsuario; ?>)">Eliminar</button>
 
-
-            <button type="button" class="ui button primary" onclick="guardarCambios()">Guardar</button>
         </form>
         <?php
     } else {

@@ -42,35 +42,14 @@ $usuarios = $abmUsuario->listarUsuarios();
                     <div class="ui list"><?php echo htmlspecialchars($rolesString); ?></div>
                 </td>
                 <td>
-                    <!-- Botón de editar -->
-                    <button class="ui button editar-usuario" data-id="<?php echo htmlspecialchars($usuario->getIdUsuario()); ?>">Editar</button>
+                    <button class="ui button accion-btns" data-action="editar" data-id="<?php echo htmlspecialchars($usuario->getIdUsuario()); ?>">Editar</button>
+                    <button class="ui button accion-btns" data-action="eliminar" data-id="<?php echo htmlspecialchars($usuario->getIdUsuario()); ?>">Eliminar</button>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
 
-<div id="editarUsuario" class="ui segment"></div>
-<script>
-    $(document).ready(function() {
-        // Maneja el clic en el botón de editar
-        $('.editar-usuario').on('click', function() {
-            let userId = $(this).data('id'); // Obtiene el ID del usuario desde el atributo data-id
+<div id="cargarCont" class="ui segment"></div>
 
-            // Realiza una petición AJAX para cargar el formulario de edición
-            $.ajax({
-                url: './Action/editarUsuario.php', // Archivo PHP donde se cargará el formulario
-                type: 'POST',
-                data: { idUsuario: userId },
-                success: function(response) {
-                    // Inserta la respuesta en el contenedor
-                    $('#editarUsuario').html(response);
-                },
-                error: function() {
-                    alert('Hubo un error al cargar los datos del usuario.');
-                }
-            });
-        });
-    });
-</script>
-
+<script src="../js/btns.js"></script>

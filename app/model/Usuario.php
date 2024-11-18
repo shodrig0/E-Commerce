@@ -207,6 +207,19 @@ class Usuario
         return $resp;
     }
 
+    public function deshabilitar()
+    {
+        $db = new BaseDatos();
+        $resp = false;
+        $sql = "UPDATE usuario SET usdeshabilitado = CURRENT_TIMESTAMP WHERE idusuario = " . $this->getIdUsuario();
+
+        if ($db->Ejecutar($sql) >= 0) {
+            $resp = true;
+        }
+
+        return $resp;
+    }
+
     public function serializeRoles()
     {
         $roles = array();

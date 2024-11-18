@@ -45,8 +45,7 @@ class Session
     public function validar()
     {
         $resp = false;
-        if ($this->activa() && isset($_SESSION['idusuario']))
-            $resp = true;
+        if ($this->activa() && isset($_SESSION['idusuario'])) $resp = true;
         return $resp;
     }
 

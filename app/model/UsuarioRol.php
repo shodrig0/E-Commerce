@@ -64,8 +64,8 @@ class UsuarioRol
                     $usr->setIdUsuario($row['idusuario']);
                     $rol = new Rol();
                     $rol->setIdRol($row['idrol']);
-
                     $this->cargar($usr, $rol);
+                    $resp = true;
                 }
             }
         } else {
@@ -120,7 +120,7 @@ class UsuarioRol
         $sql = "DELETE FROM usuariorol WHERE idusuario=" . $this->getUsuario()->getIdUsuario() . " AND idrol=" . $this->getRol()->getIdRol();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
-                return true;
+                $resp = true;
             } else {
                 $this->setMensajeOperacion("usuariorol->eliminar: " . $base->getError());
             }
