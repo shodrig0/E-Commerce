@@ -13,3 +13,4 @@ include_once '../layouts/header.php';
 </div>
 
 <script src="../js/cargarGestionUsuario.js"></script>
+<script src="../js/eliminarRol.js"></script>

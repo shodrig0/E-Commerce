@@ -59,7 +59,7 @@ if (isset($datos['usnombre'], $datos['usemail'], $datos['uspass']) && $_SERVER["
             </div>
         <?php endif; ?>
 
-        <a href="../../../index.php" class="ui button">
+        <a href="../../home/home.php" class="ui button">
             <i class="arrow left icon"></i> Volver
         </a>
     </div>

@@ -16,9 +16,9 @@ class AbmUsuarioRol
         $this->msjError = $msjError;
     }
 
-    public function buscarUsuarioRol($cond)
+    public function buscarUsuarioRol($cond = "")
     {
-        if ($cond != null) {
+        if ($cond != "") {
             $idUsuario = $cond;
         } else {
             $usuarioRolModelo = $this->obtenerDatosUsuarioRol();
@@ -27,15 +27,38 @@ class AbmUsuarioRol
         $objUsuarioRol = null;
         if ($idUsuario) {
             try {
-                $colUsuario = Usuario::listar("idusuario = '" . $idUsuario . "'");
+                $colUsuario = UsuarioRol::listar("idusuario = '" . $idUsuario . "'");
                 if (!empty($colUsuario)) {
-                    $objUsuarioRol = $colUsuario[0];
+                    $objUsuarioRol = $colUsuario;
                 }
             } catch (PDOException $e) {
                 $this->setMsjError('Error conexion bdd: ' . $e->getMessage());
             }
         }
         return $objUsuarioRol;
+    }
+    public function eliminarUsuarioRol() {
+        $resp = false;
+        $datos = darDatosSubmitted();
+        $objUsuario = new Usuario();
+        $objUsuario->cargar($datos['idUsuario'], null, null, null, null, []);
+        $objUsuario->buscar();
+
+        $objRol = new Rol();
+        $objRol->cargar($datos['idRol'], null);
+        $objRol->buscar();
+
+        $objUsuarioRol = new UsuarioRol();
+        $objUsuarioRol->cargar($objUsuario, $objRol);
+        if ($objUsuarioRol->buscar()) {
+            try {
+                $resp = true;
+                $objUsuarioRol->eliminar();
+            } catch (PDOException $e) {
+                $this->setMsjError('Error conexion bdd: ' . $e->getMessage());
+            }
+        }
+        return $resp;
     }
 
     public function agregarUsuarioRol() {}

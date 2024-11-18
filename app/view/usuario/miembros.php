@@ -19,6 +19,7 @@ $usuarios = $abmUsuario->listarUsuarios();
             <th>Email</th>
             <th>Deshabilitado</th>
             <th>Roles</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -27,25 +28,49 @@ $usuarios = $abmUsuario->listarUsuarios();
                 <td><?php echo htmlspecialchars($usuario->getIdUsuario()); ?></td>
                 <td><?php echo htmlspecialchars($usuario->getUsNombre()); ?></td>
                 <td><?php echo htmlspecialchars($usuario->getUsMail()); ?></td>
-                <td><?php if ($usuario->getUsDeshabilitado() === null) {
-                    echo "Miembro Habilitado";
-                } else {
-                    echo htmlspecialchars($usuario->getUsDeshabilitado());
-                } ?>
-                </td>
+                <td><?php echo $usuario->getUsDeshabilitado() === null ? "Miembro Habilitado" : htmlspecialchars($usuario->getUsDeshabilitado()); ?></td>
                 <td>
                     <?php
                     $objUsRol = new AbmUsuarioRol();
-                    $roles = $objUsRol->buscarUsuarioRol($usuario->getIdUsuario);
-                    var_dump($roles);
-                    foreach ($roles as $rolInd) {
-                        $rolesString .= $rolInd->getRoDescripcion();
+                    $colUsRol = $objUsRol->buscarUsuarioRol($usuario->getIdUsuario());
+                    $roles = [];
+                    foreach ($colUsRol as $usRol) {
+                        $roles[] = $usRol->getRol()->getRoDescripcion();
                     }
+                    $rolesString = implode(", ", $roles);
                     ?>
-                    <div id="roles" class="ui list hidden"><?php echo htmlspecialchars($rolesString); ?>
-                    </div>
+                    <div class="ui list"><?php echo htmlspecialchars($rolesString); ?></div>
+                </td>
+                <td>
+                    <!-- Botón de editar -->
+                    <button class="ui button editar-usuario" data-id="<?php echo htmlspecialchars($usuario->getIdUsuario()); ?>">Editar</button>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<div id="editarUsuario" class="ui segment"></div>
+<script>
+    $(document).ready(function() {
+        // Maneja el clic en el botón de editar
+        $('.editar-usuario').on('click', function() {
+            let userId = $(this).data('id'); // Obtiene el ID del usuario desde el atributo data-id
+
+            // Realiza una petición AJAX para cargar el formulario de edición
+            $.ajax({
+                url: './Action/editarUsuario.php', // Archivo PHP donde se cargará el formulario
+                type: 'POST',
+                data: { idUsuario: userId },
+                success: function(response) {
+                    // Inserta la respuesta en el contenedor
+                    $('#editarUsuario').html(response);
+                },
+                error: function() {
+                    alert('Hubo un error al cargar los datos del usuario.');
+                }
+            });
+        });
+    });
+</script>
+

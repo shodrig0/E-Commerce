@@ -7,10 +7,10 @@ require_once '../../controller/Session.php';
 $session = new Session();
 
 // Redirigir si no está logueado
-if (!$session->validar()) {
-    header("Location: login.php");
-    exit();
-}
+// if (!$session->validar()) {
+//     header("Location: home.php");
+//     exit();
+// }
 
 $usuario = $session->getUsuario();
 if ($usuario) {
