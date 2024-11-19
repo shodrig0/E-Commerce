@@ -73,6 +73,10 @@ $(document).ready(function () {
 
     $('#actualizarProductos').on('click', function () {
         localStorage.removeItem(LS_KEY);
+    
+        $('#galeriaProductos').empty().text('Actualizando productos...');
+    
         obtenerProductosDelServidor();
     });
+    
 });

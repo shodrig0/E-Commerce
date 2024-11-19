@@ -1,11 +1,42 @@
 <?php 
 include_once '../../layouts/header.php';
 ?>
+<style>
+.ui.top.attached.tabular.menu {
+    border: 1px solid #ccc; /* Cambia el color del borde */
+    border-radius: 5px 5px 0 0; /* Redondea las esquinas superiores */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Añade un efecto de sombra */
+}
+
+.ui.bottom.attached.tab.segment {
+    border: 1px solid #ccc; /* Asegura que los bordes coincidan */
+    border-top: none; /* Elimina el borde superior para integrarlo con los tabs */
+    border-radius: 0 0 5px 5px; /* Redondea las esquinas inferiores */
+    padding: 20px; /* Añade espacio interno */
+    background-color: #f9f9f9; /* Fondo más claro */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Coincide con la sombra */
+}
+
+.ui.menu .item.active {
+    background-color: #2185d0; /* Color de fondo activo */
+    color: white; /* Color del texto activo */
+    border-bottom: 3px solid #1678c2; /* Indicador visual de tab activo */
+}
+
+.ui.menu .item {
+    border-radius: 0; /* Elimina bordes redondeados de los tabs */
+    transition: all 0.3s ease; /* Transición suave al pasar el cursor */
+}
+
+.ui.menu .item:hover {
+    background-color: #f0f0f0; /* Color al pasar el cursor */
+}
+</style>
 
 <div class="ui top attached tabular menu">
-    <a class="item active" data-tab="agregar">Agregar Producto</a>
-    <a class="item" data-tab="quitar">Quitar Producto</a>
-    <a class="item" data-tab="modificar">Modificar Producto</a>
+    <a class="item active" data-tab="agregar"><i class="plus icon"></i> Agregar Producto</a>
+    <a class="item" data-tab="quitar"><i class="trash icon"></i> Quitar Producto</a>
+    <a class="item" data-tab="modificar"><i class="edit icon"></i> Modificar Producto</a>
 </div>
 
 <div class="ui bottom attached active tab segment" data-tab="agregar">
