@@ -159,19 +159,27 @@ class Usuario
     {
         $resp = false;
         $base = new BaseDatos();
-        $sql = "INSERT INTO usuario(usnombre, uspass, usmail)  VALUES('" . $this->getUsNombre() . "','" . $this->getUsPass() . "','" . $this->getUsMail() . "')";
+        $sql = "INSERT INTO usuario(usnombre, uspass, usmail) VALUES('" . $this->getUsNombre() . "','" . $this->getUsPass() . "','" . $this->getUsMail() . "')";
+        
         if ($base->Iniciar()) {
-            if ($id = $base->Ejecutar($sql)) {
-                $this->setIdUsuario($id);
-                $resp = true;
+            if ($base->Ejecutar($sql)) {
+                $id = $base->getLastInsertId();
+                if ($id) {
+                    $this->setIdUsuario($id); // Asignar el ID al objeto
+                    $resp = true;
+                } else {
+                    $this->setMensajeOperacion("Usuario->insertar: Error al obtener el ID insertado.");
+                }
             } else {
                 $this->setMensajeOperacion("Usuario->insertar: " . $base->getError());
             }
         } else {
             $this->setMensajeOperacion("Usuario->insertar: " . $base->getError());
         }
+        
         return $resp;
     }
+    
 
 
     public function modificar()

@@ -96,6 +96,12 @@ class BaseDatos extends PDO
     {
         return "\n" . $this->sql;
     }
+    public function getLastInsertId()
+    {
+        return parent::lastInsertId();
+    }
+    
+
 
     public function Ejecutar($sql)
     {

@@ -58,12 +58,12 @@ $(document).ready(function () {
             let titulo = $('<a>').addClass('header').text(producto.pronombre);
             let precio = $('<h3>').addClass('ui green text').text(`$${producto.precio}`);
 
-            // Contenido adicional (stock)
+            // Contenido adicional (boton)
             let masContenido = $('<div>').addClass('extra content');
-            let stock = $('<span>').html(`<i class="box icon"></i> Stock: ${producto.procantstock}`);
+            let boton = $('<button>').addClass('ui black button').text(`Agregar al carrito`);
 
             infoProducto.append(titulo, precio);
-            masContenido.append(stock);
+            masContenido.append(boton);
             card.append(imgContainer, infoProducto, masContenido);
             divProducto.append(card);
 

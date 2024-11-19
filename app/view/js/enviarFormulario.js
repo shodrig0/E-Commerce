@@ -1,21 +1,36 @@
-async function manejarFormSubmit(selectorForm, urlAction, redireccionUrl, operacion) {
+async function manejarFormSubmit(selectorForm, urlAction, redireccionUrl) {
     $(document).ready(function() {
         $(selectorForm).on('submit', async function(e) {
             e.preventDefault();
-
-            const formData = $(this).serializeArray();
-            formData.push({ name: 'operacion', value: operacion });
-
+            
+            const usnombre = $("input[name='usnombre']").val();
+            
+            const passwordInput = $("input[name='uspass']");
+            let password = '';
+            
+            // Si existe el campo de contraseña, obtener su valor
+            if (passwordInput.length > 0) {
+                password = passwordInput.val();
+                
+                if (!password) {
+                    alert("La contraseña no puede estar vacía");
+                    return;
+                }
+                
+                const hashedPassword = await hashPassword(password, usnombre);
+                passwordInput.val(hashedPassword);
+            }
+            
             $.ajax({
                 url: urlAction,
                 type: 'POST',
-                data: formData,
+                data: $(this).serialize(),
                 success: function(response) {
-                    const res = JSON.parse(response);
-                    $('#contModal').html(`<p>${res.message}</p>`);
+                    $('#contModal').html(response);
                     $('#modalResponse').modal('show');
 
-                    if (res.success && redireccionUrl) {
+                    // Redirigir después de 4 segundos si se proporciona una URL
+                    if (redireccionUrl) {
                         setTimeout(function() {
                             window.location.href = redireccionUrl;
                         }, 4000);

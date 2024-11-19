@@ -15,12 +15,14 @@ class AbmRol
         $this->msjOp = $msjOp;
     }
 
-    public function buscarRol()
+    public function buscarRol($cond = '')
     {
         $objRol = null;
         $rolModelo = $this->obtenerDatosRol();
         $idRol = $rolModelo['idrol'];
-
+        if ($cond !== '') {
+            $idRol = $cond;
+        }
         if ($idRol) {
             try {
                 $colRol = Rol::listar("idrol = '" . $idRol . "'");
@@ -56,7 +58,6 @@ class AbmRol
 
         try {
             $roles = Rol::listar("rodescripcion = 'Cliente'");
-
             if (!empty($roles)) {
                 $rolCliente = $roles[0];
             }
@@ -67,7 +68,9 @@ class AbmRol
         return $rolCliente;
     }
 
-    public function darRolUsuario() {}
+    public function darRolUsuario() {
+        
+    }
 
     private function obtenerDatosRol()
     {

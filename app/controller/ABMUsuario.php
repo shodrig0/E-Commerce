@@ -36,16 +36,14 @@ class AbmUsuario
 
     public function agregarUsuario($name, $email, $pass)
     {
-        $msj = '';
-
         $usuarioModelo = $this->obtenerDatosUsuario();
         $dato = $usuarioModelo['usnombre'];
         $objUsuario = new Usuario();
         if (empty($this->buscarUsuario("usnombre='" . $dato . "'"))) {
             try {
-                $objUsuario->setUsNombre($usuarioModelo['usnombre']);
-                $objUsuario->setUsMail($usuarioModelo['usemail']);
-                $objUsuario->setUsPass($usuarioModelo['uspass']);
+                $objUsuario->setUsNombre($name);
+                $objUsuario->setUsMail($email);
+                $objUsuario->setUsPass($pass);
                 if ($objUsuario->insertar()) {
                     $abmObjUsuarioRol = new AbmUsuarioRol();
                     $abmObjUsuarioRol->setearRolDefault($objUsuario->getIdUsuario());
