@@ -12,3 +12,8 @@
     object-fit: contain;
     object-position: center;
 }
+
+.item.active {
+    font-weight: bold;
+    color: rgb(33, 133, 208);
+}

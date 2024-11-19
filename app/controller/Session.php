@@ -2,7 +2,10 @@
 
 // require_once $_SESSION['ROOT'] . 'controller/AbmUsuario.php';
 require_once __DIR__ . '/AbmUsuario.php'; // Esto carga AbmUsuario.php relativo a la ubicación de Session.php
+require_once __DIR__ . '/AbmUsuarioRol.php'; // Esto carga AbmUsuario.php relativo a la ubicación de Session.php
 require_once __DIR__ . '/../model/Usuario.php'; // Esto carga AbmUsuario.php relativo a la ubicación de Session.php
+require_once __DIR__ . '/../model/UsuarioRol.php'; // Esto carga AbmUsuario.php relativo a la ubicación de Session.php
+require_once __DIR__ . '/../model/Rol.php'; // Esto carga AbmUsuario.php relativo a la ubicación de Session.php
 
 
 class Session
@@ -10,7 +13,9 @@ class Session
 
     public function __construct()
     {
-        session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
     }
 
 
@@ -18,7 +23,7 @@ class Session
     {
         $resp = false;
         $objAbmUsuario = new AbmUsuario();
-        $resultado = $objAbmUsuario->buscarUsuario("usnombre = '" . $nombreUsuario . "'");
+        $resultado = $objAbmUsuario->buscarUsuario("usnombre = '" . $nombreUsuario . "'"); 
 
         if ($resultado) {
             $usuario = $resultado;
@@ -72,7 +77,7 @@ class Session
             $param['idusuario'] = $_SESSION['idusuario'];
 
             // var_dump($_SESSION['ROOT']);
-            $resultado = $obj->buscarUsuario($param);
+            $resultado = $obj->buscarUsuario('idusuario = ' . $param['idusuario']);
             if ($resultado) {
                 $usuario = $resultado;
             }
@@ -83,19 +88,28 @@ class Session
     /**
      * Devuelve el rol del usuario logeado.
      */
-    // public function getRol()
-    // {
-    //     $list_rol = null;
-    //     if ($this->validar()) {
-    //         $obj = new AbmUsuario();
-    //         $param['idusuario'] = $_SESSION['idusuario'];
-    //         //  $resultado = $obj->darRoles($param);
-    //         if (count($resultado) > 0) {
-    //             $list_rol = $resultado;
-    //         }
-    //     }
-    //     return $list_rol;
-    // }
+    public function getRol()
+    {
+        $colRoles = null;
+        if ($this->validar()) {
+            $obj = new AbmUsuarioRol();
+            $idUsuario = $_SESSION['idusuario'];
+            $resultado = $obj->buscarUsuarioRol($idUsuario);
+            if ($resultado && count($resultado) > 0) {
+                $colRoles = [];
+                foreach($resultado as $usuarioRol){
+                    $objRol = $usuarioRol->getRol();
+                    if($objRol){
+                        $colRoles[] = [
+                            'idrol' => $objRol->getIdRol(),
+                            'rodescripcion' => $objRol->getRoDescripcion()
+                        ];
+                    }
+                }
+            }
+        }
+        return $colRoles;
+    }
 
     /**
      *Cierra la sesión actual.

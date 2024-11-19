@@ -1,7 +1,7 @@
 <?php
 
-require_once '../../../configuracion.php';
-require_once '../../controller/helpers/Session.php';
+require_once '../../../../config.php';
+require_once '../../../controller/Session.php';
 
 $sesion = new Session();
 if ($sesion->validar()) {

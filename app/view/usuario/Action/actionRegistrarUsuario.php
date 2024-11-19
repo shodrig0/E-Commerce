@@ -57,9 +57,14 @@ if (isset($datos['usnombre'], $datos['usemail'], $datos['uspass']) && $_SERVER["
                 <p><strong>Nombre:</strong> <?php echo htmlspecialchars($salida['usnombre']); ?></p>
                 <p><strong>Email:</strong> <?php echo htmlspecialchars($salida['usemail']); ?></p>
             </div>
+            <div class="ui active progress">
+                <div class="bar" style="width: 100%;"></div>
+                <div class="label">Usted será redirigido brevemente...</div>
+            </div>
         <?php endif; ?>
+        
 
-        <a href="../../home/home.php" class="ui button">
+        <a href="../home/home.php" class="ui button">
             <i class="arrow left icon"></i> Volver
         </a>
     </div>

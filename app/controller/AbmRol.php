@@ -1,5 +1,4 @@
 <?php
-
 class AbmRol
 {
     private $msjOp;

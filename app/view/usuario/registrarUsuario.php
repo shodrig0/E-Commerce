@@ -17,14 +17,14 @@ $roles = $objAbmRol->listarRoles();
                 Registrar Usuario
             </div>
         </h2>
-        <form class="ui large form" method="post" action="./Action/actionRegistrarUsuario.php" name="formulario" id="formulario">
+        <form class="ui large form" id="formulario">
             <input id="accion" name="accion" value="login" type="hidden">
 
             <div class="field">
                 <label for="usnombre">Nombre:</label>
                 <div class="ui left icon input">
                     <i class="user icon"></i>
-                    <input id="usnombre" name="usnombre" type="text" placeholder="Ingresa tu nombre">
+                    <input id="usnombre" name="usnombre" type="text" placeholder="Ingresa tu nombre" required>
                 </div>
             </div>
 
@@ -32,7 +32,7 @@ $roles = $objAbmRol->listarRoles();
                 <label for="usemail">Email:</label>
                 <div class="ui left icon input">
                     <i class="mail icon"></i>
-                    <input name="usemail" id="usemail" type="email" placeholder="example@example.com" aria-label="example">
+                    <input name="usemail" id="usemail" type="email" placeholder="example@example.com" required>
                 </div>
             </div>
 
@@ -40,30 +40,27 @@ $roles = $objAbmRol->listarRoles();
                 <label for="uspass">Contraseña:</label>
                 <div class="ui left icon input">
                     <i class="lock icon"></i>
-                    <input id="uspass" name="uspass" type="password" placeholder="Ingresa tu contraseña">
+                    <input id="uspass" name="uspass" type="password" placeholder="Ingresa tu contraseña" required>
                 </div>
             </div>
-
-            <div class="field">
-                <label for="rol">Rol:</label>
-                <select name="rol" id="rol" class="ui dropdown">
-                    <option value="">Selecciona un Rol</option>
-                    <?php foreach ($roles as $rol): ?>
-                        <option value="<?php echo htmlspecialchars($rol->getIdRol()); ?>">
-                            <?php echo htmlspecialchars($rol->getRoDescripcion()); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <button class="ui teal fluid large button" type="submit" onclick="formSubmit()">Registrar</button>
+            <button class="ui teal fluid large button" type="submit">Registrar</button>
         </form>
 
-        <div class="ui message" id="formMessage" style="display: none;"></div>
+        <!-- Div del popup para mensajes -->
+        <div class="ui modal" id="modalResponse">
+            <div class="header">Resultado del Registro</div>
+            <div class="content" id="contModal"></div>
+        </div>
     </div>
 </div>
 
+<script src="../js/enviarFormulario.js"></script>
 <script>
     $('.ui.dropdown').dropdown();
+
+    manejarFormSubmit(
+        '#formulario',
+        './Action/actionRegistrarUsuario.php',
+        './gestionUsuario.php'
+    );
 </script>
-<script src="../js/api.js"></script>

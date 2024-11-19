@@ -43,17 +43,14 @@ class AbmUsuarioRol
         $objUsuario = new Usuario();
         $objUsuario->cargar($datos['idUsuario'], null, null, null, null, []);
         $objUsuario->buscar();
-        print_r($objUsuario);
 
         $objRol = new Rol();
         $objRol->cargar($datos['idRol'], null);
         $objRol->buscar();
-        print_r( $objRol);
 
 
         $objUsuarioRol = new UsuarioRol();
         $objUsuarioRol->cargar($objUsuario, $objRol);
-        echo $objUsuarioRol->buscar();
 
         if ($objUsuarioRol->buscar()) {
             try {
@@ -95,7 +92,6 @@ class AbmUsuarioRol
         $param['idusuario'] = $idUsuario;
         $abmRol = new AbmRol();
         $rolCliente = $abmRol->obtenerRolCliente();
-        var_dump($rolCliente);
         $param['idrol'] = $rolCliente->getIdRol();
 
         $obj = $this->cargarObjeto($param);

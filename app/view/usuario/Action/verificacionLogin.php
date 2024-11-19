@@ -12,35 +12,36 @@ require_once '../../../model/Rol.php';
 
 $datos = darDatosSubmitted();
 
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//     $nombre = $datos['usnombre'];
-//     $contraseniaHash = $datos['uspass']; // ya viene hasheada
-//     var_dump($nombre);
-//     var_dump($contraseniaHash);
-//     var_dump($_POST);
-//     $nuevaSesion = new Session();
-//     $inicioExitoso = $nuevaSesion->iniciar($nombre, $contraseniaHash);
-
-//     if ($inicioExitoso) {
-//         echo 'Inicio de sesión exitoso';
-//     } else {
-//         echo 'Error: credenciales incorrectas';
-//     }
-// }
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nombre = $datos['usnombre'];
-    $contraseniaHash = $datos['uspass'];
-
-    $nuevaSesion = new Session();
-    $inicioExitoso = $nuevaSesion->iniciar($nombre, $contraseniaHash);
-
-    if ($inicioExitoso) {
-        $mensaje = "<div class='ui positive message'>Inicio de sesión exitoso</div>";
-    } else {
-        $mensaje = "<div class='ui negative message'>Error: credenciales incorrectas</div>";
-        $mensaje .= "";
+try {
+    if (empty($datos['usnombre']) || empty($datos['uspass'])) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Faltan datos obligatorios'
+        ]);
+        exit();
     }
+
+    $session = new Session();
+    $nombre = $datos['usnombre'];
+    $password = $datos['uspass'];
+
+    if ($session->iniciar($nombre, $password)) {
+        echo json_encode([
+            'status' => 'ok',
+            'message' => 'Sesion iniciada correctamente'
+        ]);
+    } else {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Usuario o contraseña incorrectos'
+        ]);
+    }
+} catch (Exception $e) {
+    error_log("Error en login: " . $e->getMessage()); // Solo log en servidor
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Ocurrio un problema en el servidor'
+    ]);
 }
 ?>
 

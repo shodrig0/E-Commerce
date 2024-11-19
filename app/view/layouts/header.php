@@ -29,7 +29,7 @@ $baseURL = $protocolo . $host . $rutaProyecto;
 
             <!-- Columna central con la imagen -->
             <div class="twelve wide column" style="text-align: center;">
-                <img src="<?php echo $baseURL ?>app/view/assets/img/LogoFrenteFINALL.png" alt="Elixir Patagónico" style="height: 42px;">
+               <a href="<?php echo $baseURL ?>app/view/home/home.php"><img src="<?php echo $baseURL ?>app/view/assets/img/LogoFrenteFINALL.png" alt="Elixir Patagónico" style="height: 42px;"></a>
             </div>
 
             <!-- Columna derecha con los botones de Login y Shop -->

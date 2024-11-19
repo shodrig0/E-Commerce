@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__ . '/connection/BaseDatos.php';
 class Usuario
 {
@@ -132,8 +131,12 @@ class Usuario
         $arregloUsuarios = array();
         $base = new BaseDatos();
         $sql = "SELECT * FROM usuario ";
-        if ($condicion != "") {
-            $sql .= 'WHERE ' . $condicion;
+        // var_dump($condicion);
+        if (is_array($condicion)) {
+            $condicion = implode(" AND ", $condicion);
+        }
+        if ($condicion != ""){
+            $sql .= " WHERE $condicion";
         }
         $res = $base->Ejecutar($sql);
         if ($res > -1) {

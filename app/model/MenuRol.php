@@ -1,5 +1,4 @@
 <?php
-
 class MenuRol
 {
 
@@ -136,8 +135,11 @@ class MenuRol
         $arreglo = array();
         $base = new BaseDatos();
         $sql = "SELECT * FROM menurol ";
-        if ($parametro != "") {
-            $sql .= 'WHERE ' . $parametro;
+        if (is_array($parametro)) {
+            $parametro = implode(" AND ", $parametro);
+        }
+        if ($parametro != ""){
+            $sql .= " WHERE $parametro";
         }
         $res = $base->Ejecutar($sql);
         if ($res > -1) {
@@ -161,7 +163,6 @@ class MenuRol
 
         return $arreglo;
     }
-
 
     public function jsonSerialize()
     {

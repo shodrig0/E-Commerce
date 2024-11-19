@@ -1,7 +1,7 @@
 <?php 
 require_once('../../../../config.php');
 require_once('../../../model/Usuario.php');
-require_once('../../../controller/AbmUsuario.php');
+require_once('../../../controller/ABMUsuario.php');
 require_once '../../../controller/AbmUsuarioRol.php';
 require_once '../../../model/UsuarioRol.php';
 require_once '../../../controller/AbmRol.php';

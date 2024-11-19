@@ -17,7 +17,7 @@ $datos = darDatosSubmitted();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idUsuario'])) {
     $idUsuario = intval($_POST['idUsuario']);
-    $abmUsuario = new AbmUsuario();
+    $abmUsuario = new $abmUsuario();
 
     $resultado = $abmUsuario->borrarLogico($idUsuario);
     if ($resultado) {

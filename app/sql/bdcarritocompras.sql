@@ -97,23 +97,30 @@ CREATE TABLE `menu` (
   `menombre` varchar(50) NOT NULL COMMENT 'Nombre del item del menu',
   `medescripcion` varchar(124) NOT NULL COMMENT 'Descripcion mas detallada del item del menu',
   `idpadre` bigint(20) DEFAULT NULL COMMENT 'Referencia al id del menu que es subitem',
-  `medeshabilitado` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha en la que el menu fue deshabilitado por ultima vez'
+  `medeshabilitado` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha en la que el menu fue deshabilitado por ultima vez',
+  `meorden` INT NOT NULL DEFAULT 0,
+  `roles` VARCHAR(50) DEFAULT NULL COMMENT 'Roles que pueden acceder al menú',
+  `link` VARCHAR(150) NOT NULL COMMENT 'Enlace al que redirige el menú';
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 --
 -- Volcado de datos para la tabla `menu`
 --
-INSERT INTO `menu` (
-    `idmenu`,
-    `menombre`,
-    `medescripcion`,
-    `idpadre`,
-    `medeshabilitado`
-  )
-VALUES (7, 'nuevo', 'kkkkk', NULL, NULL),
-  (8, 'nuevo', 'kkkkk', NULL, NULL),
-  (9, 'nuevo', 'kkkkk', 7, NULL),
-  (10, 'nuevo', 'kkkkk', NULL, NULL),
-  (11, 'nuevo', 'kkkkk', NULL, NULL);
+INSERT INTO menu (idmenu, menombre, medescripcion, idpadre, medeshabilitado, meorden) VALUES
+(1, 'Inicio', 'Página principal de la tienda', NULL, NULL, 1),
+(2, 'Productos', 'Listado de productos disponibles en la tienda', NULL, NULL, 2),
+(3, 'Contacto', 'Información de contacto de la tienda', NULL, NULL, 8),
+(4, 'Login', 'Acceso a la parte privada del sitio', NULL, NULL, 5),
+(5, 'Cervezas', 'Listado de cervezas disponibles', 2, NULL, 1),
+(6, 'Vinos', 'Listado de vinos disponibles', 2, NULL, 2),
+(7, 'Administración', 'Opciones para la administración del sistema', NULL, NULL, 3),
+(8, 'Administración Usuarios', 'Opciones para la administración de Usuarios', 7, NULL, 1),
+(9, 'Administración Roles', 'Opciones para la administración de Roles', 7, NULL, 2),
+(10, 'Control Stock', 'Administra inventarios', NULL, NULL, 4),
+(11, 'Administración de Productos', 'Opciones para la administración de Productos', 10, NULL, 1),
+(12, 'Administración de Compras', 'Opciones para la administración de Compras', 10, NULL, 2),
+(13, 'Tus Compras', 'Ve lo que has comprado', NULL, NULL, 6),
+(14, 'Carrito', 'Administra tu carrito', 13, NULL, 1),
+(15, 'Perfil', 'Administra tu perfil', NULL, NULL, 7);
 -- --------------------------------------------------------
 --
 -- Estructura de tabla para la tabla `menurol`

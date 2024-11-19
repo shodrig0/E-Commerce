@@ -1,6 +1,5 @@
 <?php
-include_once '../../model/connection/BaseDatos.php';
-include_once '../../model/Producto.php';
+
 
     $id = intval($_POST['id']);
     $producto = new Producto();

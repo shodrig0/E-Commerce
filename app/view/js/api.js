@@ -4,7 +4,7 @@ async function formSubmit() {
     const password = passwordInput.value;
 
     if (!password) {
-        alert("No vacia")
+        alert("La contraseña no puede estar vacía")
     }
 
     const hashedPassword = await hashPassword(password, usnombre)

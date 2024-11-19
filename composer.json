@@ -5,8 +5,8 @@
     },
     "autoload": {
         "psr-4": {
-            "model\\": "E-Commerce/model/",
-            "controller\\": "E-Commerce/controller/"
+            "model\\": "app/model/",
+            "controller\\": "app/controller/"
         }
     }
 }

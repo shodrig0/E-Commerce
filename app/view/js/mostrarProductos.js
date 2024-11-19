@@ -1,21 +1,38 @@
-$(document).ready(function() {
-    
+$(document).ready(function () {
+    const LS_KEY = "productos"; // Clave para `localStorage`
+
     cargarProductos();
 
     function cargarProductos() {
+        //carga los productos en localstorage
+        const productosLS = JSON.parse(localStorage.getItem(LS_KEY));
+
+        if (productosLS && productosLS.length > 0) {
+            console.log("Cargando productos desde localStorage");
+            mostrarProductos(productosLS);
+        } else {
+            console.log("Cargando productos desde servidor...");
+            obtenerProductosDelServidor();
+        }
+    }
+
+    function obtenerProductosDelServidor() {
         $.ajax({
-            url: 'listar.php',
+            url: '../pages/store/action/listarProductos.php',
             method: 'POST',
             dataType: 'json',
-            success: function(response) {
+            success: function (response) {
+                console.log("Respuesta del servidor:", response); 
                 if (response.producto && response.producto.length > 0) {
-                    mostrarProductos(response.producto);
+                    const productos = response.producto;
+                    localStorage.setItem(LS_KEY, JSON.stringify(productos));
+                    mostrarProductos(productos);
                 } else {
                     console.log("No se encontraron productos.");
                 }
             },
-            error: function(error) {
-                console.log("Error en la solicitud AJAX", error);
+            error: function (error) {
+                console.error("Error en la solicitud AJAX", error);
             }
         });
     }
@@ -23,27 +40,25 @@ $(document).ready(function() {
     function mostrarProductos(productos) {
         $('#galeriaProductos').empty();
 
-        // Recorre los productos y los agrega
-        productos.forEach(function(producto) {
+        productos.forEach(function (producto) {
             let divProducto = $('<div>').addClass('column');
 
             let card = $('<div>').addClass('ui card');
 
-            // Contenedor de imagen
+            // Creo contenedor de la imagen
             let imgContainer = $('<div>').addClass('imagen');
             let img = $('<img>')
-                .attr('src', producto.imgSource || 'https://www.espaciovino.com.ar/media/default/0001/68/thumb_67746_default_big.jpeg')
+                .attr('src', producto.imgSource || 'https://via.placeholder.com/150')
                 .attr('alt', producto.pronombre)
                 .addClass('producto-imagen');
             imgContainer.append(img);
 
-            // let descripcion = $('<div>').addClass('description').text(producto.prodetalle);
-            // Cont de información de producto
+            // Div de la información del producto
             let infoProducto = $('<div>').addClass('content');
             let titulo = $('<a>').addClass('header').text(producto.pronombre);
-            let precio = $('<h3>').addClass('ui green text').text(`$${producto.precio}`)
+            let precio = $('<h3>').addClass('ui green text').text(`$${producto.precio}`);
 
-            // Crea el contenedor extra de información (por ejemplo, stock)
+            // Contenido adicional (stock)
             let masContenido = $('<div>').addClass('extra content');
             let stock = $('<span>').html(`<i class="box icon"></i> Stock: ${producto.procantstock}`);
 
@@ -55,4 +70,9 @@ $(document).ready(function() {
             $('#galeriaProductos').append(divProducto);
         });
     }
+
+    $('#actualizarProductos').on('click', function () {
+        localStorage.removeItem(LS_KEY);
+        obtenerProductosDelServidor();
+    });
 });

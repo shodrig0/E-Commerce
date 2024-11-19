@@ -1,7 +1,7 @@
 <?php
 
-include_once '../../model/connection/BaseDatos.php';
-include_once '../../model/Producto.php';
+include_once '../../../../model/connection/BaseDatos.php';
+include_once '../../../../model/Producto.php';
 
 $producto = new Producto();
 $productos = $producto->listar();

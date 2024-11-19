@@ -8,35 +8,29 @@
             <div class="content">Lista de Productos</div>
         </h2>
 
-        <!-- Contenedor de productos con grilla de 5 columnas -->
         <div id="productos-editar" class="ui five column grid">
         </div>
     </div>
 
-    <!-- Formulario de Modificación (oculto inicialmente) -->
     <div id="formularioEdicion" class="ui container segment raised" style="max-width: 600px; margin-top: 20px; display: none;">
         <h2 class="ui yellow header">
             <i class="edit icon"></i>
             <div class="content">Modificar Producto</div>
         </h2>
 
-        <form class="ui form" id="modificarProductoForm" method="POST" action="/update-product">
-            <!-- Campo oculto para almacenar el ID del producto -->
+        <form class="ui form" id="modificarProductoForm">
             <input type="hidden" name="productId" id="productId">
 
-            <!-- Nombre del producto -->
             <div class="field">
                 <label><i class="tag icon"></i> Nombre del Producto</label>
                 <input type="text" name="nombre" id="nombreProducto" required>
             </div>
 
-            <!-- Detalle del producto -->
             <div class="field">
                 <label><i class="info circle icon"></i> Detalle</label>
                 <textarea name="detalle" id="detalleProducto"></textarea>
             </div>
 
-            <!-- Precio del producto -->
             <div class="field">
                 <label><i class="dollar sign icon"></i> Precio</label>
                 <div class="ui labeled input">
@@ -45,27 +39,29 @@
                 </div>
             </div>
 
-            <!-- Stock del producto -->
             <div class="field">
                 <label><i class="boxes icon"></i> Stock Disponible</label>
                 <input type="number" name="stock" id="stockProducto" min="0" required>
             </div>
 
-            <!-- Botón de Envío -->
-            <button type="submit" class="ui large yellow button fluid">
+            <button type="submit" class="ui large yellow button fluid" onclick="manejarFormSubmit('#modificarProductoForm', './action/actionRespuestas.php', './', 'actualizar');">
                 <i class="save icon"></i> Guardar Cambios
             </button>
         </form>
     </div>
 </div>
-
+<div class="ui modal" id="modalResponse">
+    <div class="header">Resultado del Registro</div>
+    <div class="content" id="contModal"></div>
+</div>
+<script src="../../js/enviarFormulario.js"></script>
 <script>
 $(document).ready(function() {
     cargarProductos();
 
     function cargarProductos() {
         $.ajax({
-            url: '../home/listar.php',
+            url: './action/listarProductos.php',
             method: 'POST',
             dataType: 'json',
             success: function(response) {
@@ -112,7 +108,7 @@ $(document).ready(function() {
                 .addClass('ui yellow button')
                 .text('Editar')
                 .click(function() {
-                    mostrarFormularioEdicion(id); // Pasar el ID del producto
+                    mostrarFormularioEdicion(id);
                 });
 
             infoProducto.append(titulo, detalle, precio);
@@ -123,26 +119,24 @@ $(document).ready(function() {
         });
     }
 
-    // Función para mostrar el formulario de edición con datos de producto
     function mostrarFormularioEdicion(idProducto) {
-        
-        $('#listaProductos').hide();
         $('#formularioEdicion').show();
 
         $.ajax({
-            url: '../../controller/obtenerProducto.php',
+            url: './action/actionModificarProducto.php',
             method: 'POST',
-            data: { id: idProducto }, 
             dataType: 'json',
-            success: function(producto) {
-                if (producto) {
+            data: { idProducto: idProducto },
+            success: function(response) {
+                if (response) {
+                    const producto = response;
                     $('#productId').val(producto.idproducto);
                     $('#nombreProducto').val(producto.pronombre);
                     $('#detalleProducto').val(producto.prodetalle);
                     $('#precioProducto').val(producto.precio);
                     $('#stockProducto').val(producto.procantstock);
                 } else {
-                    console.log("No se encontraron datos para el producto.");
+                    console.log("No se encontraron datos para el producto:", response.message);
                 }
             },
             error: function(error) {

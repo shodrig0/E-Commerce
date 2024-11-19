@@ -1,5 +1,4 @@
 <?php
-
 class Producto
 {
     private $idProducto;
@@ -27,6 +26,32 @@ class Producto
         $this->setPrecio($precio);
         $this->setProCantStock($proCantStock);
     }
+
+    public function cargarClave($parametro)
+    {
+        foreach ($parametro as $clave => $value) {
+            switch ($clave) {
+                case 'idProducto':
+                    $this->setIdProducto($value);
+                    break;
+                case 'proNombre':
+                    $this->setProNombre($value);
+                    break;
+                case 'proDetalle':
+                    $this->setProDetalle($value);
+                    break;
+                case 'precio':
+                    $this->setPrecio($value);
+                    break;
+                case 'proCantStock':
+                    $this->setProCantStock($value);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
 
     //getters
 
@@ -103,6 +128,7 @@ class Producto
                 if ($res > 0) {
                     $row = $base->Registro();
                     $this->cargar($row['idproducto'], $row['pronombre'], $row['prodetalle'], $row['precio'], $row['procantstock']);
+                    $resp = true;
                 }
             }
         } else {

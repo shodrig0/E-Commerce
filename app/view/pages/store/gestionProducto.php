@@ -1,5 +1,5 @@
 <?php 
-include_once '../layouts/header.php';
+include_once '../../layouts/header.php';
 ?>
 
 <div class="ui top attached tabular menu">

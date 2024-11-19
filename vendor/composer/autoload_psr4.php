@@ -6,6 +6,8 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'model\\' => array($baseDir . '/app/model'),
+    'controller\\' => array($baseDir . '/app/controller'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'MercadoPago\\' => array($vendorDir . '/mercadopago/dx-php/src/MercadoPago'),
 );

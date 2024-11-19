@@ -1,15 +1,14 @@
 <?php
 
-class Menu
-{
-
+class Menu{
     private $idMenu;
     private $meNombre;
     private $meDescripcion;
-    private $padre;
-    private $link;
+    private $idPadre;
     private $meDeshabilitado;
-    private array $roles;
+    private $meOrden;
+    private array $objRoles;
+    private $link;
     private $mensajeoperacion;
 
     public function __construct()
@@ -21,23 +20,27 @@ class Menu
         $this->padre = "";
         $this->link = "";
         $this->meDeshabilitado = "";
-        $this->roles = array();
+        $this->meOrden = "";
+        $this->objRoles = [];
         $this->mensajeoperacion = "";
     }
 
-    public function cargar($idMenu, $meNombre, $meDescripcion, $padre, $link, $meDeshabilitado, $roles = [])
+    public function cargar($idMenu, $meNombre, $meDescripcion, $idPadre, $meDeshabilitado, $meOrden,$roles = [], $link)
     {
         $this->setIdMenu($idMenu);
         $this->setMeNombre($meNombre);
         $this->setMeDescripcion($meDescripcion);
-        $this->setPadre($padre);
-        $this->setLink($link);
+        $this->setPadre($idPadre);
         $this->setMeDeshabilitado($meDeshabilitado);
-        $this->setRoles($roles);
+        $this->setMeOrden($meOrden);
+        $this->setObjRoles($roles);
+        $this->setLink($link);
     }
 
     //setters
-
+    public function setMeOrden($meOrden){
+        $this->meOrden = $meOrden;
+    }
     public function setIdMenu($idMenu)
     {
         $this->idMenu = $idMenu;
@@ -68,7 +71,7 @@ class Menu
         $this->meDeshabilitado = $meDeshabilitado;
     }
 
-    public function setRoles($roles)
+    public function setObjRoles($roles)
     {
         $this->roles = $roles;
     }
@@ -95,9 +98,9 @@ class Menu
         return $this->meDescripcion;
     }
 
-    public function getPadre()
+    public function getIdPadre()
     {
-        return $this->padre;
+        return $this->idPadre;
     }
 
     public function getLink()
@@ -110,9 +113,13 @@ class Menu
         return $this->meDeshabilitado;
     }
 
-    public function getRoles()
+    public function getObjRoles()
     {
-        return $this->roles;
+        return $this->objRoles;
+    }
+
+    public function getMeOrden(){
+        return $this->meOrden;
     }
 
     public function getMensajeoperacion()
@@ -137,10 +144,10 @@ class Menu
                         $padre->buscar();
                         // Comparo para que no se genere un bucle infinito
                         if ($padre->getIdMenu() != $this->getIdMenu()) {
-                            $this->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $padre, $row['link'], $row['medeshabilitado'], $roles);
+                            $this->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $padre, $row['medeshabilitado'], $row['meorden'],$roles, $row['link']);
                         }
                     } else {
-                        $this->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], null, $row['link'], $row['medeshabilitado'], $roles);
+                        $this->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], null, $row['medeshabilitado'], $row['meorden'],$roles, $row['link']);
                     }
                 }
             }
@@ -154,8 +161,9 @@ class Menu
     {
         $base = new BaseDatos();
         $resp = false;
-        $sql = "INSERT INTO menu (idmenu, menombre, medescripcion, idpadre, link, medeshabilitado)
-				VALUES ('" . $this->getIdMenu() . "','" . $this->getMeNombre() . "','" . $this->getMeDescripcion() . "','" . $this->getPadre()->getIdMenu() . "','" . $this->getLink() . "','" . $this->getMeDeshabilitado() . "')";
+        $sql = "INSERT INTO menu (idmenu, menombre, medescripcion, idpadre, medeshabilitado, meorden, roles, link)
+        VALUES ('" . $this->getIdMenu() . "','" . $this->getMeNombre() . "','" . $this->getMeDescripcion() . "','" . $this->getIdPadre() ? $this->getIdPadre()->getIdMenu() : 'NULL' . "','" . $this->getMeDeshabilitado() . "','" . $this->getMeOrden() . "','" . $this->getObjRoles() . "','" . $this->getLink() . "')";
+
 
         if ($base->Iniciar()) {
             $idUser = $base->Ejecutar($sql);
@@ -174,7 +182,7 @@ class Menu
         $resp = false;
         $base = new BaseDatos();
         $sql = "UPDATE menu SET menombre='" . $this->getMeNombre() . "', medescripcion='" . $this->getMeDescripcion() . "', 
-            idpadre='" . $this->getPadre()->getIdMenu() . "', link='" . $this->getLink() . "', medeshabilitado='" . $this->getMeDeshabilitado() .
+            idpadre='" . $this->getIdPadre()->getIdMenu() . "', medeshabilitado='" . $this->getMeDeshabilitado() . "', meorden='" . $this->getMeOrden() . "', roles='" . $this->getObjRoles() . "', link='" . $this->getLink() .
             "'  WHERE idmenu=" . $this->getIdMenu();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
@@ -210,8 +218,11 @@ class Menu
         $arreglo = array();
         $base = new BaseDatos();
         $sql = "SELECT * FROM menu ";
-        if ($parametro != "") {
-            $sql .= 'WHERE ' . $parametro;
+        if (is_array($parametro)) {
+            $parametro = implode(" AND ", $parametro);
+        }
+        if ($parametro != ""){
+            $sql .= " WHERE $parametro";
         }
         $res = $base->Ejecutar($sql);
         if ($res > -1) {
@@ -226,9 +237,9 @@ class Menu
                         $padre = new Menu();
                         $padre->setIdMenu($row['idpadre']);
                         $padre->buscar();
-                        $obj->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $padre, $row['link'], $row['medeshabilitado'], $roles);
+                        $obj->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $padre, $row['medeshabilitado'], $row['meorden'], $roles, $row['link']);
                     } else {
-                        $obj->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], null, $row['link'], $row['medeshabilitado'], $roles);
+                        $obj->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $padre, $row['medeshabilitado'], $row['meorden'], $roles, $row['link']);
                     }
 
                     array_push($arreglo, $obj);
@@ -241,11 +252,31 @@ class Menu
         return $arreglo;
     }
 
+    public function ordenMenu(){
+        $db = new BaseDatos();
+        $sql = "SELECT * FROM menu ORDER BY idpadre ASC, meorden ASC";
+        if ($db->Ejecutar($sql) > 0) {
+            $menu = [];
+            while ($row = $db->Registro()) {
+                if ($row['idpadre'] === NULL) {
+                    $menu[$row['idmenu']] = $row;
+                    $menu[$row['idmenu']]['subitems'] = [];
+                } else {
+                    $menu[$row['idpadre']]['subitems'][] = $row;
+                }
+            }
+        } else {
+            $this->setMensajeoperacion('No se cargaron los menus' . $db->getError());
+            $menu = [];
+        }
+        return $menu;
+    }
+
 
     public function serializeRoles()
     {
         $roles = array();
-        foreach ($this->getRoles() as $rol) {
+        foreach ($this->getObjRoles() as $rol) {
             array_push($roles, $rol->jsonSerialize()["rol"]);
         }
         return $roles;
@@ -255,8 +286,8 @@ class Menu
     public function jsonSerialize()
     {
         $padre = null;
-        if ($this->getPadre() != null) {
-            $padre = $this->getPadre()->jsonSerialize();
+        if ($this->getIdPadre() != null) {
+            $padre = $this->getIdPadre()->jsonSerialize();
         }
         return [
             'idMenu' => $this->getIdMenu(),
