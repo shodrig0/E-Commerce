@@ -5,9 +5,9 @@
                 <i class="user circle icon"></i>
                 <div class="content">Iniciar Sesión</div>
             </h2>
-            
+
             <div class="ui divider"></div>
-            <form action="./Action/verificacionLogin.php" method="POST" name="formulario" id="formulario" class="ui large form" onsubmit="return formSubmit();">
+            <form action="../action/verificacionLogin.php" method="POST" name="formulario" id="formulario" class="ui large form" onsubmit="return formSubmit()">
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
@@ -28,8 +28,9 @@
                 </div>
             </form>
             <div class="ui horizontal divider">¿No tienes una cuenta?</div>
-            <a href="registrarUsuario.php"><button id="btnRegistrarse" class="ui fluid blue button">Registrarse</button></a>
+            <a href="../registrarUsuario.php"><button id="btnRegistrarse" class="ui fluid blue button">Registrarse</button></a>
         </div>
     </div>
 </div>
-<script src="../js/api.js"></script>
+<!-- <div>holaaa</div> -->
+<script src="../../js/api.js"></script>

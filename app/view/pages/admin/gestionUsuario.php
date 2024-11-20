@@ -1,30 +1,6 @@
 <?php
-require_once '../../layouts/header.php';
-require_once '../../../../config.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.php';
 
-$session = new Session();
-
-if (!$session->validar()) {
-    // header("Location: home.php");
-    // exit();
-}
-
-// var_dump($_SESSION);
-
-$vistaAdmin = false;
-$usuario = $session->getUsuario();
-// var_dump($usuario);
-if ($usuario) {
-    $roles = $session->getRol();
-    if ($roles) {
-        foreach ($roles as $rol) {
-            if ($rol['rodescripcion'] === 'Administrador') {
-                $vistaAdmin = true;
-                break;
-            }
-        }
-    }
-}
 
 ?>
 

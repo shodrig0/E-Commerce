@@ -11,6 +11,8 @@ require_once __DIR__ . '/../model/Rol.php'; // Esto carga AbmUsuario.php relativ
 class Session
 {
 
+    private static $instance = null;
+
     public function __construct()
     {
         if (session_status() == PHP_SESSION_NONE) {
@@ -18,12 +20,17 @@ class Session
         }
     }
 
+    public static function getInstance()
+    {
+        if (self::$instance === null) self::$instance = new self();
+        return self::$instance;
+    }
 
     public function iniciar($nombreUsuario, $psw)
     {
         $resp = false;
         $objAbmUsuario = new AbmUsuario();
-        $resultado = $objAbmUsuario->buscarUsuario("usnombre = '" . $nombreUsuario . "'"); 
+        $resultado = $objAbmUsuario->buscarUsuario("usnombre = '" . $nombreUsuario . "'");
 
         if ($resultado) {
             $usuario = $resultado;
@@ -97,9 +104,9 @@ class Session
             $resultado = $obj->buscarUsuarioRol($idUsuario);
             if ($resultado && count($resultado) > 0) {
                 $colRoles = [];
-                foreach($resultado as $usuarioRol){
+                foreach ($resultado as $usuarioRol) {
                     $objRol = $usuarioRol->getRol();
-                    if($objRol){
+                    if ($objRol) {
                         $colRoles[] = [
                             'idrol' => $objRol->getIdRol(),
                             'rodescripcion' => $objRol->getRoDescripcion()

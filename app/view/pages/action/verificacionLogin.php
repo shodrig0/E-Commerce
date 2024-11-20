@@ -1,7 +1,7 @@
 <?php
 
-require_once '../../../../../config.php';
-require_once '../../../layouts/header.php';
+require_once '../../../../config.php';
+require_once '../../layouts/header.php';
 
 $datos = darDatosSubmitted();
 
@@ -14,9 +14,10 @@ try {
         exit();
     }
 
-    $session = new Session();
+    $session = Session::getInstance();
     $nombre = $datos['usnombre'];
     $password = $datos['uspass'];
+    var_dump("Datos procesados: ", $datos);
 
     if ($session->iniciar($nombre, $password)) {
         echo json_encode([
@@ -26,39 +27,40 @@ try {
     } else {
         echo json_encode([
             'status' => 'error',
-            'message' => 'Usuario o contraseña incorrectos'
+            'message' => 'Usuario o pass incorrectos'
         ]);
     }
-} catch (Exception $e) {
-    error_log("Error en login: " . $e->getMessage()); // Solo log en servidor
+} catch (PDOException $e) {
+    // var_dump("Error en login: " . $e->getMessage());
     echo json_encode([
         'status' => 'error',
-        'message' => 'Ocurrio un problema en el servidor'
+        'message' => 'Ocurrió un problema en el servidor'
     ]);
 }
 ?>
 
 <body>
-<div class="ui container" style="margin-top: 20px;">
-    <div class="ui grid" style="display: flex; justify-content: center; gap: 10px;">
-        <form action="cerrar.php" method="post">
-            <button type="submit" class="ui red button animated fade">
-                <div class="visible content">Cerrar Sesión</div>
+    <div class="ui container" style="margin-top: 20px;">
+        <div class="ui grid" style="display: flex; justify-content: center; gap: 10px;">
+            <form action="cerrar.php" method="post">
+                <button type="submit" class="ui red button animated fade">
+                    <div class="visible content">Cerrar Sesión</div>
+                    <div class="hidden content">
+                        <i class="power off icon"></i>
+                    </div>
+                </button>
+            </form>
+            <a href="../../home/home.php" class="ui blue button animated fade">
+                <div class="visible content center">&nbsp;&nbsp;Volver</div>
                 <div class="hidden content">
-                    <i class="power off icon"></i>
+                    <i class="arrow left icon"></i>
                 </div>
-            </button>
-        </form>
-        <a href="../../home/home.php" class="ui blue button animated fade">
-            <div class="visible content center">&nbsp;&nbsp;Volver</div>
-            <div class="hidden content">
-                <i class="arrow left icon"></i>
-            </div>
-        </a>
+            </a>
+        </div>
+        <div class="ui field container" style="margin-top: 20px;">
+            <?php if (isset($mensaje)) echo $mensaje; ?>
+        </div>
     </div>
-    <div class="ui field container" style="margin-top: 20px;">
-        <?php if (isset($mensaje)) echo $mensaje; ?>
-    </div>
-</div>
 </body>
+
 </html>
