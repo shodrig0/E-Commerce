@@ -23,13 +23,12 @@ async function manejarFormSubmit(selectorForm, urlAction, redireccionUrl) {
 
             $.ajax({
                 url: urlAction,
-                type: 'POST',
+                method: 'POST',
                 data: $(this).serialize(),
                 success: function (response) {
                     $('#contModal').html(response);
                     $('#modalResponse').modal('show');
 
-                    // Redirigir después de 4 segundos si se proporciona una URL
                     if (redireccionUrl) {
                         setTimeout(function () {
                             window.location.href = redireccionUrl;

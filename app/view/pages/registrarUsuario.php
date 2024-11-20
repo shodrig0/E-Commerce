@@ -1,8 +1,6 @@
 <?php
 require_once('../layouts/header.php');
 require_once('../../../config.php');
-include_once '../../controller/AbmRol.php';
-include_once '../../model/Rol.php';
 
 $objAbmRol = new AbmRol();
 $roles = $objAbmRol->listarRoles();
@@ -19,7 +17,6 @@ $roles = $objAbmRol->listarRoles();
         </h2>
         <form class="ui large form" id="formulario">
             <input id="accion" name="accion" value="login" type="hidden">
-
             <div class="field">
                 <label for="usnombre">Nombre:</label>
                 <div class="ui left icon input">
@@ -45,22 +42,19 @@ $roles = $objAbmRol->listarRoles();
             </div>
             <button class="ui teal fluid large button" type="submit">Registrar</button>
         </form>
-
-        <!-- Div del popup para mensajes -->
         <div class="ui modal" id="modalResponse">
             <div class="header">Resultado del Registro</div>
             <div class="content" id="contModal"></div>
         </div>
     </div>
 </div>
-
 <script src="../js/enviarFormulario.js"></script>
 <script>
     $('.ui.dropdown').dropdown();
 
     manejarFormSubmit(
         '#formulario',
-        './Action/actionRegistrarUsuario.php',
-        './gestionUsuario.php'
+        './action/actionRegistrarUsuario.php',
+        '../home/home.php'
     );
 </script>

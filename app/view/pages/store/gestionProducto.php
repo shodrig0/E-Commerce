@@ -94,7 +94,7 @@ $(document).ready(function() {
     // Llamada AJAX inicial para cargar 'agregarProducto.php'
     $.ajax({
         url: 'agregarProducto.php',
-        method: "GET",
+        method: "POST",
         success: function(data) {
             $("#agregarContent").html(data);
         },

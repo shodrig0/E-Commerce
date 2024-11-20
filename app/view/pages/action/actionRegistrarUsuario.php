@@ -37,9 +37,6 @@ if (isset($datos['usnombre'], $datos['usemail'], $datos['uspass']) && $_SERVER["
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <title>Confirmación de Usuario</title>

@@ -20,19 +20,18 @@ function verEstructura($e)
 }
 
 spl_autoload_register(function ($class_name) {
-    $directorys = array(
+    $directorys = [
         $GLOBALS['ROOT'] . 'app/model/',
         $GLOBALS['ROOT'] . 'app/model/connection/',
-        $GLOBALS['ROOT'] . 'app/controller/'
-    );
+        $GLOBALS['ROOT'] . 'app/controller/',
+        $GLOBALS['ROOT'] . 'app/utils/'
+    ];
     foreach ($directorys as $directory) {
-        $filePath = $directory . $class_name . '.php';
+        // $filePath = $directory . $class_name . '.php';
+        $filePath = "{$directory}{$class_name}.php";
         if (file_exists($filePath)) {
             require_once($filePath);
-            // var_dump("Cargando clase: $class_name desde $filePath");
             return;
-        } else {
-            // var_dump("No se encontró el archivo para la clase: $class_name en $filePath");
         }
     }
 });

@@ -1,6 +1,6 @@
 <?php
-include_once '../layouts/header.php';
-include_once '../../controller/Session.php';
+require_once '../../layouts/header.php';
+require_once '../../../../config.php';
 
 $session = new Session();
 
@@ -38,5 +38,5 @@ if ($usuario) {
 <div class="ui bottom attached tab segment active" id="tab-login" data-tab="login"></div>
 <div class="ui bottom attached tab segment" id="tab-miembros" data-tab="miembros"></div>
 
-<script src="../js/cargarGestionUsuario.js"></script>
-<script src="../js/eliminarRol.js"></script>
+<script src="../../js/cargarGestionUsuario.js"></script>
+<script src="../../js/eliminarRol.js"></script>

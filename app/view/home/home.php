@@ -1,35 +1,34 @@
 <?php
 include_once '../../../config.php';
 include_once '../layouts/header.php';
-include_once '../../controller/Session.php';
 
-$session = new Session();
+// $session = new Session();
 
-if (!$session->validar()) {
-    // header("Location: home.php");
-    // exit();
-}
+// if (!$session->validar()) {
+//     // header("Location: home.php");
+//     // exit();
+// }
 
-// var_dump($_SESSION);
+// // var_dump($_SESSION);
 
-$vistaAdmin = false;
-$usuario = $session->getUsuario();
-// var_dump($usuario);
-if ($usuario) {
-    $roles = $session->getRol();
-    if ($roles) {
-        foreach ($roles as $rol) {
-            if ($rol['rodescripcion'] === 'Administrador') {
-                $vistaAdmin = true;
-                break;
-            }
-        }
-    }
-}
+// $vistaAdmin = false;
+// $usuario = $session->getUsuario();
+// // var_dump($usuario);
+// if ($usuario) {
+//     $roles = $session->getRol();
+//     if ($roles) {
+//         foreach ($roles as $rol) {
+//             if ($rol['rodescripcion'] === 'Administrador') {
+//                 $vistaAdmin = true;
+//                 break;
+//             }
+//         }
+//     }
+// }
 
-?>
+// ?>
 
-<?php include '../partials/navbar.php'; ?>
+<?php navbar() ?>
 
 <?php if ($usuario): ?>
         <p>Bienvenido, <?= htmlspecialchars($usuario->getUsNombre()); ?>.</p>
@@ -41,7 +40,7 @@ if ($usuario) {
     <?php else: ?>
         <p>Usuario no logueado.</p>
     <?php endif; ?>
-<a href="../usuario/gestionUsuario.php"><button>LOGIN</button></a>
+<a href="../pages/public/login.php"><button>LOGIN</button></a>
 <a href="../pages/admin/menu.php"><button>Script de Menu</button></a>
 <div class="ui container">
     <h2 class="ui header my-4">Productos</h2>

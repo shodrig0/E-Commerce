@@ -19,7 +19,7 @@ $(document).ready(function () {
     setActiveTab(activeTab)
 
     if (activeTab === 'login' && !loginCargado) {
-        $('#tab-login').load('./login.php', function () {
+        $('#tab-login').load('../login.php', function () {
             loginCargado = true
             $('.menu .item').tab()
         })
@@ -32,7 +32,7 @@ $(document).ready(function () {
 
     $('[data-tab="login"]').on('click', function () {
         if (!loginCargado) {
-            $('#tab-login').load('./login.php', function () {
+            $('#tab-login').load('../login.php', function () {
                 loginCargado = true
                 $('.menu .item').tab()
             })
@@ -42,7 +42,7 @@ $(document).ready(function () {
 
     $('[data-tab="miembros"]').on('click', function () {
         if (!miembrosCargado) {
-            $('#tab-miembros').load('./miembros.php', function () {
+            $('#tab-miembros').load('../miembros.php', function () {
                 miembrosCargado = true
                 $('.menu .item').tab()
             })

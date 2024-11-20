@@ -1,14 +1,7 @@
 <?php
 
-require_once '../../layouts/header.php';
-require_once '../../../../config.php';
-require_once '../../../controller/Session.php';
-require_once '../../../controller/AbmUsuario.php';
-require_once '../../../model/Usuario.php';
-require_once '../../../controller/AbmUsuarioRol.php';
-require_once '../../../model/UsuarioRol.php';
-require_once '../../../controller/AbmRol.php';
-require_once '../../../model/Rol.php';
+require_once '../../../../../config.php';
+require_once '../../../layouts/header.php';
 
 $datos = darDatosSubmitted();
 

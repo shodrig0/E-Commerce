@@ -116,9 +116,7 @@ class Session
      */
     public function cerrar()
     {
-        // $_SESSION
         $resp = true;
-        // $_SESSION['nombreUsuario'] = $_SESSION['usnombre'];
         session_destroy();
         return $resp;
     }
