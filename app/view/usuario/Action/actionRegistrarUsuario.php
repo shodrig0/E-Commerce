@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json; charset=utf-8');
 
 require_once('../../../../config.php');
 require_once('../../../model/Usuario.php');
@@ -10,6 +11,7 @@ require_once '../../../model/Rol.php';
 
 $datos = darDatosSubmitted();
 $salida = [];
+
 
 if (isset($datos['usnombre'], $datos['usemail'], $datos['uspass']) && $_SERVER["REQUEST_METHOD"] === "POST") {
     $userName = $datos['usnombre'];
@@ -62,7 +64,7 @@ if (isset($datos['usnombre'], $datos['usemail'], $datos['uspass']) && $_SERVER["
                 <div class="label">Usted será redirigido brevemente...</div>
             </div>
         <?php endif; ?>
-        
+
 
         <a href="../home/home.php" class="ui button">
             <i class="arrow left icon"></i> Volver
