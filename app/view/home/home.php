@@ -6,10 +6,30 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.ph
 <style>
     .centrado {
         text-align: center;
+        margin: 0.5em auto;
     }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .icono {
+        width: 50%;
+    }
+
+    
 </style>
+
 <div class="ui container">
-    <h1 class="centrado">Elixir Patagónico</h1>
+    <h1 class="ui centrado">Elixir Patagónico</h1>
+    <h4 class="ui centrado">Tu vinoteca de confianza</h4>
+
+    <img src="../assets/img/bottle.svg" class="icono" alt="Botella de vino">
+
+    <p></p>
 </div>
 
 

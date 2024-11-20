@@ -45,11 +45,14 @@ if (!$session->validar() && strpos($_SERVER['REQUEST_URI'], '../pages/perfil.php
     <header>
         <div class="ui grid" style="align-items: center; padding: 1em;">
             <div class="two wide column" style="text-align: left;">
-                <?php if ($usuario): ?>
-                    <h3>Bienvenido, <?= htmlspecialchars($usuario->getUsNombre()); ?>.</h3>
-                    <?php else: ?>
-                        <h3></h3>
-                <?php endif; ?>
+                <div style="position: absolute; width: 800px; top: 0;">
+                    <?php if ($usuario): ?>
+                        <h3>Hola, <?= htmlspecialchars($usuario->getUsNombre()); ?>.</h3>
+                        <?php else: ?>
+                            <h3 style="margin:0;">Bienvenido An&oacute;nimo</h3>
+                            <h5 style="margin:0;">No te olvides de ingresar para comprar</h5> 
+                    <?php endif; ?>
+                </div>
             </div>
             <div class="twelve wide column" style="text-align: center;">
                 <a href="<?php echo BASE_URL ?>app/view/home/home.php">

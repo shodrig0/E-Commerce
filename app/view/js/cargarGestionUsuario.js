@@ -42,7 +42,7 @@ $(document).ready(function () {
 
     $('[data-tab="miembros"]').on('click', function () {
         if (!miembrosCargado) {
-            $('#tab-miembros').load('../miembros.php', function () {
+            $('#tab-miembros').load('./miembros.php', function () {
                 miembrosCargado = true
                 $('.menu .item').tab()
             })
