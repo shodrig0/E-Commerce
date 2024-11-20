@@ -6,19 +6,21 @@ header("Cache-Control: no-cache, must-revalidate ");
 // // CONFIGURACION APP //
 // //////////////////////
 
-$PROYECTO = 'E-Commerce';
+$protocolo = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+$host = $_SERVER['HTTP_HOST'];
 
-$GLOBALS['ROOT'] = $_SERVER['DOCUMENT_ROOT'] . "/$PROYECTO/";
+$PROYECTO = "E-Commerce";
 
-define('BASE_URL', "/" . $PROYECTO);
-// define('BASE_PATH', $_SERVER['DOCUMENT_ROOT'] . "/$PROYECTO/");
+define('BASE_URL', $protocolo . $host . "/" . $PROYECTO . "/"); 
+define('BASE_PATH', $_SERVER['DOCUMENT_ROOT'] . "/" . $PROYECTO . "/");
 
+$GLOBALS['ROOT'] = BASE_PATH;
 
-require_once($GLOBALS['ROOT'] . './app/utils/funcs.php');
-// require_once($ROOT . './vendor/autoload.php');
-require_once($GLOBALS['ROOT'] . './app/model/connection/BaseDatos.php');
+// Includes requeridos
+require_once($GLOBALS['ROOT'] . 'app/utils/funcs.php');
+require_once($GLOBALS['ROOT'] . 'app/model/connection/BaseDatos.php');
 
-function navbar($userRoles, $usuario)
-{
-    include $GLOBALS['ROOT'] . './app/view/partials/navbar.php';
+// Función para incluir el navbar
+function navbar($userRoles, $usuario) {
+    include $GLOBALS['ROOT'] . 'app/view/partials/navbar.php';
 }

@@ -1,5 +1,6 @@
-<?php 
-include_once '../../layouts/header.php';
+<?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
 ?>
 <style>
 .ui.top.attached.tabular.menu {

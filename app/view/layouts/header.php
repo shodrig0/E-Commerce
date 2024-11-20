@@ -1,13 +1,7 @@
 <?php
-
-define('BASE_PATH', dirname(__DIR__, 3));
-require_once BASE_PATH . '/config.php';
-
-$protocolo = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-$host = $_SERVER['HTTP_HOST'];
-$rutaProyecto = "/E-Commerce/";
-$baseURL = $protocolo . $host . $rutaProyecto;
-
+require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
+// var_dump($GLOBALS);
+$url = BASE_URL . 'app/view/home/home.php';
 $session = Session::getInstance();
 
 $usuario = $session->getUsuario();
@@ -27,31 +21,23 @@ $vistaDeposito = in_array('Deposito', $userRoles);
 $vistaCliente = in_array('Cliente', $userRoles);
 
 if (!$session->validar() && strpos($_SERVER['REQUEST_URI'], '../pages/perfil.php')) {
-    header("Location: " . BASE_URL . "home.php");
+    header("Location: " . $url . "home.php");
     exit();
 }
-
-// var_dump('Depuración de SESSION: ', $_SESSION);
-// var_dump('Usuario actual: ', $usuario);
-// var_dump('Roles del usuario: ', $userRoles);
-
-navbar($userRoles, $usuario);
-
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elixir Patagónico</title>
-    <link rel="icon" href="<?php echo $baseURL ?>app/view/assets/img/LogoFrenteFINALL.png">
-    <link rel="stylesheet" href="<?php echo $baseURL ?>Semantic-UI/dist/semantic.min.css">
+    <link rel="icon" href="<?php echo BASE_URL ?>app/view/assets/img/LogoFrenteFINALL.png">
+    <link rel="stylesheet" href="<?php echo BASE_URL ?>Semantic-UI/dist/semantic.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="<?php echo $baseURL ?>Semantic-UI/dist/semantic.min.js"></script>
-    <script src="<?php echo $baseURL ?>app/view/js/btns.js"></script>
-    <link rel="stylesheet" href="<?php echo $baseURL ?>app/view/css/style.css">
+    <script src="<?php echo BASE_URL ?>Semantic-UI/dist/semantic.min.js"></script>
+    <script src="<?php echo BASE_URL ?>app/view/js/btns.js"></script>
+    <link rel="stylesheet" href="<?php echo BASE_URL ?>app/view/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
@@ -59,19 +45,21 @@ navbar($userRoles, $usuario);
     <header>
         <div class="ui grid" style="align-items: center; padding: 1em;">
             <div class="two wide column" style="text-align: left;">
-                <button class="ui icon button" id="menuButton">
-                    <i class="bars icon"></i>
-                </button>
+                <?php if ($usuario): ?>
+                    <h3>Bienvenido, <?= htmlspecialchars($usuario->getUsNombre()); ?>.</h3>
+                    <?php else: ?>
+                        <h3></h3>
+                <?php endif; ?>
             </div>
             <div class="twelve wide column" style="text-align: center;">
-                <a href="<?php echo $baseURL ?>app/view/home/home.php">
-                    <img src="<?php echo $baseURL ?>app/view/assets/img/LogoFrenteFINALL.png" alt="Elixir Patagónico" style="height: 42px;">
+                <a href="<?php echo BASE_URL ?>app/view/home/home.php">
+                    <img src="<?php echo BASE_URL ?>app/view/assets/img/LogoFrenteFINALL.png" alt="Elixir Patagónico" style="height: 42px;">
                 </a>
             </div>
             <div class="two wide column" style="text-align: right; display: flex; justify-content: flex-end; align-items: center; gap: 1em; padding-right: 1em;">
                 <?php if (!$usuario): ?>
                     <div class="ui buttons">
-                        <a href="<?php echo $baseURL ?>app/view/pages/admin/gestionUsuario.php" class="ui vertical animated button">
+                        <a href="<?php echo BASE_URL ?>app/view/pages/admin/gestionUsuario.php" class="ui vertical animated button">
                             <div class="hidden content">Login</div>
                             <div class="visible content">
                                 <i class="user circle outline icon"></i>
@@ -84,7 +72,7 @@ navbar($userRoles, $usuario);
                         <span style="font-weight: bold;"><?php echo htmlspecialchars($usuario->getUsNombre()); ?></span>
                         <i class="dropdown icon"></i>
                         <div class="menu">
-                            <a href="<?php echo $baseURL ?>app/view/pages/user/profile.php" class="item">Ver Perfil</a>
+                            <a href="<?php echo BASE_URL ?>app/view/pages/user/profile.php" class="item">Ver Perfil</a>
                             <a href="#" class="accion-btns item" data-action="cerrarSesion">Cerrar Sesión</a>
                         </div>
                     </div>
@@ -122,5 +110,10 @@ navbar($userRoles, $usuario);
                 <p id="modalResultadoMensaje"></p>
             </div>
         </div>
-
+        <script>
+            $('.ui.dropdown').dropdown();
+        </script>
     </header>
+    <?php
+        navbar($userRoles, $usuario);
+    ?>
