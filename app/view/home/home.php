@@ -9,18 +9,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.ph
         margin: 0.5em auto;
     }
 
-    img {
+    .icono {
+        width: 30%;
         max-width: 100%;
         height: auto;
         display: block;
         margin: 0 auto;
     }
-
-    .icono {
-        width: 50%;
-    }
-
-    
 </style>
 
 <div class="ui container">

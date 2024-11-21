@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../../../config.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
 
 $sesion = new Session();
 $response = [];
@@ -18,6 +18,5 @@ if ($sesion->validar()) {
     ];
 }
 
-// Retornar la respuesta como JSON
 header('Content-Type: application/json');
 echo json_encode($response);
