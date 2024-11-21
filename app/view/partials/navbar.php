@@ -50,49 +50,46 @@ $hasAccess = '';
 </nav>
 
 <style>
-.custom-menu {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-radius: 8px;
-}
+    .custom-menu {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
 
-.ui.menu {
-    background-color: rgba(116, 132, 37, 0.7);
-}
-.ui.menu.custom-menu .item {
-    border-radius: 10px;
-    margin-top: 0.5em; margin-bottom: 0.5em;
-    color: white;
-    text-transform: uppercase; 
-    font-weight: bold; 
-    transition: all 0.3s ease;
-}
+    .ui.menu {
+        background-color: rgba(89, 62, 50, 0.85);
+    }
 
-.ui.menu.custom-menu .item:hover {
-    background-color: #fff;
-    color: rgba(64, 76, 18);
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
+    .ui.menu.custom-menu .item {
+        border-radius: 10px;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        color: white;
+        text-transform: uppercase;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
 
-.ui.menu.custom-menu .item:not(:hover) {
-    transition: all 0.3s ease;
-}
+    .ui.menu.custom-menu .item:hover {
+        background-color: #fff;
+        color: rgba(64, 76, 18);
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
 
-.ui.menu .item::before {
-    content: none;
-}
+    .ui.menu.custom-menu .item:not(:hover) {
+        transition: all 0.3s ease;
+    }
 
-.ui.menu::after {
-    content: none;
-}
+    .ui.menu .item::before {
+        content: none;
+    }
 
-/* Submenús */
-.ui.simple.dropdown .menu {
-}
+    .ui.menu::after {
+        content: none;
+    }
 
-.ui.simple.dropdown .menu .item:hover {
-    background-color: #444 !important;
-}
+    .ui.simple.dropdown .menu .item:hover {
+        background-color: #444 !important;
+    }
 </style>

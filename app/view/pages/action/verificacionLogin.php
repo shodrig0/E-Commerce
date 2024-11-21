@@ -1,4 +1,5 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.php';
 
 $datos = darDatosSubmitted();
@@ -15,7 +16,7 @@ try {
     $session = Session::getInstance();
     $nombre = $datos['usnombre'];
     $password = $datos['uspass'];
-    var_dump("Datos procesados: ", $datos);
+    // var_dump("Datos procesados: ", $datos);
 
     if ($session->iniciar($nombre, $password)) {
         echo json_encode([
@@ -38,27 +39,11 @@ try {
 ?>
 
 <body>
-    <div class="ui container" style="margin-top: 20px;">
-        <div class="ui grid" style="display: flex; justify-content: center; gap: 10px;">
-            <form action="cerrar.php" method="post">
-                <button type="submit" class="ui red button animated fade">
-                    <div class="visible content">Cerrar Sesión</div>
-                    <div class="hidden content">
-                        <i class="power off icon"></i>
-                    </div>
-                </button>
-            </form>
-            <a href="../../home/home.php" class="ui blue button animated fade">
-                <div class="visible content center">&nbsp;&nbsp;Volver</div>
-                <div class="hidden content">
-                    <i class="arrow left icon"></i>
-                </div>
-            </a>
-        </div>
-        <div class="ui field container" style="margin-top: 20px;">
-            <?php if (isset($mensaje)) echo $mensaje; ?>
-        </div>
+
+    <div class="ui field container" style="margin-top: 20px;">
+        <?php if (isset($mensaje)) echo $mensaje; ?>
     </div>
+
 </body>
 
-</html>
+<?php footer(); ?>

@@ -2,7 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
 
-$sesion = new Session();
+$sesion = Session::getInstance();
 $response = [];
 
 if ($sesion->validar()) {
@@ -11,6 +11,8 @@ if ($sesion->validar()) {
         'success' => true,
         'message' => 'Sesión cerrada correctamente.'
     ];
+    // header('Location: ' . BASE_URL . 'app/view/home/home.php');
+    // exit();
 } else {
     $response = [
         'success' => false,

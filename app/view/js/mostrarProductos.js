@@ -22,7 +22,7 @@ $(document).ready(function () {
             method: 'POST',
             dataType: 'json',
             success: function (response) {
-                console.log("Respuesta del servidor:", response); 
+                console.log("Respuesta del servidor:", response);
                 if (response.producto && response.producto.length > 0) {
                     const productos = response.producto;
                     localStorage.setItem(LS_KEY, JSON.stringify(productos));
@@ -48,7 +48,7 @@ $(document).ready(function () {
             // Creo contenedor de la imagen
             let imgContainer = $('<div>').addClass('imagen');
             let img = $('<img>')
-                .attr('src', producto.imgSource || 'https://via.placeholder.com/150')
+                .attr('src', producto.imgSource || 'https://static.vecteezy.com/system/resources/thumbnails/021/217/339/small_2x/red-wine-bottle-png.png')
                 .attr('alt', producto.pronombre)
                 .addClass('producto-imagen');
             imgContainer.append(img);
@@ -73,10 +73,10 @@ $(document).ready(function () {
 
     $('#actualizarProductos').on('click', function () {
         localStorage.removeItem(LS_KEY);
-    
+
         $('#galeriaProductos').empty().text('Actualizando productos...');
-    
+
         obtenerProductosDelServidor();
     });
-    
+
 });

@@ -11,7 +11,7 @@ $host = $_SERVER['HTTP_HOST'];
 
 $PROYECTO = "E-Commerce";
 
-define('BASE_URL', $protocolo . $host . "/" . $PROYECTO . "/"); 
+define('BASE_URL', $protocolo . $host . "/" . $PROYECTO . "/");
 define('BASE_PATH', $_SERVER['DOCUMENT_ROOT'] . "/" . $PROYECTO . "/");
 
 $GLOBALS['ROOT'] = BASE_PATH;
@@ -21,6 +21,12 @@ require_once($GLOBALS['ROOT'] . 'app/utils/funcs.php');
 require_once($GLOBALS['ROOT'] . 'app/model/connection/BaseDatos.php');
 
 // Función para incluir el navbar
-function navbar($userRoles, $usuario) {
+function navbar($userRoles, $usuario)
+{
     include $GLOBALS['ROOT'] . 'app/view/partials/navbar.php';
+}
+
+function footer()
+{
+    include $GLOBALS['ROOT'] . 'app/view/layouts/footer.php';
 }

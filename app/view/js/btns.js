@@ -9,11 +9,11 @@ function accionesBtns() {
             case 'editar':
                 console.log('Editando usuario con ID:', userId)
                 $.ajax({
-                    url: './Action/editarUsuario.php',
+                    url: './Action/actionActualizarUsuario.php',
                     type: 'POST',
                     data: { idUsuario: userId },
                     success: function (response) {
-                        $('#cargarCont').html(response)
+                        $('#')
                     },
                     error: function () {
                         alert('Hubo un error al cargar los datos del usuario.');
@@ -37,14 +37,14 @@ function accionesBtns() {
             case 'cerrarSesion':
                 console.log('Cerrando sesión');
                 $('#modalCerrarSesion').modal('show');
-    
+
                 $('#confirmCerrarSesion').off('click').on('click', function () {
                     $.ajax({
-                        url: '../pages/action/actionLogout.php',
+                        url: BASE_URL + 'app/view/pages/action/actionLogout.php',
                         type: 'POST',
                         success: function (response) {
                             let iconClass, message, modalClass;
-                
+
                             if (response.success) {
                                 iconClass = 'check circle green icon';
                                 message = response.message;
@@ -54,10 +54,10 @@ function accionesBtns() {
                                 message = response.message;
                                 modalClass = 'ui basic modal';
                             }
-                
+
                             $('#modalResultadoIcon').attr('class', iconClass);
                             $('#modalResultadoMensaje').text(message);
-                
+
                             $('#modalResultado')
                                 .modal({
                                     closable: false,
@@ -77,19 +77,19 @@ function accionesBtns() {
                                 .modal({
                                     closable: false,
                                     onHidden: function () {
-                                        location.reload();
+                                        window.location.href = BASE_URL + 'app/view/home/home.php';
                                     }
                                 })
                                 .modal('show');
-                
+
                             setTimeout(function () {
                                 $('#modalResultado').modal('hide');
-                            }, 3000);
+                            }, 2000);
                         }
                     });
                 });
                 break;
-            }
+        }
     })
 }
 

@@ -1,12 +1,7 @@
 <?php
 
-require_once('../../../configuracion.php');
-require_once('../../model/classes/Usuario.php');
-require_once('../../controller/services/AbmUsuario.php');
-require_once '../../controller/services/AbmUsuarioRol.php';
-require_once '../../model/classes/UsuarioRol.php';
-require_once '../../controller/services/AbmRol.php';
-require_once '../../model/classes/Rol.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.php';
 
 $datos = darDatosSubmitted();
 $salida = [];
@@ -24,7 +19,7 @@ if (isset($datos['usemail']) && $_SERVER["REQUEST_METHOD"] === "POST") {
 
             if ($resultado) {
                 $salida['resp'] = 'Éxito';
-                $salida['mensaje'] = 'Usuario borrado bien';
+                $salida['mensaje'] = 'Usuario bien borrado';
             } else {
                 $salida['resp'] = 'Error';
                 $salida['mensaje'] = 'ERrror al borrar usduario';

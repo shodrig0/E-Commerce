@@ -17,8 +17,6 @@ class AbmUsuario
 
     public function buscarUsuario($condicion)
     {
-        // $objUsuario = new Usuario();
-        // $objUsuario->setIdUsuario($param);
 
         $objUsuario = null;
 

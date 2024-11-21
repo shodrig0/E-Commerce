@@ -1,7 +1,6 @@
 
 
 <div class="ui container" style="max-width: 800px; margin-top: 20px;">
-    <!-- Lista de Productos (vista inicial) -->
     <div id="listaProductos">
         <h2 class="ui teal header">
             <i class="list icon"></i>

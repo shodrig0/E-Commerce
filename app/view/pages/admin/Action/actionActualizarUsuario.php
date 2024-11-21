@@ -1,48 +1,57 @@
-<?php 
-require_once('../../../../config.php');
-require_once('../../../model/Usuario.php');
-require_once('../../../controller/ABMUsuario.php');
-require_once '../../../controller/AbmUsuarioRol.php';
-require_once '../../../model/UsuarioRol.php';
-require_once '../../../controller/AbmRol.php';
-require_once '../../../model/Rol.php';
+<?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
 
-$datos = darDatosSubmitted();
-$abmUsuario = new AbmUsuario();
-$mensaje = $abmUsuario->modificarUsuario();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $datos = darDatosSubmitted();
+    $id = $datos['idUsuario'];
 
-?>
-<body>
-    <div class="ui container">
-        <h2 class="ui header">Modificar Usuario</h2>
-        <?php if (!empty($mensaje)): ?>
-            <?php if (strpos($mensaje, 'exitosamente') !== false): ?>
-                <div class="ui positive message">
-                    <i class="close icon"></i>
-                    <div class="header">Éxito</div>
-                    <p><?= $mensaje; ?></p>
-                </div>
-            <?php elseif (strpos($mensaje, 'Error') !== false): ?>
-                <div class="ui negative message">
-                    <i class="close icon"></i>
-                    <div class="header">Error</div>
-                    <p><?= $mensaje; ?></p>
-                </div>
-            <?php else: ?>
-                <div class="ui info message">
-                    <i class="close icon"></i>
-                    <div class="header">Información</div>
-                    <p><?= $mensaje; ?></p>
-                </div>
-            <?php endif; ?>
-        <?php endif; ?>
-    </div>
+    if (isset($id)) {
+        $objAbmUsuario = new AbmUsuario();
+        $objUsuario = $objAbmUsuario->buscarUsuario("idusuario = " . $id);
 
-    <script>
-        // Permitir cerrar mensajes
-        $('.message .close').on('click', function() {
-            $(this).closest('.message').transition('fade');
-        });
-    </script>
-</body>
-</html>
+        if (!is_null($objUsuario)) {
+            $objAbmUsuarioRol = new AbmUsuarioRol;
+            $colRoles = $objAbmUsuarioRol->buscarUsuarioRol($id);
+            
+            $roles = [];
+            foreach ($colRoles as $rolObj) {
+                $roles[] = [
+                    'idRol' => $rolObj->getRol()->getIdRol(),
+                    'nombreRol' => $rolObj->getRol()->getRoDescripcion(),
+                ];
+            }
+
+            $datosUsuario = [
+                'idUsuario' => $objUsuario->getIdUsuario(),
+                'usnombre' => $objUsuario->getUsNombre(),
+                'usmail' => $objUsuario->getUsMail(),
+                'usdeshabilitado' => $objUsuario->getUsDeshabilitado(),
+                'rol' => $roles
+            ];
+
+            echo json_encode([
+                'success' => true,
+                'usuario' => $datosUsuario,
+            ]);
+            exit;
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Usuario no encontrado.',
+            ]);
+            exit;
+        }
+    } else {
+        echo json_encode([
+            'success' => false,
+            'message' => 'ID de usuario no proporcionado.',
+        ]);
+        exit;
+    }
+} else {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Método no permitido.',
+    ]);
+    exit;
+}

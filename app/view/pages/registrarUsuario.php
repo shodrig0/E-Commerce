@@ -1,15 +1,14 @@
 <?php
-require_once('../layouts/header.php');
-require_once('../../../config.php');
+require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.php';
 
 $objAbmRol = new AbmRol();
 $roles = $objAbmRol->listarRoles();
 ?>
-<link rel="stylesheet" href="../../../Semantic-UI/dist/semantic.min.css">
 
 <div class="ui middle aligned center aligned grid" style="height: 100vh; margin: 0;">
     <div class="column" style="max-width: 450px;">
-        <h2 class="ui teal header">
+        <h2 class="ui header" style="color: rgba(64, 76, 18, 0.8);">
             <i class="user plus icon"></i>
             <div class="content">
                 Registrar Usuario
@@ -32,7 +31,6 @@ $roles = $objAbmRol->listarRoles();
                     <input name="usemail" id="usemail" type="email" placeholder="example@example.com" required>
                 </div>
             </div>
-
             <div class="field">
                 <label for="uspass">Contraseña:</label>
                 <div class="ui left icon input">
@@ -40,7 +38,7 @@ $roles = $objAbmRol->listarRoles();
                     <input id="uspass" name="uspass" type="password" placeholder="Ingresa tu contraseña" required>
                 </div>
             </div>
-            <button class="ui teal fluid large button" type="submit">Registrar</button>
+            <button class="ui fluid large button" type="submit" style="background-color: rgba(116, 132, 37, 0.7); color: white;">Registrar</button>
         </form>
         <div class="ui modal" id="modalResponse">
             <div class="header">Resultado del Registro</div>

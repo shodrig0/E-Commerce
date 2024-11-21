@@ -1,7 +1,9 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
 // var_dump($GLOBALS);
+// var_dump(BA)
 $url = BASE_URL . 'app/view/home/home.php';
+// var_dump($url);
 $session = Session::getInstance();
 
 $usuario = $session->getUsuario();
@@ -20,9 +22,15 @@ $vistaAdmin = in_array('Administrador', $userRoles);
 $vistaDeposito = in_array('Deposito', $userRoles);
 $vistaCliente = in_array('Cliente', $userRoles);
 
-if (!$session->validar() && strpos($_SERVER['REQUEST_URI'], '../pages/perfil.php')) {
-    header("Location: " . $url . "home.php");
-    exit();
+$pagPrivadas = ['perfil', 'admin', 'client', 'store'];
+
+if (!$session->validar()) {
+    foreach ($pagPrivadas as $pagina) {
+        if (strpos($_SERVER['REQUEST_URI'], $pagina) !== false) {
+            header("Location: " . $url);
+            exit();
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -39,6 +47,9 @@ if (!$session->validar() && strpos($_SERVER['REQUEST_URI'], '../pages/perfil.php
     <script src="<?php echo BASE_URL ?>app/view/js/btns.js"></script>
     <link rel="stylesheet" href="<?php echo BASE_URL ?>app/view/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"> -->
 </head>
 
 <body>
@@ -48,9 +59,9 @@ if (!$session->validar() && strpos($_SERVER['REQUEST_URI'], '../pages/perfil.php
                 <div style="position: absolute; width: 800px; top: 0;">
                     <?php if ($usuario): ?>
                         <h3>Hola, <?= htmlspecialchars($usuario->getUsNombre()); ?>.</h3>
-                        <?php else: ?>
-                            <h3 style="margin:0;">Bienvenido An&oacute;nimo</h3>
-                            <h5 style="margin:0;">No te olvides de ingresar para comprar</h5> 
+                    <?php else: ?>
+                        <h3 style="margin:0;">Bienvenido An&oacute;nimo</h3>
+                        <h5 style="margin:0;">No te olvides de ingresar para comprar</h5>
                     <?php endif; ?>
                 </div>
             </div>
@@ -62,7 +73,7 @@ if (!$session->validar() && strpos($_SERVER['REQUEST_URI'], '../pages/perfil.php
             <div class="two wide column" style="text-align: right; display: flex; justify-content: flex-end; align-items: center; gap: 1em; padding-right: 1em;">
                 <?php if (!$usuario): ?>
                     <div class="ui buttons">
-                        <a href="<?php echo BASE_URL ?>app/view/pages/admin/gestionUsuario.php" class="ui vertical animated button">
+                        <a href="<?php echo BASE_URL ?>app/view/pages/login.php" class="ui vertical animated button">
                             <div class="hidden content">Login</div>
                             <div class="visible content">
                                 <i class="user circle outline icon"></i>
@@ -75,48 +86,52 @@ if (!$session->validar() && strpos($_SERVER['REQUEST_URI'], '../pages/perfil.php
                         <span style="font-weight: bold;"><?php echo htmlspecialchars($usuario->getUsNombre()); ?></span>
                         <i class="dropdown icon"></i>
                         <div class="menu">
-                            <a href="<?php echo BASE_URL ?>app/view/pages/user/profile.php" class="item">Ver Perfil</a>
-                            <a href="#" class="accion-btns item" data-action="cerrarSesion">Cerrar Sesión</a>
+                            <a href="<?php echo BASE_URL ?>app/view/pages/user/profile.php" class="item"><i class="ui id badge outline icon"></i>Ver Perfil</a>
+                            <a href="#" class="accion-btns item" data-action="cerrarSesion"><i class="ui logout icon"></i>Cerrar Sesión</a>
                         </div>
                     </div>
                 <?php endif; ?>
-                <div class="ui vertical animated button" style="width: auto; height: auto; overflow: visible;">
-                    <div class="visible content">
-                        <i class="shop icon"></i>
+                <div>
+                    <div class="ui vertical animated button" style="width: auto; height: auto; overflow: visible;">
+                        <div class="visible content">
+                            <i class="shop icon"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="ui basic modal" id="modalCerrarSesion">
-            <div class="ui icon header">
-                <i class="sign out alternate icon"></i>
-                Cerrar Sesión
-            </div>
-            <div class="content">
-                <p>¿Estás seguro de que quieres cerrar sesión?</p>
-            </div>
-            <div class="actions">
-                <div class="ui red cancel inverted button">
-                    <i class="remove icon"></i>
-                    No
+            <div class="ui basic modal" id="modalCerrarSesion">
+                <div class="ui icon header">
+                    <i class="sign out alternate icon"></i>
+                    Cerrar Sesión
                 </div>
-                <div class="ui green ok inverted button" id="confirmCerrarSesion">
-                    <i class="checkmark icon"></i>
-                    Sí
+                <div class="content">
+                    <p>¿Estás seguro de que quieres cerrar sesión?</p>
+                </div>
+                <div class="actions">
+                    <div class="ui red cancel inverted button">
+                        <i class="remove icon"></i>
+                        No
+                    </div>
+                    <div class="ui green ok inverted button" id="confirmCerrarSesion">
+                        <i class="checkmark icon"></i>
+                        Sí
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="ui basic modal" id="modalResultado">
-            <div class="ui icon header" id="modalResultadoIcon">
+            <div class="ui basic modal" id="modalResultado">
+                <div class="ui icon header" id="modalResultadoIcon">
+                </div>
+                <div class="content">
+                    <p id="modalResultadoMensaje"></p>
+                </div>
             </div>
-            <div class="content">
-                <p id="modalResultadoMensaje"></p>
-            </div>
-        </div>
-        <script>
-            $('.ui.dropdown').dropdown();
-        </script>
+            <script>
+                $('.ui.dropdown').dropdown();
+            </script>
+            <script>
+                const BASE_URL = "<?php echo BASE_URL; ?>";
+            </script>
     </header>
     <?php
-        navbar($userRoles, $usuario);
+    navbar($userRoles, $usuario);
     ?>
