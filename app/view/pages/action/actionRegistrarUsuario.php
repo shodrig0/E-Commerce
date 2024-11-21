@@ -1,13 +1,8 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-require_once('../../../../config.php');
-require_once('../../../model/Usuario.php');
-require_once('../../../controller/AbmUsuario.php');
-require_once '../../../controller/AbmUsuarioRol.php';
-require_once '../../../model/UsuarioRol.php';
-require_once '../../../controller/AbmRol.php';
-require_once '../../../model/Rol.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
+// require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.php';
 
 $datos = darDatosSubmitted();
 $salida = [];
@@ -61,8 +56,6 @@ if (isset($datos['usnombre'], $datos['usemail'], $datos['uspass']) && $_SERVER["
                 <div class="label">Usted será redirigido brevemente...</div>
             </div>
         <?php endif; ?>
-
-
         <a href="../home/home.php" class="ui button">
             <i class="arrow left icon"></i> Volver
         </a>

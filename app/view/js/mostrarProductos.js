@@ -39,12 +39,12 @@ $(document).ready(function () {
 
     function mostrarProductos(productos) {
         $('#galeriaProductos').empty();
-
+    
         productos.forEach(function (producto) {
             let divProducto = $('<div>').addClass('column');
-
+    
             let card = $('<div>').addClass('ui card');
-
+    
             // Creo contenedor de la imagen
             let imgContainer = $('<div>').addClass('imagen');
             let img = $('<img>')
@@ -52,24 +52,44 @@ $(document).ready(function () {
                 .attr('alt', producto.pronombre)
                 .addClass('producto-imagen');
             imgContainer.append(img);
-
+    
             // Div de la información del producto
             let infoProducto = $('<div>').addClass('content');
             let titulo = $('<a>').addClass('header').text(producto.pronombre);
             let precio = $('<h3>').addClass('ui green text').text(`$${producto.precio}`);
-
-            // Contenido adicional (boton)
+    
+            // Contenido adicional (botones)
             let masContenido = $('<div>').addClass('extra content');
-            let boton = $('<button>').addClass('ui black button').text(`Agregar al carrito`);
-
+    
+            // Botón de agregar al carrito
+            let botonAgregar = $('<button>').addClass('ui black button').text(`Agregar al carrito`);
+    
+            // Botón de editar con desplazamiento
+            let botonEditar = $('<button>').addClass('ui grey button').text(`Editar`).click(function () {
+                // Aquí realizamos el desplazamiento a la sección de edición
+                $('html, body').animate({
+                    scrollTop: $('#divEdicionProducto').offset().top
+                }, 800);
+    
+                // Lógica adicional para cargar los datos del producto en el formulario de edición
+                cargarDatosProductoEdicion(producto);
+            });
+    
             infoProducto.append(titulo, precio);
-            masContenido.append(boton);
+            masContenido.append(botonAgregar, botonEditar);
             card.append(imgContainer, infoProducto, masContenido);
             divProducto.append(card);
-
+    
             $('#galeriaProductos').append(divProducto);
         });
     }
+    
+    function cargarDatosProductoEdicion(producto) {
+        $('#idProducto').val(producto.id);
+        $('#nombreProducto').val(producto.pronombre);
+        $('#precioProducto').val(producto.precio);
+    }
+    
 
     $('#actualizarProductos').on('click', function () {
         localStorage.removeItem(LS_KEY);

@@ -41,9 +41,9 @@ $usuarios = $abmUsuario->listarUsuarios();
                     <button class="ui button accion-btns" data-action="editar" data-id="<?php echo htmlspecialchars($usuario->getIdUsuario()); ?>" 
                     <?php if (!(is_null($usuario->getUsDeshabilitado()))) { echo htmlspecialchars("disabled");} ?>>Editar</button>
                     <?php if (!is_null($usuario->getUsDeshabilitado())): ?>
-                        <button class="ui button accion-btns" data-action="eliminar" data-id="<?php echo htmlspecialchars($usuario->getIdUsuario()); ?>">Dar de Alta</button>
+                        <button class="ui button accion-btns" data-action="alta" data-id="<?php echo htmlspecialchars($usuario->getIdUsuario()); ?>">Dar de Alta</button>
                     <?php else: ?>
-                        <button class="ui button accion-btns" data-action="alta" data-id="<?php echo htmlspecialchars($usuario->getIdUsuario()); ?>">Dar de Baja</button>
+                        <button class="ui button accion-btns" data-action="eliminar" data-id="<?php echo htmlspecialchars($usuario->getIdUsuario()); ?>">Dar de Baja</button>
                     <?php endif; ?>
                 </td>
             </tr>
