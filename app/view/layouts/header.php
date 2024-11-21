@@ -1,11 +1,8 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
-// var_dump($GLOBALS);
-// var_dump(BA)
 $url = BASE_URL . 'app/view/home/home.php';
-// var_dump($url);
-$session = Session::getInstance();
 
+$session = Session::getInstance();
 $usuario = $session->getUsuario();
 $roles = $session->getRol();
 
@@ -18,21 +15,24 @@ if ($roles && is_array($roles)) {
     }
 }
 
-$vistaAdmin = in_array('Administrador', $userRoles);
-$vistaDeposito = in_array('Deposito', $userRoles);
-$vistaCliente = in_array('Cliente', $userRoles);
+$rolesPagina = [
+    'admin' => ['Administrador'],
+    'client' => ['Cliente', 'Administrador'],
+    'deposito' => ['Deposito', 'Administrador']
+];
 
-$pagPrivadas = ['perfil', 'admin', 'client', 'store'];
+$rutaActual = str_replace(BASE_PATH, '', $_SERVER['SCRIPT_FILENAME']); // dependiendo el nombre redirigirá o no
 
-if (!$session->validar()) {
-    foreach ($pagPrivadas as $pagina) {
-        if (strpos($_SERVER['REQUEST_URI'], $pagina) !== false) {
-            header("Location: " . $url);
+foreach ($rolesPagina as $carpeta => $rolesPermitidos) {
+    if (strpos($rutaActual, "app/view/pages/{$carpeta}") !== false) {
+        if (!$session->validar() || !array_intersect($userRoles, $rolesPermitidos)) {
+            header("Location: $url");
             exit();
         }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
