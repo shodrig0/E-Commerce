@@ -44,7 +44,7 @@
             </div>
 
             <button type="submit" class="ui large yellow button fluid" onclick="manejarFormSubmit('#modificarProductoForm', './action/actionRespuestas.php', './', 'actualizar');">
-                <i class="save icon"></i> Guardar Cambios
+                <i class="save icon"></i> <div id="botonGuardar">Guardar Cambios</div>
             </button>
         </form>
     </div>
@@ -85,11 +85,10 @@ $(document).ready(function() {
             let card = $('<div>').addClass('ui card');
             let id = producto.idproducto;
 
-            // Contenido de información del producto
             let infoProducto = $('<div>')
                 .addClass('content')
                 .css({
-                    'min-height': '140px', // Ajusta la altura según tus necesidades
+                    'min-height': '140px',
                     'overflow-y': 'auto'
                 });
 
@@ -97,18 +96,16 @@ $(document).ready(function() {
             let detalle = $('<p>').text(producto.prodetalle);
             let precio = $('<h3>').addClass('ui green text').text(`$${producto.precio}`);
 
-            // Contenedor extra de información (por ejemplo, stock)
             let masContenido = $('<div>').addClass('extra content');
             let stock = $('<span>').html(`<i class="box icon"></i> Stock: ${producto.procantstock}`);
             let idProd = $('<p>').html('<i class="tag icon"></i> ID: ' + id);
 
-            // Botón de editar
-            let botonEditar = $('<button>')
-                .addClass('ui yellow button')
-                .text('Editar')
-                .click(function() {
-                    mostrarFormularioEdicion(id);
-                });
+            let botonEditar = $('<button>').addClass('ui yellow button').text(`Editar`).click(function () {
+                mostrarFormularioEdicion(id);
+                $('html, body').animate({
+                    scrollTop: $('#formularioEdicion').offset().top
+                }, 800);
+            });
 
             infoProducto.append(titulo, detalle, precio);
             masContenido.append(stock, idProd);
