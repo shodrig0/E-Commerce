@@ -11,14 +11,20 @@ function accionesBtns() {
                 $.ajax({
                     url: './Action/actionActualizarUsuario.php',
                     type: 'POST',
-                    data: { idUsuario: userId },
+                    data: $.param({ idUsuario: userId, accion: "pedir_datos" }),
+                    dataType: 'json',
                     success: function (response) {
-                        $('#')
+                        if (response && response.success && response.usuario) {
+                            crearFormularioEdicion(response.usuario, response.roles);
+                        } else {
+                            alert(response.message || 'Error: No se pudo obtener el usuario.');
+                        }
                     },
-                    error: function () {
+                    error: function (xhr, status, error) {
+                        console.error('Error en la solicitud:', status, error);
                         alert('Hubo un error al cargar los datos del usuario.');
-                    }
-                });
+                    },
+                });                 
                 break;
             case 'eliminar':
                 console.log('Eliminando usuario con ID:', userId)
@@ -62,7 +68,7 @@ function accionesBtns() {
                                 .modal({
                                     closable: false,
                                     onHidden: function () {
-                                        location.reload();
+                                        window.location.href = BASE_URL + 'app/view/home/home.php';
                                     }
                                 })
                                 .modal('show');

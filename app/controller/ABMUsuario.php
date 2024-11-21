@@ -61,6 +61,7 @@ class AbmUsuario
         $msj = '';
         try {
             $usuarioSent = darDatosSubmitted();
+            
     
             if ($usuarioSent === null) {
                 throw new Exception("Datos inválidos enviados.");
@@ -74,20 +75,24 @@ class AbmUsuario
             }
     
             $usuarioCambiado = $this->verificarCambios($usuario, $usuarioSent);
-            $rolCambio = $this->verificarCambioRol($usuario->getIdUsuario(), $usuarioSent['roles']);
-            $abmUsuarioRol = new AbmUsuarioRol();
+            $rolCambio = false;
+            if (isset($usuarioSent['roles'])) {
+                $rolCambio = $this->verificarCambioRol($usuario->getIdUsuario(), $usuarioSent['roles']);
+                $abmUsuarioRol = new AbmUsuarioRol();
+            }
 
             if ($usuarioCambiado || $rolCambio) {
                 $actualizado = $usuarioCambiado ? $usuario->modificar() : false;
                 $rolActualizado = $rolCambio ? $abmUsuarioRol->agregarUsuarioRol($usuario, $rolCambio) : false;
     
                 if ($actualizado || $rolActualizado) {
-                    $msj = $actualizado ? "Usuario modificado exitosamente." : "Rol del Usuario modificado exitosamente.";
+                    $msj = $actualizado ? true : "Rol del Usuario modificado exitosamente.";
                 } else {
                     $msj = "Error al modificar el usuario: " . $usuario->getMensajeOperacion();
                 }
             } else {
                 $msj = "No se detectaron cambios en los datos del usuario.";
+
             }
         } catch (Exception $e) {
             $msj = "Ocurrió un error: " . $e->getMessage();

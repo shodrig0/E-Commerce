@@ -86,7 +86,7 @@ foreach ($rolesPagina as $carpeta => $rolesPermitidos) {
                         <span style="font-weight: bold;"><?php echo htmlspecialchars($usuario->getUsNombre()); ?></span>
                         <i class="dropdown icon"></i>
                         <div class="menu">
-                            <a href="<?php echo BASE_URL ?>app/view/pages/user/profile.php" class="item"><i class="ui id badge outline icon"></i>Ver Perfil</a>
+                            <a href="<?php echo BASE_URL ?>app/view/pages/perfil.php" class="item"><i class="ui id badge outline icon"></i>Ver Perfil</a>
                             <a href="#" class="accion-btns item" data-action="cerrarSesion"><i class="ui logout icon"></i>Cerrar Sesión</a>
                         </div>
                     </div>

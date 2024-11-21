@@ -24,7 +24,7 @@ $usuarios = $abmUsuario->listarUsuarios();
                 <td><?php echo htmlspecialchars($usuario->getIdUsuario()); ?></td>
                 <td><?php echo htmlspecialchars($usuario->getUsNombre()); ?></td>
                 <td><?php echo htmlspecialchars($usuario->getUsMail()); ?></td>
-                <td><?php echo $usuario->getUsDeshabilitado() === null ? "Miembro Habilitado" : htmlspecialchars($usuario->getUsDeshabilitado()); ?></td>
+                <td><?php echo $usuario->getUsDeshabilitado() === null ? "Miembro Habilitado" : "Miembro Deshabilitado"; ?></td>
                 <td>
                     <?php
                     $objUsRol = new AbmUsuarioRol();
@@ -38,53 +38,35 @@ $usuarios = $abmUsuario->listarUsuarios();
                     <div class="ui list"><?php echo htmlspecialchars($rolesString); ?></div>
                 </td>
                 <td>
-                    <button class="ui button accion-btns" data-action="editar" data-id="<?php echo htmlspecialchars($usuario->getIdUsuario()); ?>">Editar</button>
-                    <button class="ui button accion-btns" data-action="eliminar" data-id="<?php echo htmlspecialchars($usuario->getIdUsuario()); ?>">Eliminar</button>
+                    <button class="ui button accion-btns" data-action="editar" data-id="<?php echo htmlspecialchars($usuario->getIdUsuario()); ?>" 
+                    <?php if (!(is_null($usuario->getUsDeshabilitado()))) { echo htmlspecialchars("disabled");} ?>>Editar</button>
+                    <?php if (!is_null($usuario->getUsDeshabilitado())): ?>
+                        <button class="ui button accion-btns" data-action="eliminar" data-id="<?php echo htmlspecialchars($usuario->getIdUsuario()); ?>">Dar de Alta</button>
+                    <?php else: ?>
+                        <button class="ui button accion-btns" data-action="alta" data-id="<?php echo htmlspecialchars($usuario->getIdUsuario()); ?>">Dar de Baja</button>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
-<div id="formularioEdicionUsuario">
-    <form id="formEditarUsuario" class="ui form">
-        <div class="field">
-            <label><i class="user icon"></i> ID Usuario</label>
-            <div class="ui disabled input">
-                <input type="text" readonly>
-            </div>
-        </div>
-        <div class="field">
-            <label><i class="id badge icon"></i> Nombre</label>
-            <input type="text" readonly>
-        </div>
-        <div class="field">
-            <label><i class="envelope icon"></i> Email</label>
-            <div class="ui disabled input">
-                <input type="text" readonly>
-            </div>
-        </div>
-        <div class="field">
-            <label><i class="ban icon"></i> Deshabilitado</label>
-            <div class="ui toggle checkbox">
-                <input type="checkbox" name="usDeshabilitado" {DESHABILITADO_CHECKED}>
-                <label>Deshabilitar Usuario</label>
-            </div>
-        </div>
-        <div class="field">
-            <label><i class="tag icon"></i> Roles</label>
-            <div class="ui multiple selection dropdown">
-                <input type="hidden" name="roles">
-                <i class="dropdown icon"></i>
-                <div class="default text">Seleccionar Roles</div>
-                <div class="menu">
-                    {OPCIONES_ROLES}
-                </div>
-            </div>
-        </div>
-        <button type="button" class="ui button primary" onclick="guardarCambios()">Guardar Cambios</button>
-    </form>
-</div>
 <div id="cargarCont" class="ui segment"></div>
-
+<div class="ui modal" id="modalResultado">
+    <div class="header">Resultado de la Acción</div>
+    <div class="content">
+        <i id="modalResultadoIcon" class="check circle green icon"></i>
+        <span id="modalResultadoMensaje"></span>
+    </div>
+</div>
+<div id="modalConfirmacion" class="ui modal">
+    <div class="header">Confirmar operación</div>
+    <div class="content">
+        <p id="mensajeConfirmacion"></p>
+    </div>
+    <div class="actions">
+        <button class="ui button red" id="cancelarOperacion">Cancelar</button>
+        <button class="ui button green" id="confirmarOperacion">Confirmar</button>
+    </div>
+</div>
 <script src="../../js/btns.js"></script>
 <script src="../../js/eliminarRol.js"></script>
