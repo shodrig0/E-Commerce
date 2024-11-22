@@ -27,7 +27,7 @@ class abmCompra {
     /**
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto
      * @param array $param
-     * @return object
+     * @return Tabla
      */
     private function cargarObjeto($param){
         $obj = null;
@@ -50,7 +50,7 @@ class abmCompra {
         $obj = null;
         if (isset($param['idcompra'])) {
             $obj = new Compra();
-            $obj->setear($param['idcompra'], null, null);
+            $obj->cargar($param['idcompra'], null, null);
         }
         return $obj;
     }
@@ -224,9 +224,4 @@ class abmCompra {
        }    
         return $salida;
     }
-
-
-   
-
-
 }

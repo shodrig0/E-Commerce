@@ -3,22 +3,19 @@ $(document).ready(function () {
     const carritoDesplegable = $("#carritoDesplegable");
     const cerrarCarrito = $(".cerrarCarrito");
 
-    // Muestra el carrito al hacer clic en el botón
     carritoBoton.on("click", function () {
         carritoDesplegable.addClass("mostrado");
         cargarCarrito();
     });
 
-    // Oculta el carrito al hacer clic en el botón "Cerrar"
     cerrarCarrito.on("click", function () {
         carritoDesplegable.removeClass("mostrado");
     });
 
-    // Carga el contenido del carrito mediante AJAX
     function cargarCarrito() {
         $.ajax({
-            url: `${BASE_URL}app/view/pages/client/carrito.php`,
-            method: "GET",
+            url: BASE_URL + "app/view/pages/client/carrito.php",
+            method: "POST",
             success: function (data) {
                 $("#carritoItems").html(data);
             },
@@ -30,7 +27,6 @@ $(document).ready(function () {
         });
     }
 
-    // Agrega un producto al carrito mediante AJAX
     $(document).on("click", ".agregarCarrito", function (e) {
         e.preventDefault();
 

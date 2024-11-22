@@ -3,47 +3,29 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.php';
 
 $datos = darDatosSubmitted();
+$mensaje = '';
 
 try {
     if (empty($datos['usnombre']) || empty($datos['uspass'])) {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Faltan datos obligatorios'
-        ]);
-        exit();
-    }
-
-    $session = Session::getInstance();
-    $nombre = $datos['usnombre'];
-    $password = $datos['uspass'];
-    // var_dump("Datos procesados: ", $datos);
-
-    if ($session->iniciar($nombre, $password)) {
-        echo json_encode([
-            'status' => 'ok',
-            'message' => 'Sesion iniciada correctamente'
-        ]);
+        $mensaje = '<div class="ui red message">Faltan datos obligatorios</div>';
     } else {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Usuario o pass incorrectos'
-        ]);
+        $session = Session::getInstance();
+        $nombre = htmlspecialchars($datos['usnombre']); // Sanitizar para prevenir XSS
+        $password = $datos['uspass'];
+
+        if ($session->iniciar($nombre, $password)) {
+            $mensaje = "<div class='ui green message'>Bienvenido, <strong>{$nombre}</strong>! Sesión iniciada correctamente.</div>";
+        } else {
+            $mensaje = '<div class="ui red message">Usuario o contraseña incorrectos. Intente nuevamente.</div>';
+        }
     }
 } catch (PDOException $e) {
-    // var_dump("Error en login: " . $e->getMessage());
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Ocurrió un problema en el servidor'
-    ]);
+    $mensaje = '<div class="ui red message">Ocurrió un problema en el servidor. Por favor, intente más tarde.</div>';
 }
 ?>
 
-<body>
-
-    <div class="ui field container" style="margin-top: 20px;">
-        <?php if (isset($mensaje)) echo $mensaje; ?>
+    <div class="ui container" style="margin-top: 20px;">
+        <?php echo $mensaje; ?>
     </div>
-
-</body>
 
 <?php footer(); ?>

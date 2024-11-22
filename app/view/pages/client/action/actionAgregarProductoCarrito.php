@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 $idproducto = $_POST['idproducto'] ?? null;
 $cantidad = $_POST['cantidad'] ?? 1;
 

@@ -1,222 +1,223 @@
 <?php
 
-class Compra
-{
-    private $idcompra;
-    private $cofecha;
-    private $objUsuario;
-    private $metodo;
-    private $mensajeoperacion;
+class Compra {
 
-    /**
-     * Constructor de la clase Compra.
-     * Inicializa los atributos de la clase.
-     */
-    public function __construct()
-    {
-        $this->idcompra = null;
-        $this->cofecha = null;
-        $this->objUsuario = new Usuario();
-        $this->metodo = null;
-        $this->mensajeoperacion = "";
-    }
+private $idcompra;
+private $cofecha;
+private Usuario $usuario;
+private $mensajeOperacion;
+private array $items;
+private array $estados;
 
-    /**
-     * Setea los atributos de la clase Compra.
-     * @param int $idcompraS
-     * @param string|null $cofechaS
-     * @param Usuario $objUsuarioS
-     * @param string|null $metodoS
-     */
-    public function setear($idcompraS, $cofechaS, $objUsuarioS, $metodoS)
-    {
-        $this->setIdcompra($idcompraS);
-        $this->setCofecha($cofechaS);
-        $this->setObjUsuario($objUsuarioS);
-        $this->setMetodo($metodoS);
-    }
 
-    public function getIdcompra()
-    {
-        return $this->idcompra;
-    }
-    public function setIdcompra($nuevoIdcompra)
-    {
-        $this->idcompra = $nuevoIdcompra;
-    }
+public function __construct(){
+   $this->idcompra = "";
+   $this->cofecha = "";
+   $this->usuario = new Usuario();
+   $this->items = array();
+    $this->estados = array();
+}
 
-    public function getCofecha()
-    {
-        return $this->cofecha;
-    }
-    public function setCofecha($nuevoCofecha)
-    {
-        $this->cofecha = $nuevoCofecha;
-    }
+public function cargar($idcompra, $cofecha, $usuario, $items=[], $estados = []){
+   $this->setIdCompra($idcompra);
+   $this->setCoFecha($cofecha);
+   $this->setUsuario($usuario);  
+   $this->setItems($items);
+    $this->setEstados($estados);
+}
 
-    public function getObjUsuario()
-    {
-        return $this->objUsuario;
-    }
-    public function setObjUsuario($nuevoObjUsuario)
-    {
-        $this->objUsuario = $nuevoObjUsuario;
-    }
+public function getIdCompra(){
+   return $this->idcompra;
+}
 
-    public function getMetodo()
-    {
-        return $this->metodo;
-    }
-    public function setMetodo($nuevoMetodo)
-    {
-        $this->metodo = $nuevoMetodo;
-    }
+public function setIdCompra($idcompra){
+   $this->idcompra = $idcompra;
+}
 
-    public function getmensajeoperacion()
-    {
-        return $this->mensajeoperacion;
-    }
-    public function setmensajeoperacion($nuevomensajeoperacion)
-    {
-        $this->mensajeoperacion = $nuevomensajeoperacion;
-    }
+public function getCoFecha(){
+   return $this->cofecha;
+}
 
-    /**
-     * Carga los datos de una compra desde la base de datos.
-     * @return boolean
-     */
-    public function cargar()
-    {
-        $respuesta = false;
-        $base = new BaseDatos();
-        $sql = "SELECT * FROM compra WHERE idcompra = " . $this->getIdcompra();
-        if ($base->Iniciar()) {
-            $res = $base->Ejecutar($sql);
-            if ($res > -1) {
-                if ($res > 0) {
-                    $row = $base->Registro();
-                    $objUsuario = new Usuario();
-                    $objUsuario->setIdusuario($row["idusuario"]);
-                    $objUsuario->cargar();
-                    $this->setear($row["idcompra"], $row["cofecha"], $objUsuario, $row["metodo"]);
-                    $respuesta = true;
-                }
+public function setCoFecha($cofecha){
+   $this->cofecha = $cofecha;
+}
+
+public function getUsuario(){
+   return $this->usuario;
+}
+
+public function setUsuario($usuario){
+   $this->usuario = $usuario;
+}
+
+public function getMensajeOperacion(){
+   return $this->mensajeOperacion;
+}
+
+public function setMensajeOperacion($mensajeOperacion){
+   $this->mensajeOperacion = $mensajeOperacion;
+}
+
+public function getItems(){
+   return $this->items;
+}
+
+public function setItems($items){
+   $this->items = $items;
+}
+
+public function getEstados(){
+   return $this->estados;
+}
+
+public function setEstados($estados){
+   $this->estados = $estados;
+}
+
+
+
+
+public function buscar(){
+    $resp = false;
+    $base = new BaseDatos();
+    $sql = "SELECT * FROM compra WHERE idcompra = " . $this->getIdCompra();
+    if ($base->Iniciar()) {
+        $res = $base->Ejecutar($sql);
+        if ($res > -1) {
+            if ($res > 0) {
+                $row = $base->Registro();
+                $usr = new Usuario();
+                $usr->setIdUsuario($row['idusuario']);
+                $usr->buscar();
+                $items =  CompraItem::listar("idcompra = ".$this->getIdCompra());
+                $estados = CompraEstado::listar("idcompra = ".$this->getIdCompra());
+                $this->cargar($row['idcompra'], $row['cofecha'], $usr, $items, $estados);
+                $resp = true;
             }
-        } else {
-            $this->setmensajeoperacion("Compra->listar: " . $base->getError());
         }
-        return $respuesta;
+    } else {
+        $this->setMensajeOperacion("Compra->buscar: " . $base->getError());
+    }
+    return $resp;
+}
+
+
+
+public function insertar(){
+    $resp = false;
+    $base = new BaseDatos();
+    $sql = "INSERT INTO compra(cofecha, idusuario) 
+            VALUES ('" . $this->getCoFecha() . "', '" . $this->getUsuario()->getIdUsuario() . "')";
+    if ($base->Iniciar()) {
+
+        if($idCompra= $base->Ejecutar($sql)){
+            $this->setIdCompra($idCompra);
+            $resp = true;
+        } else {
+            $this->setmensajeoperacion("compra->insertar:".$base->getError());	
+        }
+    } else {
+        $this->setMensajeOperacion("Compra->insertar: " . $base->getError());
+    }
+    return $resp;
+}
+
+public function modificar(){
+    $resp = false;
+    $base = new BaseDatos();
+    $sql = "UPDATE compra SET cofecha = '" . $this->getCoFecha() . "', idusuario=".$this->getUsuario()->getIdUsuario()." WHERE idcompra = " . $this->getIdCompra();
+    if ($base->Iniciar()) {
+        if ($base->Ejecutar($sql)) {
+            $resp = true;
+        } else {
+            $this->setMensajeOperacion("Compra->modificar: " . $base->getError());
+        }
+    } else {
+        $this->setMensajeOperacion("Compra->modificar: " . $base->getError());
+    }
+    return $resp;
+}
+
+public function eliminar(){
+    $resp = false;
+    $base = new BaseDatos();
+    $sql = "DELETE FROM compra WHERE idcompra = " . $this->getIdCompra();
+    if ($base->Iniciar()) {
+        if ($base->Ejecutar($sql)) {
+            $resp = true;
+        } else {
+            $this->setMensajeOperacion("Compra->eliminar: " . $base->getError());
+        }
+    } else {
+        $this->setMensajeOperacion("Compra->eliminar: " . $base->getError());
+    }
+    return $resp;
+}
+
+public static function listar($parametro = ""){
+    $arreglo = array();
+    $base = new BaseDatos();
+    $sql = "SELECT * FROM compra";
+    if ($parametro != "") {
+        $sql .= ' WHERE ' . $parametro;
+    }
+    $res = $base->Ejecutar($sql);
+    if ($res > -1) {
+        if ($res > 0) {
+            while ($row = $base->Registro()) {  
+                $obj = new Compra();
+                $usr = new Usuario();
+                $usr->setIdUsuario($row['idusuario']);
+                $usr->buscar();
+                $items = CompraItem::listar("idcompra = ".$row['idcompra']);
+                $estados = CompraEstado::listar("idcompra = ".$row['idcompra']);
+                $obj->cargar($row['idcompra'], $row['cofecha'], $usr, $items, $estados);
+                array_push($arreglo, $obj);
+            }
+        }
+    } else {
+       throw new Exception("Error al listar las compras: " . $base->getError());
+    }
+    return $arreglo;
+}
+
+
+public function serializeItems(){
+    $items = array();
+    if($this->getItems() != null){
+        foreach($this->getItems() as $item){
+            array_push($items, $item->jsonSerialize());
+        }
+    }
+    return $items;
+}
+
+public function serializeEstados(){
+    $estados = array();
+    if($this->getEstados() != null){
+        foreach($this->getEstados() as $estado){
+            array_push($estados, $estado->jsonSerialize());
+        }
+    }
+    return $estados;
+}
+
+
+public function jsonSerialize(){
+    $usr = null;
+    if($this->getUsuario()!=null){
+        $usr = $this->getUsuario()->jsonSerialize();
     }
 
-    /**
-     * Inserta una nueva compra en la base de datos.
-     * @return boolean
-     */
-    public function insertar()
-    {
-        $respuesta = false;
-        $base = new BaseDatos();
-        if ($this->getCofecha() == null) {
-            $coFecha = "(NULL, ";
-        } else {
-            $coFecha = "('" . $this->getCofecha() . "', ";
-        }
-        $sql = "INSERT INTO compra (cofecha, idusuario, metodo) 
-            VALUES " . $coFecha .
-            $this->getObjUsuario()->getIdusuario() .
-            ",'" . $this->getMetodo() . "')";
-        if ($base->Iniciar()) {
-            if ($elid = $base->Ejecutar($sql)) {
-                $this->setIdcompra($elid);
-                $respuesta = true;
-            } else {
-                $this->setmensajeoperacion("Compra->insertar: " . $base->getError());
-            }
-        } else {
-            $this->setmensajeoperacion("Compra->insertar: " . $base->getError());
-        }
-        return $respuesta;
-    }
+    return [
+        'idcompra' => $this->getIdCompra(),
+        'cofecha' => $this->getCoFecha(),
+        'usuario' => $usr,
+        'items' => $this->serializeItems(),
+        'estados' => $this->serializeEstados()
+    ];
+}
 
-    /**
-     * Modifica una compra existente en la base de datos.
-     * @return boolean
-     */
-    public function modificar()
-    {
-        $respuesta = false;
-        $base = new BaseDatos();
-        if ($this->getCofecha() == null) {
-            $coFecha = " cofecha = NULL";
-        } else {
-            $coFecha = " cofecha = '" . $this->getCofecha() . "'";
-        }
-        $sql = "UPDATE compra 
-            SET " . $coFecha .
-            ", idusuario = " . $this->getObjUsuario()->getIdusuario() .
-            ", metodo = '" . $this->getMetodo() .
-            "' WHERE idcompra = " . $this->getIdcompra();
-        if ($base->Iniciar()) {
-            if ($base->Ejecutar($sql)) {
-                $respuesta = true;
-            } else {
-                $this->setmensajeoperacion("Compra->modificar: " . $base->getError());
-            }
-        } else {
-            $this->setmensajeoperacion("Compra->modificar: " . $base->getError());
-        }
-        return $respuesta;
-    }
 
-    /**
-     * Elimina una compra de la base de datos.
-     * @return boolean
-     */
-    public function eliminar()
-    {
-        $respuesta = false;
-        $base = new BaseDatos();
-        $sql = "DELETE FROM compra WHERE idcompra = " . $this->getIdcompra();
-        if ($base->Iniciar()) {
-            if ($base->Ejecutar($sql)) {
-                $respuesta = true;
-            } else {
-                $this->setmensajeoperacion("Compra->eliminar: " . $base->getError());
-            }
-        } else {
-            $this->setmensajeoperacion("Compra->eliminar: " . $base->getError());
-        }
-        return $respuesta;
-    }
 
-    /**
-     * Lista las compras de la base de datos que cumplen con el parámetro dado.
-     * @param string $parametro
-     * @return array
-     */
-    public function listar($parametro = "")
-    {
-        $arreglo = array();
-        $base = new BaseDatos();
-        $sql = "SELECT * FROM compra ";
-        if ($parametro != "") {
-            $sql .= "WHERE " . $parametro;
-        }
-        $respuesta = $base->Ejecutar($sql);
-        if ($respuesta > -1) {
-            if ($respuesta > 0) {
-                while ($row = $base->Registro()) {
-                    $obj = new Compra();
-                    $objUsuario = new Usuario();
-                    $objUsuario->setIdusuario($row["idusuario"]);
-                    $objUsuario->cargar();
-                    $obj->setear($row["idcompra"], $row["cofecha"], $objUsuario, $row["metodo"]);
-                    array_push($arreglo, $obj);
-                }
-            }
-        } else {
-            $this->setmensajeoperacion("Compra->listar: " . $base->getError());
-        }
-        return $arreglo;
-    }
 }
