@@ -45,6 +45,10 @@ class AbmUsuario
                 if ($objUsuario->insertar()) {
                     $abmObjUsuarioRol = new AbmUsuarioRol();
                     $abmObjUsuarioRol->setearRolDefault($objUsuario->getIdUsuario());
+                    $this->notificarAdministradores(
+                        'Nuevo usuario registrado',
+                        "El usuario $name ($email) se ha registrado en el sitio"
+                    );
                     $msj = 'Éxito';
                 }
             } catch (PDOException $e) {
@@ -100,6 +104,40 @@ class AbmUsuario
         return $msj;
     }
     
+    private function notificarAdministradores($asunto, $mensaje)
+    {
+        $administradores = $this->listarUsuariosPorRol('Administrador');
+
+        $mailService = new Mail();
+        foreach ($administradores as $admin) {
+            try {
+                $mailService->enviarCorreo(
+                    $admin->getUsMail(),
+                    $admin->getUsNombre(),
+                    $asunto,
+                    $mensaje,
+                    strip_tags($mensaje)
+                );
+            } catch (Exception $e) {
+                // errror
+            }
+        }
+    }
+
+    public function listarUsuariosPorRol($rolDescripcion)
+    {
+        $usuarios = [];
+        try {
+            $roles = Rol::listar("rodescripcion = '{$rolDescripcion}'");
+            if (!empty($roles)) {
+                $rol = $roles[0];
+                $usuarios = Usuario::listar("idrol = {$rol->getIdRol()}");
+            }
+        } catch (PDOException $e) {
+            $this->setMsjError('Error al listar usuarios por rol: ' . $e->getMessage());
+        }
+        return $usuarios;
+    }
     
     private function verificarCambios($usuario, $usuarioSent) {
         $cambios = false;
@@ -117,7 +155,6 @@ class AbmUsuario
                 $cambios = true;
             }
         }
-    
         return $cambios ? $usuario : null;
     }
     
@@ -148,6 +185,20 @@ class AbmUsuario
         return $colUsuarios;
     }
 
+    public function habilitarUsuario($idUsuario)
+    {
+        $resp = false;
+        $usuario = $this->buscarUsuario("idusuario = " . $idUsuario);
+
+        if ($usuario) {
+            if ($usuario->habilitar()) {
+                $resp = true;
+            }
+        }   
+
+        return $resp;
+    }
+
     public function borrarLogico($idUsuario)
     {
         $resp = false;
@@ -161,37 +212,69 @@ class AbmUsuario
         return $resp;
     }
 
-    public function registrar()
+    public function registrar($datos)
     {
-    $datos = darDatosSubmitted();
-
+    $rpta = [];
     if (!isset($datos['usnombre']) || !isset($datos['usemail']) || !isset($datos['uspass'])) {
-        echo json_encode(['success' => false, 'error' => 'Todos los campos son obligatorios.']);
-        return;
+        return [
+            'success' => false,
+            'error' => 'Todos los campos son obligatorios.'
+        ];
     }
 
-    $registroExitoso = true;
+    try {
+        if (!empty($this->buscarUsuario("usnombre='" . $datos['usnombre'] . "'"))) {
+            $rpta = [
+                'success' => false,
+                'error' => 'El usuario ya existe.'
+            ];
+        }
 
-    if ($registroExitoso) {
+        $usuario = new Usuario();
+        $usuario->setUsNombre($datos['usnombre']);
+        $usuario->setUsMail($datos['usemail']);
+        $usuario->setUsPass($datos['uspass']);
+
+        if (!$usuario->insertar()) {
+            $rpta =  [
+                'success' => false,
+                'error' => 'Error al insertar el usuario en la base de datos.'
+            ];
+        }
+
+        $abmUsuarioRol = new AbmUsuarioRol();
+        $abmUsuarioRol->setearRolDefault($usuario->getIdUsuario());
+
         $mailService = new Mail();
         $asunto = 'Bienvenido a nuestra plataforma';
         $contenidoHtml = "
-        <h1>¡Hola {$datos['usnombre']}!</h1>
-        <p>Gracias por registrarte en nuestro sistema.</p>
-        <p>Esperamos que disfrutes de tu experiencia.</p>
-        <p>Saludos,<br>El equipo de Soporte</p>
+            <h1>¡Hola {$datos['usnombre']}!</h1>
+            <p>Gracias por registrarte en nuestro sistema.</p>
+            <p>Esperamos que disfrutes de tu experiencia.</p>
+            <p>Saludos,<br>El equipo de Soporte</p>
         ";
-        $contenidoAlt = "¡Hola {$datos['usnombre']}! Gracias por registrarte en nuestro sistema. Esperamos que disfrutes de tu experiencia.";
+        $contenidoAlt = "¡Hola {$datos['usnombre']}! Gracias por registrarte en Elixir Patagonico. Esperamos que disfrutes de tu experiencia en la mejor vinoteca digital.";
 
         try {
             $mailService->enviarCorreo($datos['usemail'], $datos['usnombre'], $asunto, $contenidoHtml, $contenidoAlt);
-            echo json_encode(['success' => true, 'message' => 'Registro exitoso y correo enviado.']);
         } catch (\Exception $e) {
-            echo json_encode(['success' => true, 'message' => 'Registro exitoso, pero no se pudo enviar el correo.']);
+            $rpta =  [
+                'success' => true,
+                'message' => 'Registro exitoso, pero no se pudo enviar el correo.'
+            ];
         }
-    } else {
-        echo json_encode(['success' => false, 'error' => 'Error al registrar el usuario.']);
+
+        $rpta =  [
+            'success' => true,
+            'message' => 'Registro exitoso y correo enviado.'
+        ];
+    } catch (\Exception $e) {
+        $rpta =  [
+            'success' => false,
+            'error' => 'Error en el proceso de registro: ' . $e->getMessage()
+        ];
     }
+    return $rpta;
     }
 
 

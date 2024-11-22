@@ -24,7 +24,7 @@ $usuarios = $abmUsuario->listarUsuarios();
                 <td><?php echo htmlspecialchars($usuario->getIdUsuario()); ?></td>
                 <td><?php echo htmlspecialchars($usuario->getUsNombre()); ?></td>
                 <td><?php echo htmlspecialchars($usuario->getUsMail()); ?></td>
-                <td><?php echo $usuario->getUsDeshabilitado() === null ? "Miembro Habilitado" : "Miembro Deshabilitado"; ?></td>
+                <td><?php echo $usuario->getUsDeshabilitado() === null ? "Miembro Habilitado" : $usuario->getUsDeshabilitado(); ?></td>
                 <td>
                     <?php
                     $objUsRol = new AbmUsuarioRol();
@@ -70,3 +70,4 @@ $usuarios = $abmUsuario->listarUsuarios();
 </div>
 <script src="../../js/btns.js"></script>
 <script src="../../js/eliminarRol.js"></script>
+<?php footer(); ?>

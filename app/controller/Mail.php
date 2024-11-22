@@ -22,7 +22,7 @@ class Mail{
             $this->mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $this->mailer->Port = 587;
     
-            $this->mailer->setFrom('celayes.brisaabril@gmail.com', 'uwu');
+            $this->mailer->setFrom('rodrigo.villablanca@est.fi.uncoma.edu.ar', 'Elixir Patagonico');
         } catch (Exception $e) {
             throw new \Exception("Error al configurar PHPMailer: {$e->getMessage()}");
         }

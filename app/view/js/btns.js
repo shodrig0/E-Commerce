@@ -26,21 +26,29 @@ function accionesBtns() {
                     },
                 });
                 break;
-            case 'eliminar':
-                console.log('Eliminando usuario con ID:', userId)
+                case 'eliminar':
+            console.log('Eliminando usuario con ID:', userId);
+            $('#confirmarModal').modal('show');
+            $('#confirmarBaja').off('click').on('click', function () {
                 $.ajax({
-                    url: './Action/eliminarUsuario.php',
+                    url: './Action/actionEliminarUsuario.php',
                     type: 'POST',
                     data: { idUsuario: userId },
                     success: function (response) {
-                        $('#cargarCont').html(response)
+                        $('#mensajeContenedor').html(response);
+                        $('#confirmarModal').modal('hide');
+                        setTimeout(function() {
+                            location.reload()
+                        }, 1000)
                     },
                     error: function () {
-                        alert('Hubo un error al cargar los datos del usuario.')
+                        alert('Hubo un error al intentar eliminar al usuario.');
                     }
-                })
-                break;
-                case 'cerrarSesion':
+                });
+            });
+            break;
+
+            case 'cerrarSesion':
                     console.log('Cerrando sesión');
                     $('#modalCerrarSesion').modal('show');
             

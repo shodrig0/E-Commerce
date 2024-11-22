@@ -2,9 +2,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
 ?>
 
-<div class="w-100 mt-4" style="height: 65px;"></div>
-
-<footer class="ui sticky footer segment">
+<footer class="ui segment footer">
     <div class="ui container">
         <div class="ui two column grid">
             <div class="column">
@@ -22,6 +20,32 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
     </div>
 </footer>
 
+<style>
+    html,
+    body {
+        height: 100;vh
+        margin: 0;
+        /* Elimina márgenes por defecto */
+        display: flex;
+        flex-direction: column;
+        /* Flexbox en columna para todo el documento */
+    }
+
+    .content {
+        flex: 1;
+        /* Hace que el contenido principal ocupe el espacio disponible */
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 0;
+        padding: 1rem 0;
+        background-color: #f9f9f9;
+        /* Fondo claro */
+        border-top: 1px solid #ddd;
+        /* Línea superior */
+    }
+</style>
 </body>
 
 </html>

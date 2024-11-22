@@ -16,8 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($datos["accion"]) && $datos["accion"] === "pedir_datos") {
                 $objAbmUsuarioRol = new AbmUsuarioRol();
                 $objAbmRol = new AbmRol();
-
-                // Roles del usuario
                 $colRolesUsuario = $objAbmUsuarioRol->buscarUsuarioRol($id);
                 $usRoles = [];
                 foreach ($colRolesUsuario as $rolObj) {

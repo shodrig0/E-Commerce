@@ -156,6 +156,17 @@ foreach ($rolesPagina as $carpeta => $rolesPermitidos) {
                     <p id="modalResultadoMensaje"></p>
                 </div>
             </div>
+            <div id="confirmarModal" class="ui modal">
+    <div class="header">Confirmar eliminación</div>
+    <div class="content">
+        <p>¿Estás seguro de que deseas eliminar este usuario?</p>
+    </div>
+    <div class="actions">
+        <div class="ui button" onclick="$('#confirmarModal').modal('hide');">Cancelar</div>
+        <div id="confirmarBaja" class="ui red button">Confirmar</div>
+    </div>
+    </div>
+
             <script>
                 $('.ui.dropdown').dropdown();
                 const BASE_URL = "<?php echo BASE_URL; ?>";

@@ -10,13 +10,10 @@
             <label><i class="hashtag icon"></i> ID del Producto</label>
             <input type="number" name="productId" placeholder="Ejemplo: 123" required>
         </div>
-
-        <!-- Botón de Borrado -->
         <button type="submit" class="ui large red button fluid">
             <i class="trash icon"></i> Borrar Producto
         </button>
     </form>
 
-    <!-- Mensaje de resultado -->
     <div id="mensajeResultado" style="margin-top: 20px;"></div>
 </div>

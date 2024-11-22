@@ -13,7 +13,7 @@ if (isset($_POST['idRol']) && isset($_POST['idUsuario'])) {
     $abmUsuarioRol = new AbmUsuarioRol();
 
     if ($abmUsuarioRol->buscarUsuarioRol($idUsuario) > 1) {
-        $resultado = $abmUsuarioRol->eliminarUsuarioRol(); // Asegúrate de pasar los parámetros necesarios
+        $resultado = $abmUsuarioRol->eliminarUsuarioRol(); 
         if ($resultado) {
             $response['success'] = true;
             $response['message'] = 'Rol eliminado correctamente.';

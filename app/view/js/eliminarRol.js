@@ -30,12 +30,10 @@ function guardarCambios() {
     });
 }
 
-
-
 function borradoLogico(userId) {
-    if (confirm('¿Borrar?')) {
+    if (confirm('¿Está seguro de deshabilitar este usuario?')) {
         $.ajax({
-            url: '../usuario/Action/actionEliminarUsuario.php',
+            url: './Action/actionEliminarUsuario.php',
             type: 'POST',
             data: { idUsuario: userId },
             success: function (response) {
@@ -61,5 +59,3 @@ function borradoLogico(userId) {
         })
     }
 }
-
-// function 
