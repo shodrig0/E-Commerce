@@ -20,7 +20,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.ph
 
 <div class="ui container">
     <h1 class="ui centrado">Elixir Patagónico</h1>
-    <h4 class="ui centrado">Tu vinoteca de confianza</h4>
+    <h4 class="ui centrado">Tu vinoteca digital de confianza</h4>
 
     <img src="../assets/img/bottle.svg" class="icono" alt="Botella de vino">
 

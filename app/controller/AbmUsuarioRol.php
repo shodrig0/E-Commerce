@@ -41,7 +41,7 @@ class AbmUsuarioRol
         $resp = false;
         $datos = darDatosSubmitted();
         $objUsuario = new Usuario();
-        $objUsuario->cargar($datos['idUsuario'], null, null, null, null, []);
+        $objUsuario->setear($datos['idUsuario'], null, null, null, null, []);
         $objUsuario->buscar();
 
         $objRol = new Rol();

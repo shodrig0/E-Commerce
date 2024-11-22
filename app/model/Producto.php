@@ -18,7 +18,7 @@ class Producto
         $this->mensajeOperacion = "";
     }
 
-    public function cargar($idProducto, $proNombre, $proDetalle, $precio, $proCantStock)
+    public function setear($idProducto, $proNombre, $proDetalle, $precio, $proCantStock)
     {
         $this->setIdProducto($idProducto);
         $this->setProNombre($proNombre);
@@ -117,6 +117,25 @@ class Producto
         $this->mensajeOperacion = $mensajeOperacion;
     }
 
+    public function cargar()
+    {
+        $respuesta = false;
+        $base = new BaseDatos();
+        $sql = "SELECT * FROM producto WHERE idproducto = " . $this->getIdproducto();
+        if ($base->Iniciar()) {
+            $res = $base->Ejecutar($sql);
+            if ($res > -1) {
+                if ($res > 0) {
+                    $row = $base->Registro();
+                    $this->setear($row["idproducto"], $row["pronombre"], $row["prodetalle"], $row["procantstock"], $row["proprecio"]);
+                    $respuesta = true;
+                }
+            }
+        } else {
+            $this->setmensajeoperacion("Producto->listar: " . $base->getError());
+        }
+        return $respuesta;
+    }
     public function buscar()
     {
         $resp = false;
@@ -127,7 +146,7 @@ class Producto
             if ($res > -1) {
                 if ($res > 0) {
                     $row = $base->Registro();
-                    $this->cargar($row['idproducto'], $row['pronombre'], $row['prodetalle'], $row['precio'], $row['procantstock']);
+                    $this->setear($row['idproducto'], $row['pronombre'], $row['prodetalle'], $row['precio'], $row['procantstock']);
                     $resp = true;
                 }
             }
@@ -208,7 +227,7 @@ class Producto
             if ($res > 0) {
                 while ($row = $base->Registro()) {
                     $obj = new Producto();
-                    $obj->cargar($row['idproducto'], $row['pronombre'], $row['prodetalle'], $row['precio'], $row['procantstock']);
+                    $obj->setear($row['idproducto'], $row['pronombre'], $row['prodetalle'], $row['precio'], $row['procantstock']);
                     array_push($arreglo, $obj);
                 }
             }

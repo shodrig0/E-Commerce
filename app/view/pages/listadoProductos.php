@@ -10,6 +10,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.ph
     <button id="actualizarProductos" class="ui button">Actualizar Productos</button>
     <div id="galeriaProductos" class="ui three column grid"></div>
 </div>
-<script src="../../js/mostrarProductos.js"></script>
+<script src="../js/mostrarProductos.js"></script>
 
 <?php footer(); ?>

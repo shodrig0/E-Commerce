@@ -21,7 +21,7 @@ class Usuario
     }
 
 
-    public function cargar($idUsuario, $usNombre, $usPass, $usMail, $usDeshabilitado, $roles = [])
+    public function setear($idUsuario, $usNombre, $usPass, $usMail, $usDeshabilitado, $roles = [])
     {
         $this->setIdUsuario($idUsuario);
         $this->setUsNombre($usNombre);
@@ -101,6 +101,26 @@ class Usuario
         $this->roles = $roles;
     }
 
+    public function cargar()
+    {
+        $respuesta = false;
+        $base = new BaseDatos();
+        $sql = "SELECT * FROM usuario WHERE idusuario = " . $this->getIdusuario();
+        if ($base->Iniciar()) {
+            $res = $base->Ejecutar($sql);
+            if ($res > -1) {
+                if ($res > 0) {
+                    $row = $base->Registro();
+                    $this->setear($row["idusuario"], $row["usnombre"], $row["uspass"], $row["usmail"], $row["usdeshabilitado"]);
+                    $respuesta = true;
+                }
+            }
+        } else {
+            $this->setmensajeoperacion("usuario->listar: " . $base->getError());
+        }
+        return $respuesta;
+    }
+
     public function buscar()
     {
         $resp = false;
@@ -144,7 +164,7 @@ class Usuario
                 while ($row = $base->Registro()) {
                     $obj = new Usuario();
                     $roles = UsuarioRol::listar("idusuario = " . $row['idusuario']);
-                    $obj->cargar($row['idusuario'], $row['usnombre'], $row['uspass'], $row['usmail'], $row['usdeshabilitado'], $roles);
+                    $obj->setear($row['idusuario'], $row['usnombre'], $row['uspass'], $row['usmail'], $row['usdeshabilitado'], $roles);
                     array_push($arregloUsuarios, $obj);
                 }
             }

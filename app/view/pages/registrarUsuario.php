@@ -1,9 +1,6 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.php';
-
-$objAbmRol = new AbmRol();
-$roles = $objAbmRol->listarRoles();
 ?>
 
 <div class="ui middle aligned center aligned grid" style="height: 100vh; margin: 0;">

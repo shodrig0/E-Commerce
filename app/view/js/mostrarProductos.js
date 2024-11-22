@@ -1,10 +1,10 @@
 $(document).ready(function () {
-    const LS_KEY = "productos"; // Clave para `localStorage`
+    const LS_KEY = "productos"; // Clave para `localStorage` de productos
 
     cargarProductos();
+    cargarCarrito();
 
     function cargarProductos() {
-        //carga los productos en localstorage
         const productosLS = JSON.parse(localStorage.getItem(LS_KEY));
 
         if (productosLS && productosLS.length > 0) {
@@ -18,7 +18,7 @@ $(document).ready(function () {
 
     function obtenerProductosDelServidor() {
         $.ajax({
-            url: '../pages/store/action/listarProductos.php',
+            url: './store/action/listarProductos.php',
             method: 'POST',
             dataType: 'json',
             success: function (response) {
@@ -41,42 +41,55 @@ $(document).ready(function () {
         $('#galeriaProductos').empty();
 
         productos.forEach(function (producto) {
-            let divProducto = $('<div>').addClass('column');
-
-            let card = $('<div>').addClass('ui card');
-
-            // Creo contenedor de la imagen
-            let imgContainer = $('<div>').addClass('imagen');
-            let img = $('<img>')
-                .attr('src', producto.imgSource || 'https://static.vecteezy.com/system/resources/thumbnails/021/217/339/small_2x/red-wine-bottle-png.png')
-                .attr('alt', producto.pronombre)
-                .addClass('producto-imagen');
-            imgContainer.append(img);
-
-            // Div de la información del producto
-            let infoProducto = $('<div>').addClass('content');
-            let titulo = $('<a>').addClass('header').text(producto.pronombre);
-            let precio = $('<h3>').addClass('ui green text').text(`$${producto.precio}`);
-
-            // Contenido adicional (boton)
-            let masContenido = $('<div>').addClass('extra content');
-            let boton = $('<button>').addClass('ui black button').text(`Agregar al carrito`);
-
-            infoProducto.append(titulo, precio);
-            masContenido.append(boton);
-            card.append(imgContainer, infoProducto, masContenido);
-            divProducto.append(card);
-
-            $('#galeriaProductos').append(divProducto);
+            const elementoProducto = crearElementoProducto(producto);
+            $('#galeriaProductos').append(elementoProducto);
         });
     }
 
-    $('#actualizarProductos').on('click', function () {
-        localStorage.removeItem(LS_KEY);
+    function crearElementoProducto(producto) {
+        let divProducto = $('<div>').addClass('column');
 
-        $('#galeriaProductos').empty().text('Actualizando productos...');
+        let card = $('<div>').addClass('ui card');
 
-        obtenerProductosDelServidor();
-    });
+        let imgContainer = $('<div>').addClass('imagen');
+        let img = $('<img>')
+            .attr('src', producto.imgSource || 'https://static.vecteezy.com/system/resources/thumbnails/021/217/339/small_2x/red-wine-bottle-png.png')
+            .attr('alt', producto.pronombre)
+            .addClass('producto-imagen');
+        imgContainer.append(img);
 
-});
+        let infoProducto = $('<div>').addClass('content');
+        let titulo = $('<a>').addClass('header').text(producto.pronombre);
+        let precio = $('<h3>').addClass('ui green text').text(`$${producto.precio}`);
+
+        let masContenido = $('<div>').addClass('extra content');
+        let boton = $('<button>')
+            .addClass('ui black button')
+            .text(`Agregar al carrito`)
+            .on('click', function () {
+                agregarAlCarrito(producto);
+            });
+
+        infoProducto.append(titulo, precio);
+        masContenido.append(boton);
+        card.append(imgContainer, infoProducto, masContenido);
+        divProducto.append(card);
+
+        return divProducto;
+    }
+
+    function agregarAlCarrito(producto) {
+        $.ajax({
+            url: BASE_URL + "app/view/pages/client/action/actionAgregarProductoCarrito.php",
+            method: 'POST',
+            data: { producto : producto, tipo : 'agregar' },
+            dataType: 'json',
+            success: function (response) {
+
+            },
+            error: {
+
+            }
+        })
+    }
+})

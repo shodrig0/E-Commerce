@@ -68,10 +68,10 @@ class AbmUsuario
             }
     
             $usuario = new Usuario();
-            $usuario->cargar($usuarioSent['idUsuario'], null, null, null, null, []);
+            $usuario->setear($usuarioSent['idUsuario'], null, null, null, null, []);
             
             if (!$usuario->buscar()) {
-                throw new Exception("El usuario no existe.");
+                throw new PDOException("El usuario no existe.");
             }
     
             $usuarioCambiado = $this->verificarCambios($usuario, $usuarioSent);
@@ -94,7 +94,7 @@ class AbmUsuario
                 $msj = "No se detectaron cambios en los datos del usuario.";
 
             }
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             $msj = "Ocurrió un error: " . $e->getMessage();
         }
         return $msj;
@@ -160,6 +160,40 @@ class AbmUsuario
         }
         return $resp;
     }
+
+    public function registrar()
+    {
+    $datos = darDatosSubmitted();
+
+    if (!isset($datos['usnombre']) || !isset($datos['usemail']) || !isset($datos['uspass'])) {
+        echo json_encode(['success' => false, 'error' => 'Todos los campos son obligatorios.']);
+        return;
+    }
+
+    $registroExitoso = true;
+
+    if ($registroExitoso) {
+        $mailService = new Mail();
+        $asunto = 'Bienvenido a nuestra plataforma';
+        $contenidoHtml = "
+        <h1>¡Hola {$datos['usnombre']}!</h1>
+        <p>Gracias por registrarte en nuestro sistema.</p>
+        <p>Esperamos que disfrutes de tu experiencia.</p>
+        <p>Saludos,<br>El equipo de Soporte</p>
+        ";
+        $contenidoAlt = "¡Hola {$datos['usnombre']}! Gracias por registrarte en nuestro sistema. Esperamos que disfrutes de tu experiencia.";
+
+        try {
+            $mailService->enviarCorreo($datos['usemail'], $datos['usnombre'], $asunto, $contenidoHtml, $contenidoAlt);
+            echo json_encode(['success' => true, 'message' => 'Registro exitoso y correo enviado.']);
+        } catch (\Exception $e) {
+            echo json_encode(['success' => true, 'message' => 'Registro exitoso, pero no se pudo enviar el correo.']);
+        }
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Error al registrar el usuario.']);
+    }
+    }
+
 
     private function obtenerDatosUsuario()
     {

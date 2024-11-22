@@ -2,177 +2,191 @@
 
 class CompraEstadoTipo
 {
+    private $idcompraestadotipo;
+    private $cetdescripcion;
+    private $cetdetalle;
+    private $mensajeoperacion;
 
-    private $idCompraEstadoTipo;
-    private $cetDescripcion;
-    private $cetDetalle;
-    private $mensajeOperacion;
-
+    /**
+     * Constructor de la clase CompraEstadoTipo.
+     * Inicializa los atributos de la clase.
+     */
     public function __construct()
     {
-        $this->idCompraEstadoTipo = "";
-        $this->cetDescripcion = "";
-        $this->cetDetalle = "";
-        $this->mensajeOperacion = "";
+        $this->idcompraestadotipo = null;
+        $this->cetdescripcion = "";
+        $this->cetdetalle = "";
+        $this->mensajeoperacion = "";
     }
 
-    public function cargar($idCompraEstadoTipo, $cetDescripcion, $cetDetalle)
+    /**
+     * Setea los atributos de la clase CompraEstadoTipo.
+     * @param int $idcompraestadotipoS
+     * @param string $cetdescripcionS
+     * @param string $cetdetalleS
+     */
+    public function setear($idcompraestadotipoS, $cetdescripcionS, $cetdetalleS)
     {
-        $this->setIdCompraEstadoTipo($idCompraEstadoTipo);
-        $this->setCetDescripcion($cetDescripcion);
-        $this->setCetDetalle($cetDetalle);
+        $this->setIdcompraestadotipo($idcompraestadotipoS);
+        $this->setCetdescripcion($cetdescripcionS);
+        $this->setCetdetalle($cetdetalleS);
     }
 
-    //getters
-
-    public function getIdCompraEstadoTipo()
+    public function getIdcompraestadotipo()
     {
-        return $this->idCompraEstadoTipo;
+        return $this->idcompraestadotipo;
+    }
+    public function setIdcompraestadotipo($nuevoIdcompraestadotipo)
+    {
+        $this->idcompraestadotipo = $nuevoIdcompraestadotipo;
     }
 
-    public function getCetDescripcion()
+    public function getCetdescripcion()
     {
-        return $this->cetDescripcion;
+        return $this->cetdescripcion;
+    }
+    public function setCetdescripcion($nuevoCetdescripcion)
+    {
+        $this->cetdescripcion = $nuevoCetdescripcion;
     }
 
-    public function getCetDetalle()
+    public function getCetdetalle()
     {
-        return $this->cetDetalle;
+        return $this->cetdetalle;
+    }
+    public function setCetdetalle($nuevoCetdetalle)
+    {
+        $this->cetdetalle = $nuevoCetdetalle;
     }
 
-    public function getMensajeOperacion()
+    public function getmensajeoperacion()
     {
-        return $this->mensajeOperacion;
+        return $this->mensajeoperacion;
+    }
+    public function setmensajeoperacion($nuevomensajeoperacion)
+    {
+        $this->mensajeoperacion = $nuevomensajeoperacion;
     }
 
-    //setters
-
-    public function setIdCompraEstadoTipo($idCompraEstadoTipo)
+    /**
+     * Carga los datos de un tipo de estado de compra desde la base de datos.
+     * @return boolean
+     */
+    public function cargar()
     {
-        $this->idCompraEstadoTipo = $idCompraEstadoTipo;
-    }
-
-    public function setCetDescripcion($cetDescripcion)
-    {
-        $this->cetDescripcion = $cetDescripcion;
-    }
-
-    public function setCetDetalle($cetDetalle)
-    {
-        $this->cetDetalle = $cetDetalle;
-    }
-
-    public function setMensajeOperacion($mensajeOperacion)
-    {
-        $this->mensajeOperacion = $mensajeOperacion;
-    }
-
-
-    public function buscar()
-    {
-        $resp = false;
+        $respuesta = false;
         $base = new BaseDatos();
-        $sql = "SELECT * FROM compraestadotipo WHERE idcompraestadotipo = " . $this->getIdCompraEstadoTipo();
+        $sql = "SELECT * FROM compraestadotipo WHERE idcompraestadotipo = " . $this->getIdcompraestadotipo();
         if ($base->Iniciar()) {
             $res = $base->Ejecutar($sql);
             if ($res > -1) {
                 if ($res > 0) {
                     $row = $base->Registro();
-                    $this->cargar($row['idcompraestadotipo'], $row['cetdescripcion'], $row['cetdetalle']);
+                    $this->setear($row["idcompraestadotipo"], $row["cetdescripcion"], $row["cetdetalle"]);
+                    $respuesta = true;
                 }
             }
         } else {
-            $this->setMensajeOperacion("CompraEstadoTipo->listar: " . $base->getError());
-        }
-        return $resp;
-    }
-
-    public function insertar()
-    {
-        $respuesta = false;
-        $base = new BaseDatos();
-        $sql = "INSERT INTO compraestadotipo (idcompraestadotipo, cetdescripcion, cetdetalle)
-        VALUES ('"
-            . $this->getIdCompraEstadoTipo() . "', '"
-            . $this->getCetDescripcion() . "', '"
-            . $this->getCetDetalle() . "')";
-        if ($base->Iniciar()) {
-            if ($elid = $base->Ejecutar($sql)) {
-                $this->setIdCompraEstadoTipo($elid);
-                $respuesta = true;
-            } else {
-                $this->setMensajeOperacion("CompraEstadoTipo->insertar: " . $base->getError());
-            }
-        } else {
-            $this->setMensajeOperacion("CompraEstadoTipo->insertar: " . $base->getError());
+            $this->setmensajeoperacion("CompraEstadoTipo->listar: " . $base->getError());
         }
         return $respuesta;
     }
 
+    /**
+     * Inserta un nuevo tipo de estado de compra en la base de datos.
+     * @return boolean
+     */
+    public function insertar()
+    {
+        $respuesta = false;
+        $base = new BaseDatos();
+        $sql = "INSERT INTO compraestadotipo (idcompraestadotipo, cetdescripcion, cetdetalle) 
+            VALUES (" . $this->getIdcompraestadotipo() .
+            ",'" . $this->getCetdescripcion() .
+            "','" . $this->getCetdetalle() . "')";
+        if ($base->Iniciar()) {
+            if ($elid = $base->Ejecutar($sql)) {
+                //$this->setIdcompraestadotipo($elid);
+                $respuesta = true;
+            } else {
+                $this->setmensajeoperacion("CompraEstadoTipo->insertar: " . $base->getError());
+            }
+        } else {
+            $this->setmensajeoperacion("CompraEstadoTipo->insertar: " . $base->getError());
+        }
+        return $respuesta;
+    }
+
+    /**
+     * Modifica un tipo de estado de compra existente en la base de datos.
+     * @return boolean
+     */
     public function modificar()
     {
-        $resp = false;
+        $respuesta = false;
         $base = new BaseDatos();
-        $sql = "UPDATE compraestadotipo SET cetdescripcion='" . $this->getCetDescripcion() . "', cetdetalle='" . $this->getCetDetalle() .
-            "'  WHERE idcompraestadotipo=" . $this->getIdCompraEstadoTipo();
+        $sql = "UPDATE compraestadotipo 
+            SET cetdescripcion = '" . $this->getCetdescripcion() .
+            "', cetdetalle = '" . $this->getCetdetalle() .
+            "' WHERE idcompraestadotipo = " . $this->getIdcompraestadotipo();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
-                $resp = true;
+                $respuesta = true;
             } else {
-                $this->setMensajeOperacion("CompraEstadoTipo->modificar: " . $base->getError());
+                $this->setmensajeoperacion("CompraEstadoTipo->modificar: " . $base->getError());
             }
         } else {
-            $this->setMensajeOperacion("CompraEstadoTipo->modificar: " . $base->getError());
+            $this->setmensajeoperacion("CompraEstadoTipo->modificar: " . $base->getError());
         }
-        return $resp;
+        return $respuesta;
     }
 
+    /**
+     * Elimina un tipo de estado de compra de la base de datos.
+     * @return boolean
+     */
     public function eliminar()
     {
-        $resp = false;
+        $respuesta = false;
         $base = new BaseDatos();
-        $sql = "DELETE FROM compraestadotipo WHERE idcompraestadotipo=" . $this->getIdCompraEstadoTipo();
+        $sql = "DELETE FROM compraestadotipo WHERE idcompraestadotipo = " . $this->getIdcompraestadotipo();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
-                return true;
+                $respuesta = true;
             } else {
-                $this->setMensajeOperacion("CompraEstadoTipo->eliminar: " . $base->getError());
+                $this->setmensajeoperacion("CompraEstadoTipo->eliminar: " . $base->getError());
             }
         } else {
-            $this->setMensajeOperacion("CompraEstadoTipo->eliminar: " . $base->getError());
+            $this->setmensajeoperacion("CompraEstadoTipo->eliminar: " . $base->getError());
         }
-        return $resp;
+        return $respuesta;
     }
 
-    public static function listar($parametro = "")
+    /**
+     * Lista los tipos de estado de compra de la base de datos que cumplen con el parámetro dado.
+     * @param string $parametro
+     * @return array
+     */
+    public function listar($parametro = "")
     {
         $arreglo = array();
         $base = new BaseDatos();
         $sql = "SELECT * FROM compraestadotipo ";
         if ($parametro != "") {
-            $sql .= 'WHERE ' . $parametro;
+            $sql .= "WHERE " . $parametro;
         }
-        $res = $base->Ejecutar($sql);
-        if ($res > -1) {
-            if ($res > 0) {
+        $respuesta = $base->Ejecutar($sql);
+        if ($respuesta > -1) {
+            if ($respuesta > 0) {
                 while ($row = $base->Registro()) {
                     $obj = new CompraEstadoTipo();
-                    $obj->cargar($row['idcompraestadotipo'], $row['cetdescripcion'], $row['cetdetalle']);
+                    $obj->setear($row["idcompraestadotipo"], $row["cetdescripcion"], $row["cetdetalle"]);
                     array_push($arreglo, $obj);
                 }
             }
         } else {
-            throw new Exception("Error al listar los compraEstadoTipo: " . $base->getError());
+            $this->setmensajeoperacion("CompraEstadoTipo->listar: " . $base->getError());
         }
         return $arreglo;
-    }
-
-
-    public function jsonSerialize()
-    {
-        return [
-            'idCompraEstadoTipo' => $this->getIdCompraEstadoTipo(),
-            'cetDescripcion' => $this->getCetDescripcion()
-        ];
     }
 }

@@ -2,17 +2,17 @@
 header('Content-Type: application/json; charset=utf-8');
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
-// require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/controller/Mail.php'; // Incluye la clase Mail
 
 $datos = darDatosSubmitted();
 $salida = [];
-
 
 if (isset($datos['usnombre'], $datos['usemail'], $datos['uspass']) && $_SERVER["REQUEST_METHOD"] === "POST") {
     $userName = $datos['usnombre'];
     $email = $datos['usemail'];
     $passwordHash = $datos['uspass'];
 
+    // Crear objeto para la gestión del usuario
     $objAbmUsuario = new AbmUsuario();
     $query = $objAbmUsuario->agregarUsuario($userName, $email, $passwordHash);
 
@@ -24,6 +24,25 @@ if (isset($datos['usnombre'], $datos['usemail'], $datos['uspass']) && $_SERVER["
         $salida['resp'] = 'Éxito';
         $salida['usnombre'] = $userName;
         $salida['usemail'] = $email;
+
+        // Configurar el correo
+        $mailService = new Mail();
+        $asunto = 'Bienvenido a nuestra plataforma';
+        $contenidoHtml = "
+        <h1>¡Hola {$userName}!</h1>
+        <p>Gracias por registrarte en nuestro sistema.</p>
+        <p>Esperamos que disfrutes de tu experiencia.</p>
+        <p>Saludos,<br>El equipo de Soporte</p>
+        ";
+        $contenidoAlt = "¡Hola {$userName}! Gracias por registrarte en nuestro sistema. Esperamos que disfrutes de tu experiencia.";
+
+        // Intentar enviar el correo
+        try {
+            $mailService->enviarCorreo($email, $userName, $asunto, $contenidoHtml, $contenidoAlt);
+        } catch (Exception $e) {
+            $salida['resp'] = 'Registro exitoso, pero no se pudo enviar el correo.';
+            $salida['error'] = false;
+        }
     }
 } else {
     $salida['resp'] = 'Faltan datos';
@@ -32,13 +51,7 @@ if (isset($datos['usnombre'], $datos['usemail'], $datos['uspass']) && $_SERVER["
 }
 ?>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Confirmación de Usuario</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
-</head>
 
-<body>
     <div class="ui container" style="margin-top: 50px;">
         <?php if (isset($salida['error']) && $salida['error']): ?>
             <div class="ui negative message">
@@ -60,6 +73,3 @@ if (isset($datos['usnombre'], $datos['usemail'], $datos['uspass']) && $_SERVER["
             <i class="arrow left icon"></i> Volver
         </a>
     </div>
-</body>
-
-</html>

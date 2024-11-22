@@ -1,7 +1,7 @@
 function accionesBtns() {
     $(document).off('click', '.accion-btns').on('click', '.accion-btns', function () {
         let action = $(this).data('action')
-        let userId = $(this).data('id')
+        let userId = $(this).data('id') || null
 
         console.log('Botón presionado:', action, 'ID:', userId)
 
@@ -40,61 +40,27 @@ function accionesBtns() {
                     }
                 })
                 break;
-            case 'cerrarSesion':
-                console.log('Cerrando sesión');
-                $('#modalCerrarSesion').modal('show');
-
-                $('#confirmCerrarSesion').off('click').on('click', function () {
-                    $.ajax({
-                        url: BASE_URL + 'app/view/pages/action/actionLogout.php',
-                        type: 'POST',
-                        success: function (response) {
-                            let iconClass, message, modalClass;
-
-                            if (response.success) {
-                                iconClass = 'check circle green icon';
-                                message = response.message;
-                                modalClass = 'ui basic modal';
-                            } else {
-                                iconClass = 'exclamation triangle red icon';
-                                message = response.message;
-                                modalClass = 'ui basic modal';
-                            }
-
-                            $('#modalResultadoIcon').attr('class', iconClass);
-                            $('#modalResultadoMensaje').text(message);
-
-                            $('#modalResultado')
-                                .modal({
-                                    closable: false,
-                                    onHidden: function () {
-                                        window.location.href = BASE_URL + 'app/view/home/home.php';
-                                    }
-                                })
-                                .modal('show');
-                            setTimeout(function () {
-                                $('#modalResultado').modal('hide');
-                            }, 3000);
-                        },
-                        error: function () {
-                            $('#modalResultadoIcon').attr('class', 'exclamation triangle red icon');
-                            $('#modalResultadoMensaje').text('Error en la comunicación con el servidor.');
-                            $('#modalResultado')
-                                .modal({
-                                    closable: false,
-                                    onHidden: function () {
-                                        window.location.href = BASE_URL + 'app/view/home/home.php';
-                                    }
-                                })
-                                .modal('show');
-
-                            setTimeout(function () {
-                                $('#modalResultado').modal('hide');
-                            }, 2000);
-                        }
-                    });
-                });
-                break;
+                case 'cerrarSesion':
+                    console.log('Cerrando sesión');
+                    $('#modalCerrarSesion').modal('show');
+            
+                    $('#confirmCerrarSesion').off('click').on('click', function () {
+                        $.ajax({
+                            url: BASE_URL + 'app/view/pages/action/actionLogout.php',
+                            type: 'POST',
+                            success: function (response) {
+                                console.log('Respuesta del servidor:', response)
+                                $('#modalCerrarSesion').modal('hide')
+                                setTimeout(function () {
+                                    window.location.href = BASE_URL + 'app/view/home/home.php'
+                                }, 1000)
+                            },
+                            error: function () {
+                                alert('Error al intentar cerrar sesión.')
+                            },
+                        })
+                    })
+                break
         }
     })
 }
@@ -240,12 +206,11 @@ function eliminarRolAsignado(idRol, idUsuario) {
                     $('#modalResultadoMensaje').text('El rol ha sido eliminado correctamente.');
 
                     $('#modalResultado')
-                        .modal('show')
-                        .delay(2000)
-                        .queue(function (next) {
-                            location.reload();
-                            next();
-                        });
+                        .modal('show');
+
+                    setTimeout(function () {
+                        location.reload()
+                    }, 2000)
                 } else {
                     $('#modalResultadoIcon').attr('class', 'exclamation triangle red icon');
                     $('#modalResultadoMensaje').text(response.message || 'Hubo un error al eliminar el rol.');
@@ -273,12 +238,11 @@ function agregarRolAsignado(idRol, idUsuario) {
                     $('#modalResultadoMensaje').text('El rol ha sido agregado correctamente.');
 
                     $('#modalResultado')
-                        .modal('show')
-                        .delay(2000)
-                        .queue(function (next) {
-                            location.reload();
-                            next();
-                        });
+                        .modal('show');
+
+                    setTimeout(function () {
+                        location.reload()
+                    }, 2000)
                 } else {
                     $('#modalResultadoIcon').attr('class', 'exclamation triangle red icon');
                     $('#modalResultadoMensaje').text(response.message || 'Hubo un error al agregar el rol.');

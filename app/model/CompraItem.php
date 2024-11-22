@@ -2,205 +2,224 @@
 
 class CompraItem
 {
+    private $idcompraitem;
+    private $objProducto;
+    private $objCompra;
+    private $cicantidad;
+    private $mensajeoperacion;
 
-    private $idCompraItem;
-    private Producto $producto;
-    private Compra $compra;
-    private $ciCantidad;
-    private $mensajeOperacion;
-
+    /**
+     * Constructor de la clase CompraItem.
+     * Inicializa los atributos de la clase.
+     */
     public function __construct()
     {
-        $this->idCompraItem = "";
-        $this->producto = new Producto();
-        $this->compra = new Compra();
-        $this->ciCantidad = "";
-        $this->mensajeOperacion = "";
+        $this->idcompraitem = null;
+        $this->objProducto = new Producto();
+        $this->objCompra = new Compra();
+        $this->cicantidad = null;
+        $this->mensajeoperacion = "";
     }
 
-    public function cargar($idCompraItem, $producto, $compra, $ciCantidad)
+    /**
+     * Setea los atributos de la clase CompraItem.
+     * @param int $idcompraitemS
+     * @param Producto $objProductoS
+     * @param Compra $objCompraS
+     * @param int $cicantidadS
+     */
+    public function setear($idcompraitemS, $objProductoS, $objCompraS, $cicantidadS)
     {
-        $this->setIdCompraItem($idCompraItem);
-        $this->setProducto($producto);
-        $this->setCompra($compra);
-        $this->setCiCantidad($ciCantidad);
+        $this->setIdcompraitem($idcompraitemS);
+        $this->setObjProducto($objProductoS);
+        $this->setObjCompra($objCompraS);
+        $this->setCicantidad($cicantidadS);
     }
 
-    //getters
-
-    public function getIdCompraItem()
+    public function getIdcompraitem()
     {
-        return $this->idCompraItem;
+        return $this->idcompraitem;
+    }
+    public function setIdcompraitem($nuevoIdcompraitem)
+    {
+        $this->idcompraitem = $nuevoIdcompraitem;
     }
 
-    public function getProducto()
+    public function getObjProducto()
     {
-        return $this->producto;
+        return $this->objProducto;
+    }
+    public function setObjProducto($nuevoObjProducto)
+    {
+        $this->objProducto = $nuevoObjProducto;
     }
 
-    public function getCompra()
+    public function getObjCompra()
     {
-        return $this->compra;
+        return $this->objCompra;
+    }
+    public function setObjCompra($nuevoObjCompra)
+    {
+        $this->objCompra = $nuevoObjCompra;
     }
 
-    public function getCiCantidad()
+    public function getCicantidad()
     {
-        return $this->ciCantidad;
+        return $this->cicantidad;
+    }
+    public function setCicantidad($nuevoCicantidad)
+    {
+        $this->cicantidad = $nuevoCicantidad;
     }
 
-    public function getMensajeOperacion()
+    public function getmensajeoperacion()
     {
-        return $this->mensajeOperacion;
+        return $this->mensajeoperacion;
+    }
+    public function setmensajeoperacion($nuevomensajeoperacion)
+    {
+        $this->mensajeoperacion = $nuevomensajeoperacion;
     }
 
-    //setters
-
-    public function setIdCompraItem($idCompraItem)
+    /**
+     * Carga los datos de un ítem de compra desde la base de datos.
+     * @return boolean
+     */
+    public function cargar()
     {
-        $this->idCompraItem = $idCompraItem;
-    }
-
-    public function setProducto($producto)
-    {
-        $this->producto = $producto;
-    }
-
-    public function setCompra($compra)
-    {
-        $this->compra = $compra;
-    }
-
-    public function setCiCantidad($ciCantidad)
-    {
-        $this->ciCantidad = $ciCantidad;
-    }
-
-    public function setMensajeOperacion($mensajeOperacion)
-    {
-        $this->mensajeOperacion = $mensajeOperacion;
-    }
-
-    public function buscar()
-    {
-        $resp = false;
+        $respuesta = false;
         $base = new BaseDatos();
-        $sql = "SELECT * FROM compraitem WHERE idcompraitem = " . $this->getIdCompraItem();
+        $sql = "SELECT * FROM compraitem WHERE idcompraitem = " . $this->getIdcompraitem();
         if ($base->Iniciar()) {
             $res = $base->Ejecutar($sql);
             if ($res > -1) {
                 if ($res > 0) {
                     $row = $base->Registro();
-                    $compra = new Compra();
-                    $compra->setIdCompra($row['idcompra']);
-                    $producto = new Producto();
-                    $producto->setIdProducto($row['idproducto']);
-                    $this->cargar($row['idcompraitem'], $row['idproducto'], $row['idcompra'], $row['cicantidad']);
+                    $objProducto = new Producto();
+                    $objProducto->setIdproducto($row["idproducto"]);
+                    $objProducto->cargar();
+                    $objCompra = new Compra();
+                    $objCompra->setIdcompra($row["idcompra"]);
+                    $objCompra->cargar();
+                    $this->setear($row["idcompraitem"], $objProducto, $objCompra, $row["cicantidad"]);
+                    $respuesta = true;
                 }
             }
         } else {
-            $this->setMensajeOperacion("CompraItem->listar: " . $base->getError());
-        }
-        return $resp;
-    }
-
-    public function insertar()
-    {
-        $respuesta = false;
-        $base = new BaseDatos();
-        $sql = "INSERT INTO compraitem (idproducto, idcompra, cicantidad)
-        VALUES ('"
-            . $this->getProducto()->getIdProducto() . "', '"
-            . $this->getCompra()->getIdCompra() . "', '"
-            . $this->getCiCantidad() . "')";
-        if ($base->Iniciar()) {
-            if ($elid = $base->Ejecutar($sql)) {
-                $this->setIdCompraItem($elid);
-                $respuesta = true;
-            } else {
-                $this->setMensajeOperacion("CompraItem->insertar: " . $base->getError());
-            }
-        } else {
-            $this->setMensajeOperacion("CompraItem->insertar: " . $base->getError());
+            $this->setmensajeoperacion("CompraItem->listar: " . $base->getError());
         }
         return $respuesta;
     }
 
+    /**
+     * Inserta un nuevo ítem de compra en la base de datos.
+     * @return boolean
+     */
+    public function insertar()
+    {
+        $respuesta = false;
+        $base = new BaseDatos();
+        $sql = "INSERT INTO compraitem (idproducto, idcompra, cicantidad) 
+            VALUES (" . $this->getObjProducto()->getIdproducto() . " , " .
+            $this->getObjCompra()->getIdcompra() . " , " .
+            $this->getCicantidad() . ")";
+        if ($base->Iniciar()) {
+            if ($elid = $base->Ejecutar($sql)) {
+                $this->setIdcompraitem($elid);
+                $respuesta = true;
+            } else {
+                $this->setmensajeoperacion("CompraItem->insertar: " . $base->getError());
+            }
+        } else {
+            $this->setmensajeoperacion("CompraItem->insertar: " . $base->getError());
+        }
+        return $respuesta;
+    }
+
+    /**
+     * Modifica un ítem de compra existente en la base de datos.
+     * @return boolean
+     */
     public function modificar()
     {
-        $resp = false;
+        $respuesta = false;
         $base = new BaseDatos();
-        $sql = "UPDATE compraitem SET idproducto=" . $this->getProducto()->getIdProducto() . ", idcompra=" . $this->getCompra()->getIdCompra() . ", cicantidad=" . $this->getCiCantidad() .
-            "  WHERE idcompraitem=" . $this->getIdCompraItem();
+        $sql = "UPDATE compraitem 
+            SET idproducto = " . $this->getObjProducto()->getIdproducto() .
+            ", idcompra = " . $this->getObjCompra()->getIdcompra() .
+            ", cicantidad = " . $this->getCicantidad() .
+            " WHERE idcompraitem = " . $this->getIdcompraitem();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
-                $resp = true;
+                $respuesta = true;
             } else {
-                $this->setMensajeOperacion("CompraItem->modificar: " . $base->getError());
+                $this->setmensajeoperacion("CompraItem->modificar: " . $base->getError());
             }
         } else {
-            $this->setMensajeOperacion("CompraItem->modificar: " . $base->getError());
+            $this->setmensajeoperacion("CompraItem->modificar: " . $base->getError());
         }
-        return $resp;
+        return $respuesta;
     }
 
+    /**
+     * Elimina un ítem de compra de la base de datos.
+     * @return boolean
+     */
     public function eliminar()
     {
-        $resp = false;
+        $respuesta = false;
         $base = new BaseDatos();
-        $sql = "DELETE FROM compraitem WHERE idcompraitem=" . $this->getIdCompraItem();
+        $sql = "DELETE FROM compraitem WHERE idcompraitem = " . $this->getIdcompraitem();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
-                return true;
+                $respuesta = true;
             } else {
-                $this->setMensajeOperacion("CompraItem->eliminar: " . $base->getError());
+                $this->setmensajeoperacion("CompraItem->eliminar: " . $base->getError());
             }
         } else {
-            $this->setMensajeOperacion("CompraItem->eliminar: " . $base->getError());
+            $this->setmensajeoperacion("CompraItem->eliminar: " . $base->getError());
         }
-        return $resp;
+        return $respuesta;
     }
 
+    /**
+     * Lista los ítems de compra de la base de datos que cumplen con el parámetro dado.
+     * @param string $parametro
+     * @return array
+     */
     public static function listar($parametro = "")
-    {
-        $arreglo = array();
-        $base = new BaseDatos();
-        $sql = "SELECT * FROM compraitem ";
-        if ($parametro != "") {
-            $sql .= 'WHERE ' . $parametro;
-        }
-        $res = $base->Ejecutar($sql);
-        if ($res > -1) {
-            if ($res > 0) {
-                while ($row = $base->Registro()) {
-                    $obj = new CompraItem();
-                    $producto = new Producto();
-                    $producto->setIdProducto($row['idproducto']);
-                    $producto->buscar();
-                    $compra = new Compra();
-                    $compra->setIdCompra($row['idcompra']);
-                    //$compra->buscar();
-                    $obj->cargar($row['idcompraitem'], $producto, $compra, $row['cicantidad']);
-                    array_push($arreglo, $obj);
-                }
+{
+    $arreglo = array();
+    $base = new BaseDatos();
+    $sql = "SELECT * FROM compraitem ";
+    if ($parametro != "") {
+        $sql .= "WHERE " . $parametro;
+    }
+    $res = $base->Ejecutar($sql);
+    if ($res > -1) {
+        if ($res > 0) {
+            while ($row = $base->Registro()) {
+                $obj = new CompraItem();
+                
+                // Crear y cargar el objeto Producto
+                $objProducto = new Producto();
+                $objProducto->setIdproducto($row["idproducto"]);
+                $objProducto->cargar();
+
+                // Crear y cargar el objeto Compra
+                $objCompra = new Compra();
+                $objCompra->setIdcompra($row["idcompra"]);
+                $objCompra->cargar();
+
+                // Configurar el objeto CompraItem
+                $obj->setear($row["idcompraitem"], $objProducto, $objCompra, $row["cicantidad"]);
+                array_push($arreglo, $obj);
             }
-        } else {
-            throw new Exception("Error al listar las compraItem: " . $base->getError());
         }
-        return $arreglo;
+    } else {
+        throw new Exception("Error al listar los ítems de compra: " . $base->getError());
     }
+    return $arreglo;
+}
 
-
-    public function jsonSerialize()
-    {
-
-        $producto = null;
-        if ($this->getProducto() != null) {
-            $producto = $this->getProducto()->jsonSerialize();
-        }
-        return [
-            'idCompraItem' => $this->getIdCompraItem(),
-            'producto' => $producto,
-            'ciCantidad' => $this->getCiCantidad()
-        ];
-    }
 }

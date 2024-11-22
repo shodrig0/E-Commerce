@@ -45,13 +45,39 @@ foreach ($rolesPagina as $carpeta => $rolesPermitidos) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="<?php echo BASE_URL ?>Semantic-UI/dist/semantic.min.js"></script>
     <script src="<?php echo BASE_URL ?>app/view/js/btns.js"></script>
+    <script src="<?php echo BASE_URL ?>app/view/js/shop_handler.js"></script>
     <link rel="stylesheet" href="<?php echo BASE_URL ?>app/view/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"> -->
-</head>
+    <style>
+        .carrito-desplegable {
+            width: 600px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            transform: translateX(100%);
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1050;
+            right: 0;
+            top: 0;
+            position: fixed;
+        }
 
+        .carrito-desplegable.mostrado {
+            transform: translateX(0);
+        }
+
+        .cerrarCarrito {
+            background: transparent;
+            border: none;
+            font-size: 1em;
+            cursor: pointer;
+            color: #333;
+        }
+
+        
+    </style>
+</head>
 <body>
     <header>
         <div class="ui grid" style="align-items: center; padding: 1em;">
@@ -67,10 +93,12 @@ foreach ($rolesPagina as $carpeta => $rolesPermitidos) {
             </div>
             <div class="twelve wide column" style="text-align: center;">
                 <a href="<?php echo BASE_URL ?>app/view/home/home.php">
-                    <img src="<?php echo BASE_URL ?>app/view/assets/img/LogoFrenteFINALL.png" alt="Elixir Patagónico" style="height: 42px;">
+                    <img src="<?php echo BASE_URL ?>app/view/assets/img/LogoFrenteFINALL.png" alt="Elixir Patagónico"
+                        style="height: 42px;">
                 </a>
             </div>
-            <div class="two wide column" style="text-align: right; display: flex; justify-content: flex-end; align-items: center; gap: 1em; padding-right: 1em;">
+            <div class="two wide column"
+                style="text-align: right; display: flex; justify-content: flex-end; align-items: center; gap: 1em; padding-right: 1em;">
                 <?php if (!$usuario): ?>
                     <div class="ui buttons">
                         <a href="<?php echo BASE_URL ?>app/view/pages/login.php" class="ui vertical animated button">
@@ -92,30 +120,33 @@ foreach ($rolesPagina as $carpeta => $rolesPermitidos) {
                     </div>
                 <?php endif; ?>
                 <div>
-                    <div class="ui vertical animated button" style="width: auto; height: auto; overflow: visible;">
-                        <div class="visible content">
-                            <i class="shop icon"></i>
+                    <div class="ui right aligned grid field">
+                        <div id="carritoBoton" class="ui vertical animated button" style="position: relative;">
+                            <div class="visible content">
+                                <i class="shop icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="carritoDesplegable" class="ui right fixed vertical menu carrito-desplegable">
+                        <div class="item">                            
+                            <button class="ui button cerrarCarrito"><i class="ui x icon"></i></button>
+                            <div class="ui divider"></div>
+                            <div id="carritoItems">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="ui basic modal" id="modalCerrarSesion">
-                <div class="ui icon header">
-                    <i class="sign out alternate icon"></i>
-                    Cerrar Sesión
+            <div id="modalCerrarSesion" class="ui small modal">
+                <div class="header">
+                    <i class="sign out alternate icon"></i> Cerrar Sesión
                 </div>
                 <div class="content">
-                    <p>¿Estás seguro de que quieres cerrar sesión?</p>
+                    <p>¿Estás seguro de que deseas cerrar sesión?</p>
                 </div>
                 <div class="actions">
-                    <div class="ui red cancel inverted button">
-                        <i class="remove icon"></i>
-                        No
-                    </div>
-                    <div class="ui green ok inverted button" id="confirmCerrarSesion">
-                        <i class="checkmark icon"></i>
-                        Sí
-                    </div>
+                    <button class="ui red button" id="cancelCerrarSesion">Cancelar</button>
+                    <button class="ui green button" id="confirmCerrarSesion">Confirmar</button>
                 </div>
             </div>
             <div class="ui basic modal" id="modalResultado">
@@ -127,8 +158,6 @@ foreach ($rolesPagina as $carpeta => $rolesPermitidos) {
             </div>
             <script>
                 $('.ui.dropdown').dropdown();
-            </script>
-            <script>
                 const BASE_URL = "<?php echo BASE_URL; ?>";
             </script>
     </header>
