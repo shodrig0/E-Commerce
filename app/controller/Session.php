@@ -4,8 +4,8 @@
 require_once __DIR__ . '/AbmUsuario.php'; // Esto carga AbmUsuario.php relativo a la ubicación de Session.php
 require_once __DIR__ . '/AbmUsuarioRol.php'; // Esto carga AbmUsuario.php relativo a la ubicación de Session.php
 require_once __DIR__ . '/../model/Usuario.php'; // Esto carga AbmUsuario.php relativo a la ubicación de Session.php
-require_once __DIR__ . '/../model/UsuarioRol.php'; // Esto carga AbmUsuario.php relativo a la ubicación de Session.php
-require_once __DIR__ . '/../model/Rol.php'; // Esto carga AbmUsuario.php relativo a la ubicación de Session.php
+require_once __DIR__ . '/../model/UsuarioRol.php'; 
+require_once __DIR__ . '/../model/Rol.php'; 
 
 
 class Session
@@ -116,6 +116,21 @@ class Session
             }
         }
         return $colRoles;
+    }
+
+     /**
+     * 
+     */
+    public function getCarritoSession() {
+
+        if (!isset($_SESSION['carrito'])) {
+            $_SESSION['carrito'] = [];
+        }
+        return $_SESSION['carrito'];
+    }
+
+    public function setCarritoSession($array) {
+        $_SESSION['carrito'] = $array;
     }
 
     /**

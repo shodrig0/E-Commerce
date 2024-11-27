@@ -1,41 +1,107 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
+require_once '../../../../config.php';
+require_once '../../layouts/header.php';
 
-$carrito = isset($_SESSION['carrito']) ? $_SESSION['carrito'] : (isset($_COOKIE['carrito']) ? json_decode($_COOKIE['carrito'], true) : []);
 ?>
-<div class="ui segment carrito-container">
-    <h2 class="ui header">Carrito de Compras</h2>
-    <div class="ui divided items">
-        <?php if (!empty($carrito)): ?>
-            <?php
-            $total = 0;
-            foreach ($carrito as $producto):
-                $subtotal = $producto['precio'] * $producto['cantidad'];
-                $total += $subtotal;
-            ?>
+<div class="ui horizontal divider"></div>
+<div class="ui container">
+  <h1 class="ui center aligned header">Carrito de Compras</h1>
+  <div class="ui segment">
+    <table class="ui striped celled table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($carrito as $producto): ?>
+          <tr>
+            <td>
+              <div class="ui items">
                 <div class="item">
-                    <div class="content">
-                        <div class="header"><?php echo htmlspecialchars($producto['pronombre']); ?></div>
-                        <div class="description">
-                            <p><?php echo htmlspecialchars($producto['prodetalle']); ?></p>
-                        </div>
-                        <div class="extra">
-                            <div><strong>Precio:</strong> <?php echo number_format($producto['precio'], 2); ?> ARS</div>
-                            <div><strong>Cantidad:</strong> <?php echo $producto['cantidad']; ?></div>
-                            <div><strong>Subtotal:</strong> <?php echo number_format($subtotal, 2); ?> ARS</div>
-                        </div>
+                  <div class="ui small image">
+                    <img src="<?= $imgArtic ?>" alt="Imagen del producto" style="max-width: 100px;">
+                  </div>
+                  <div class="content">
+                    <div class="header"><?= $producto['nombre'] ?></div>
+                    <div class="description">
+                      <p><?= $producto['descripcion'] ?? 'Sin descripción disponible' ?></p>
                     </div>
+                  </div>
                 </div>
-            <?php endforeach; ?>
-            <div class="ui clearing divider"></div>
-            <div class="ui segment">
-                <h3>Total: <?php echo number_format($total, 2); ?> ARS</h3>
-                <button class="ui blue button">Finalizar Compra</button>
-            </div>
-        <?php else: ?>
-            <div class="ui message">
-                <p>Tu carrito está vacío. ¡Explora nuestra <a href="/E-Commerce/galeria.php">galería de productos</a> para agregar artículos!</p>
-            </div>
-        <?php endif; ?>
+              </div>
+            </td>
+            <td>
+              <div class="ui label large">
+                $<?= number_format($producto['precio'], 2) ?>
+              </div>
+            </td>
+            <td>
+              <div class="ui buttons">
+                <button class="ui button reducir-cantidad" data-id="<?= $producto['idproducto'] ?>">-</button>
+                <div class="ui label large cantidad"><?= $producto['cantidadproducto'] ?></div>
+                <button class="ui button anadir-cantidad" data-id="<?= $producto['idproducto'] ?>">+</button>
+              </div>
+            </td>
+            <td>
+              <button class="ui red button" (<?= $producto['idproducto']; ?>)">
+                <i class="trash alternate icon"></i> Eliminar
+                </a>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+    <div class="ui clearing segment">
+      <h2 class="ui right floated header">Total: $<?= number_format($precioTotal, 2) ?></h2>
     </div>
+    <div class="ui center aligned">
+      <button class="ui green button">
+        <i class="shopping cart icon"></i> Finalizar Compra
+      </button>
+    </div>
+  </div>
 </div>
+<script>
+  $(document).ready(function () {
+    $('.reducir-cantidad').on('click', function () {
+      let idProducto = $(this).data('id');
+      actualizarCantidad(idProducto, -1, $(this));
+    });
+
+    $('.anadir-cantidad').on('click', function () {
+      let idProducto = $(this).data('id');
+      actualizarCantidad(idProducto, 1, $(this));
+    });
+
+    function actualizarCantidad(idProducto, cambio, boton) {
+      $.ajax({
+        url: './action/actionActualizarCarrito.php',
+        method: 'POST',
+        dataType: 'json', 
+        data: { idproducto: idProducto, cantidad: cambio },
+        success: function (response) {
+          console.log(response);
+          if (response.success) {
+            const cantidadOrig = boton.siblings('.cantidad');
+            let nuevaCantidad = parseInt(cantidadOrig.text()) + cambio;
+            if (nuevaCantidad <= 0) {
+              boton.closest('tr').remove();
+            } else {
+              cantidadOrig.text(nuevaCantidad);
+            }
+          } else {
+            alert(response.message);
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error(xhr.responseText); // Agrega un log para depurar la respuesta del servidor
+          alert('Hubo un error en el envío.');
+        }
+      });
+    }
+  })
+</script>

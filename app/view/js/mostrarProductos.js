@@ -1,34 +1,9 @@
 $(document).ready(function () {
-  const LS_KEY = "productos"; // Clave para `localStorage` de productos
-
-  function cargarCarrito() {
-    $.ajax({
-      url: BASE_URL + "app/view/pages/client/carrito.php",
-      method: "POST",
-      success: function (data) {
-        $("#carritoItems").html(data);
-      },
-      error: function () {
-        $("#carritoItems").html(
-          '<div class="ui message error">Error al cargar el carrito.</div>'
-        );
-      },
-    });
-  }
-
-  cargarProductos();
-  cargarCarrito();
 
   function cargarProductos() {
-    const productosLS = JSON.parse(localStorage.getItem(LS_KEY));
-
-    if (productosLS && productosLS.length > 0) {
-      console.log("Cargando productos desde localStorage");
-      mostrarProductos(productosLS);
-    } else {
-      console.log("Cargando productos desde servidor...");
-      obtenerProductosDelServidor();
-    }
+    console.log("Recargando productos desde el servidor...");
+    $("#galeriaProductos").empty(); 
+    obtenerProductosDelServidor();
   }
 
   function obtenerProductosDelServidor() {
@@ -40,7 +15,6 @@ $(document).ready(function () {
         console.log("Respuesta del servidor:", response);
         if (response.producto && response.producto.length > 0) {
           const productos = response.producto;
-          localStorage.setItem(LS_KEY, JSON.stringify(productos));
           mostrarProductos(productos);
         } else {
           console.log("No se encontraron productos.");
@@ -53,8 +27,7 @@ $(document).ready(function () {
   }
 
   function mostrarProductos(productos) {
-    $("#galeriaProductos").empty();
-
+    $("#galeriaProductos").empty(); 
     productos.forEach(function (producto) {
       const elementoProducto = crearElementoProducto(producto);
       $("#galeriaProductos").append(elementoProducto);
@@ -84,14 +57,21 @@ $(document).ready(function () {
       .text(`$${producto.precio}`);
 
     let masContenido = $("<div>").addClass("extra content");
+    let selectCantidad = $("<select>")
+      .attr("id", "cantidad")
+      .addClass("ui dropdown");
+    for (let i = 1; i <= producto.procantstock; i++) {
+      selectCantidad.append($("<option>").attr("value", i).text(i));
+    }
+
     let boton = $("<button>")
       .addClass("ui black button")
       .text(`Agregar al carrito`)
       .on("click", function () {
-        agregarAlCarrito(producto);
+        agregarAlCarrito(producto.idproducto, selectCantidad.val());
       });
 
-    infoProducto.append(titulo, precio);
+    infoProducto.append(titulo, precio, selectCantidad);
     masContenido.append(boton);
     card.append(imgContainer, infoProducto, masContenido);
     divProducto.append(card);
@@ -99,19 +79,20 @@ $(document).ready(function () {
     return divProducto;
   }
 
-
-
-  function agregarAlCarrito(producto) {
-    console.log(producto)
+  function agregarAlCarrito(idproducto, cantidad) {
     $.ajax({
       url: BASE_URL + "app/view/pages/client/action/actionAgregarProductoCarrito.php",
       method: "POST",
-      data: { producto: producto, tipo: "agregar" },
-      dataType: "json",
-      success: function (response) {
-        
+      data: { 
+        idproducto: idproducto,
+        cantidad: cantidad
       },
-      error: {},
-    });
+      dataType: "json",
+      success: function(response) {
+        alert(response.message)
+      }
+    })
   }
+
+  cargarProductos();
 });

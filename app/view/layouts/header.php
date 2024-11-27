@@ -4,6 +4,7 @@ $url = BASE_URL . 'app/view/home/home.php';
 
 $session = Session::getInstance();
 $usuario = $session->getUsuario();
+$carrito = $session->getCarritoSession();
 $roles = $session->getRol();
 
 $userRoles = [];
@@ -74,10 +75,9 @@ foreach ($rolesPagina as $carpeta => $rolesPermitidos) {
             cursor: pointer;
             color: #333;
         }
-
-        
     </style>
 </head>
+
 <body>
     <header>
         <div class="ui grid" style="align-items: center; padding: 1em;">
@@ -114,29 +114,24 @@ foreach ($rolesPagina as $carpeta => $rolesPermitidos) {
                         <span style="font-weight: bold;"><?php echo htmlspecialchars($usuario->getUsNombre()); ?></span>
                         <i class="dropdown icon"></i>
                         <div class="menu">
-                            <a href="<?php echo BASE_URL ?>app/view/pages/perfil.php" class="item"><i class="ui id badge outline icon"></i>Ver Perfil</a>
-                            <a href="#" class="accion-btns item" data-action="cerrarSesion"><i class="ui logout icon"></i>Cerrar Sesión</a>
+                            <a href="<?php echo BASE_URL ?>app/view/pages/perfil.php" class="item"><i
+                                    class="ui id badge outline icon"></i>Ver Perfil</a>
+                            <a href="#" class="accion-btns item" data-action="cerrarSesion"><i
+                                    class="ui logout icon"></i>Cerrar Sesión</a>
                         </div>
                     </div>
                 <?php endif; ?>
-                <div>
-                    <div class="ui right aligned grid field">
-                        <div id="carritoBoton" class="ui vertical animated button" style="position: relative;">
+                <div class="ui buttons">
+                        <a href="<?php echo BASE_URL ?>app/view/pages/client/carrito.php" class="ui vertical animated button">
+                            <div class="hidden content">Carro</div>
                             <div class="visible content">
-                                <i class="shop icon"></i>
+                                <i class="shopping cart icon"></i>
                             </div>
-                        </div>
+                        </a>
                     </div>
-                    <div id="carritoDesplegable" class="ui right fixed vertical menu carrito-desplegable">
-                        <div class="item">                            
-                            <button class="ui button cerrarCarrito"><i class="ui x icon"></i></button>
-                            <div class="ui divider"></div>
-                            <div id="carritoItems">
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
+            
+
             <div id="modalCerrarSesion" class="ui small modal">
                 <div class="header">
                     <i class="sign out alternate icon"></i> Cerrar Sesión
@@ -157,15 +152,15 @@ foreach ($rolesPagina as $carpeta => $rolesPermitidos) {
                 </div>
             </div>
             <div id="confirmarModal" class="ui modal">
-    <div class="header">Confirmar eliminación</div>
-    <div class="content">
-        <p>¿Estás seguro de que deseas eliminar este usuario?</p>
-    </div>
-    <div class="actions">
-        <div class="ui button" onclick="$('#confirmarModal').modal('hide');">Cancelar</div>
-        <div id="confirmarBaja" class="ui red button">Confirmar</div>
-    </div>
-    </div>
+                <div class="header">Confirmar eliminación</div>
+                <div class="content">
+                    <p>¿Estás seguro de que deseas eliminar este usuario?</p>
+                </div>
+                <div class="actions">
+                    <div class="ui button" onclick="$('#confirmarModal').modal('hide');">Cancelar</div>
+                    <div id="confirmarBaja" class="ui red button">Confirmar</div>
+                </div>
+            </div>
 
             <script>
                 $('.ui.dropdown').dropdown();

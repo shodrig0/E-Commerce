@@ -102,7 +102,7 @@ class AbmProducto
      * @param array $param
      * @return array
      */
-    public function buscar($param)
+    public function buscarProducto($param)
     {
         $where = " true ";
         if ($param <> null) {
@@ -160,7 +160,7 @@ class AbmProducto
     public function cargaDeImagen($param)
     {
         $arreglo["idproducto"] = $param["idproducto"];
-        if ($this->buscar($arreglo)) {
+        if ($this->buscarProducto($arreglo)) {
             if ($param[0]["imagen"]["type"] == "image/jpeg") {
                 $archivo = "../../img/productos/" . $param["idproducto"] . ".jpg";
                 if (file_exists($archivo)) {
@@ -194,7 +194,7 @@ class AbmProducto
     public function editarProducto($param)
     {
         $arreglo["idproducto"] = $param["idproducto"];
-        $listaProductos = $this->buscar($arreglo);
+        $listaProductos = $this->buscarProducto($arreglo);
         $param["prodeshabilitado"] = $listaProductos[0]->getProdeshabilitado();
         $param["procantstock"] = $listaProductos[0]->getProcantstock();
         if ($param["proprecio"] > 0) {
@@ -217,7 +217,7 @@ class AbmProducto
     public function editarStock($param)
     {
         $arreglo["idproducto"] = $param["idproducto"];
-        $listaProductos = $this->buscar($arreglo);
+        $listaProductos = $this->buscarProducto($arreglo);
         $param["proprecio"] = $listaProductos[0]->getProprecio();
         $param["prodeshabilitado"] = $listaProductos[0]->getProdeshabilitado();
         $param["procantstock"] = intval($param["procantstock"]);
@@ -269,7 +269,7 @@ class AbmProducto
      */
     public function listarStock()
     {
-        $listaProductos = $this->buscar(null);
+        $listaProductos = $this->buscarProducto([]);
         $arregloSalida = array();
         foreach ($listaProductos as $elemento) {
             $nuevoElemento['idproducto'] = $elemento->getIdproducto();
