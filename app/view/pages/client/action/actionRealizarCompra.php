@@ -17,10 +17,4 @@ if (isset($data['idproducto'])) {
     $response['mensaje'] = 'Datos incompletos';
 }
 
-// if (isset($data['limpiar'])) {
-//     $session->setCarritoSession([]);
-//     $response['respuesta'] = true;
-//     $response['mensaje'] = 'Carrito limpiado';
-// }
-
 echo json_encode($response);
