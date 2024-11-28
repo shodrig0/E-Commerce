@@ -11,9 +11,9 @@ class AbmProducto
     private function cargarObjeto($param)
     {
         $obj = null;
-        if (array_key_exists('idproducto', $param) && array_key_exists('pronombre', $param) && array_key_exists('prodetalle', $param) && array_key_exists('proprecio', $param) && array_key_exists('procantstock', $param)) {
+        if (array_key_exists('idproducto', $param) && array_key_exists('pronombre', $param) && array_key_exists('prodetalle', $param) && array_key_exists('precio', $param) && array_key_exists('procantstock', $param)) {
             $obj = new Producto();
-            $obj->setear($param['idproducto'], $param['pronombre'], $param['prodetalle'],$param["proprecio"] ,$param['procantstock']);
+            $obj->setear($param['idproducto'], $param['pronombre'], $param['prodetalle'],$param["precio"] ,$param['procantstock']);
         }
         return $obj;
     }
@@ -71,6 +71,8 @@ class AbmProducto
     public function baja($param)
     {
         $resp = false;
+        echo "ID PRODUCTO?";
+        var_dump($param);
         if ($this->seteadosCamposClaves($param)) {
             $objProducto = $this->cargarObjetoConClave($param);
             if ($objProducto != null and $objProducto->eliminar()) {
@@ -90,6 +92,8 @@ class AbmProducto
         $resp = false;
         if ($this->seteadosCamposClaves($param)) {
             $objProducto = $this->cargarObjeto($param);
+            echo "BOOLEAN";
+            var_dump($objProducto);
             if ($objProducto != null and $objProducto->modificar()) {
                 $resp = true;
             }
@@ -239,7 +243,7 @@ class AbmProducto
      */
     public function listarProductos()
     {
-        $listaProductos = $this->buscar(null);
+        $listaProductos = $this->buscarProducto(null);
         $arregloSalida = array();
         foreach ($listaProductos as $elemento) {
             $nuevoElemento['idproducto'] = $elemento->getIdproducto();

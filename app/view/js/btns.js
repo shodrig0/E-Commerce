@@ -26,48 +26,48 @@ function accionesBtns() {
                     },
                 });
                 break;
-                case 'eliminar':
-            console.log('Eliminando usuario con ID:', userId);
-            $('#confirmarModal').modal('show');
-            $('#confirmarBaja').off('click').on('click', function () {
-                $.ajax({
-                    url: './Action/actionEliminarUsuario.php',
-                    type: 'POST',
-                    data: { idUsuario: userId },
-                    success: function (response) {
-                        $('#mensajeContenedor').html(response);
-                        $('#confirmarModal').modal('hide');
-                        setTimeout(function() {
-                            location.reload()
-                        }, 1000)
-                    },
-                    error: function () {
-                        alert('Hubo un error al intentar eliminar al usuario.');
-                    }
+            case 'eliminar':
+                console.log('Eliminando usuario con ID:', userId);
+                $('#confirmarModal').modal('show');
+                $('#confirmarBaja').off('click').on('click', function () {
+                    $.ajax({
+                        url: './Action/actionEliminarUsuario.php',
+                        type: 'POST',
+                        data: { idUsuario: userId },
+                        success: function (response) {
+                            $('#mensajeContenedor').html(response);
+                            $('#confirmarModal').modal('hide');
+                            setTimeout(function () {
+                                location.reload()
+                            }, 1000)
+                        },
+                        error: function () {
+                            alert('Hubo un error al intentar eliminar al usuario.');
+                        }
+                    });
                 });
-            });
-            break;
+                break;
 
             case 'cerrarSesion':
-                    console.log('Cerrando sesión');
-                    $('#modalCerrarSesion').modal('show');
-            
-                    $('#confirmCerrarSesion').off('click').on('click', function () {
-                        $.ajax({
-                            url: BASE_URL + 'app/view/pages/action/actionLogout.php',
-                            type: 'POST',
-                            success: function (response) {
-                                console.log('Respuesta del servidor:', response)
-                                $('#modalCerrarSesion').modal('hide')
-                                setTimeout(function () {
-                                    window.location.href = BASE_URL + 'app/view/home/home.php'
-                                }, 1000)
-                            },
-                            error: function () {
-                                alert('Error al intentar cerrar sesión.')
-                            },
-                        })
+                console.log('Cerrando sesión');
+                $('#modalCerrarSesion').modal('show');
+
+                $('#confirmCerrarSesion').off('click').on('click', function () {
+                    $.ajax({
+                        url: BASE_URL + 'app/view/pages/action/actionLogout.php',
+                        type: 'POST',
+                        success: function (response) {
+                            console.log('Respuesta del servidor:', response)
+                            $('#modalCerrarSesion').modal('hide')
+                            setTimeout(function () {
+                                window.location.href = BASE_URL + 'app/view/home/home.php'
+                            }, 1000)
+                        },
+                        error: function () {
+                            alert('Error al intentar cerrar sesión.')
+                        },
                     })
+                })
                 break
         }
     })

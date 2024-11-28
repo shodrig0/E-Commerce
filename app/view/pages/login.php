@@ -40,7 +40,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.ph
     </div>
 </div>
 
-<!-- <div>holaaa</div> -->
 <script src="../js/api.js"></script>
 
 <style>

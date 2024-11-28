@@ -4,7 +4,6 @@ require_once '../../../../../config.php';
 $datos = darDatosSubmitted();
 if (!isset($datos['accion'])) {
     $resp['mensaje'] = 'No se especificó la acción';
-    echo json_encode($respuesta);
     exit();
 }
 
@@ -18,6 +17,7 @@ switch ($accion) {
     case 'cancelar':
         if (isset($datos['idcompra']) || !empty($datos['idcompra'])) {
             if($abmCompraEstado->cancelarCompra($datos)){
+                $resp['success'] = true;
                 $resp['mensaje'] = 'Compra cancelada con exito';
             }else{
                 $resp["mensaje"] = "No se pudo cancelar la compra";
@@ -37,6 +37,6 @@ switch ($accion) {
     
     break;
 }
-echo json_encode($resp);
 header('Content-Type: application/json');
+echo json_encode($resp);
 

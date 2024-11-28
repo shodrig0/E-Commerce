@@ -1,19 +1,26 @@
 <?php
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+
 require_once __DIR__ . '/PHPMailer/src/PHPMailer.php';
 require_once __DIR__ . '/PHPMailer/src/SMTP.php';
 require_once __DIR__ . '/PHPMailer/src/Exception.php';
 
-class Mail{
+class Mail
+{
     private $mailer;
 
     # https://stackoverflow.com/questions/29854795/implementing-a-try-catch-block-in-php-constructor-function
-    public function __construct(){
+    public function __construct()
+    {
         $this->mailer = new PHPMailer(true);
 
         try {
+            //
+            $this->mailer->SMTPDebug = SMTP::DEBUG_OFF;
+            //
             $this->mailer->isSMTP();
             $this->mailer->Host = 'smtp.gmail.com';
             $this->mailer->SMTPAuth = true;
@@ -21,7 +28,7 @@ class Mail{
             $this->mailer->Password = 'krdh nlth lnpp tzbt';
             $this->mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $this->mailer->Port = 587;
-    
+
             $this->mailer->setFrom('rodrigo.villablanca@est.fi.uncoma.edu.ar', 'Elixir Patagonico');
         } catch (Exception $e) {
             throw new \Exception("Error al configurar PHPMailer: {$e->getMessage()}");
@@ -37,7 +44,7 @@ class Mail{
     {
         $resultado = ['success' => false, 'message' => ''];
         try {
-            $this->getMailer()->addAddress($destinatario, $nombre);
+            $this->getMailer()->addAddress('rodrigo.villablanca@est.fi.uncoma.edu.ar', $nombre);
 
             $this->getMailer()->isHTML(true);
             $this->getMailer()->Subject = $asunto;

@@ -15,7 +15,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.ph
                 <div class="content" style="text-align: center; padding: 15px;">
                     <h2 class="header">Brisa Celayes</h2>
                     <div class="meta" style="color: #888; font-size: 0.9em;">
-                        <span>Legajo: 1234</span>
+                        <span>FAI 4923</span>
                     </div>
                     <div class="description" style="font-size: 1em;">
                         <p style="display: flex; align-items: center; justify-content: center;">
@@ -38,7 +38,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.ph
                 <div class="content" style="text-align: center; padding: 15px;">
                     <h2 class="header">Martin De La Iglesia</h2>
                     <div class="meta" style="color: #888; font-size: 0.9em;">
-                        <span>Legajo: 5678</span>
+                        <span>FAI 5084</span>
                     </div>
                     <div class="description" style="font-size: 1em;">
                         <p style="display: flex; align-items: center; justify-content: center;">
@@ -61,7 +61,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.ph
                 <div class="content" style="text-align: center; padding: 15px;">
                     <h2 class="header">Rodrigo Velo</h2>
                     <div class="meta" style="color: #888; font-size: 0.9em;">
-                        <span>Legajo: 9101</span>
+                        <span>FAI 9101</span>
                     </div>
                     <div class="description" style="font-size: 1em;">
                         <p style="display: flex; align-items: center; justify-content: center;">
@@ -84,7 +84,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.ph
                 <div class="content" style="text-align: center; padding: 15px;">
                     <h2 class="header">Rodrigo Villablanca</h2>
                     <div class="meta" style="color: #888; font-size: 0.9em;">
-                        <span>Legajo: 1213</span>
+                        <span>FAI 5097</span>
                     </div>
                     <div class="description" style="font-size: 1em;">
                         <p style="display: flex; align-items: center; justify-content: center;">

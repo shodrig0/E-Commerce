@@ -4,7 +4,8 @@ require_once '../../layouts/header.php';
 
 $abmCompra = new AbmCompra;
 $arrayCompras = $abmCompra->listarCompras($session);
-
+$arrayRol = $session->getRol();
+$idRol = $arrayRol[0]['idrol'];
 ?>
 
 <div class="ui container">
@@ -19,7 +20,7 @@ $arrayCompras = $abmCompra->listarCompras($session);
             </tr>
         </thead>
         <tbody>
-            <?php if (!empty($arrayCompras)) : ?>
+            <?php if (!empty($arrayCompras)) : ;?>
                 <?php foreach ($arrayCompras as $compra) :
                     $abmEstado = new AbmCompraEstado;
                     $idCompra = $compra->getIdCompra();
@@ -33,11 +34,11 @@ $arrayCompras = $abmCompra->listarCompras($session);
                         <td><?= $compra->getCoFecha(); ?></td>
                         <td><?= $estado[$contadorEstado]->getCompraEstadoTipo()->getCetdescripcion();?></td>
                         <td>
-
-                            <button class="ui button red boton-cancelar" <?=($idCompraEstadoTipo == 4 ||$idCompraEstadoTipo == 3) ? 'disabled' : ''; ?> data-idcompra="<?=$compra->getIdCompra(); ?> " data-idestado="<?= $idCompraEstadoTipo; ?>">
+                            
+                            <button class="ui button red boton-cancelar" <?=($idCompraEstadoTipo == 4 ||$idCompraEstadoTipo == 3 || $idRol== 1) ? 'disabled' : ''; ?> data-idcompra="<?=$compra->getIdCompra(); ?> " data-idestado="<?= $idCompraEstadoTipo; ?>">
                                 <i class="ui trash alternate icon"></i>Cancelar
                             </button>
-                            <button class="ui button blue boton-cambiar" <?= ($idCompraEstadoTipo == 4 ||$idCompraEstadoTipo == 3) ? 'disabled' : ''; ?> data-idestado="<?= $idCompraEstadoTipo; ?>"data-idcompra="<?=$compra->getIdCompra(); ?>"  >
+                            <button class="ui button blue boton-cambiar" <?= ($idCompraEstadoTipo == 4 ||$idCompraEstadoTipo == 3 || $idRol== 1) ? 'disabled' : ''; ?> data-idestado="<?= $idCompraEstadoTipo; ?>"data-idcompra="<?=$compra->getIdCompra(); ?>"  >
                                 <i></i> Siguiente Estado
                             </button>
                         </td>
@@ -58,50 +59,58 @@ $arrayCompras = $abmCompra->listarCompras($session);
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('.boton-cancelar').click(function() {
-            const fila = $(this).closest('tr')
-            const idCompra = fila.find('td:first').text()
-            const idEstado = $(this).data('idestado')
-            const data = {
-                accion: 'cancelar',
-                idcompra: idCompra,
-                idcompraestadotipo: idEstado
-            };
-            $.ajax({
-                url: './action/actionCambiarEstadoCompra.php',
-                method: 'POST',
-                data: data,
-                success: function(response) {
-                    $('#modal-mensaje').text('¿Est$aacute;s segurx de que deseas cancelar esta compra?')
-                    $('.ui.modal').modal('show')
-                },
-                error: function(error) {
-                    alert('Hubo problemas al cancelar la compra')
-                }
-            })
-        })
-        $('.boton-cambiar').click(function() {
-            const fila = $(this).closest('tr')
-            const idCompra = fila.find('td:first').text()
-            const idEstado = $(this).data('idestado')
-            const data = {
-                accion: 'siguienteEstado',
-                idcompra: idCompra,
-                idcompraestadotipo: idEstado
-            };
+$(document).ready(function() {
+    $('.boton-cancelar').click(function() {
+        const fila = $(this).closest('tr');
+        const idCompra = fila.find('td:first').text();
+        const idEstado = $(this).data('idestado');
+        const data = {
+            accion: 'cancelar',
+            idcompra: idCompra,
+            idcompraestadotipo: idEstado
+        };
 
-            $.ajax({
-                url: './action/actionCambiarEstadoCompra.php',
-                method: 'POST',
-                data: data,
-                success: function(response) {
-                    alert('Funciona el cambio de la compra')
-                },
-                error: function(error) {
-                    alert('Hubo problemas al cancelar la compra')
-                }
-            })
-        })
-    })
+        $.ajax({
+            url: './action/actionCambiarEstadoCompra.php',
+            method: 'POST',
+            data: data,
+            success: function(response) {
+                $('#modal-mensaje').text('¿Est$aacute;s segurx de que deseas cancelar esta compra?');
+                $('.ui.modal').modal('show');
+            },
+            error: function(error) {
+                console.error(error); 
+                location.reload(); 
+            }
+        });
+    });
+
+    // Acción de cambiar el estado de la compra
+    $('.boton-cambiar').click(function() {
+        const fila = $(this).closest('tr');
+        const idCompra = fila.find('td:first').text();
+        const idEstado = $(this).data('idestado');
+        const data = {
+            accion: 'siguienteEstado',
+            idcompra: idCompra,
+            idcompraestadotipo: idEstado
+        };
+
+        $.ajax({
+            url: './action/actionCambiarEstadoCompra.php',
+            method: 'POST',
+            data: data,
+            success: function(response) {
+                alert('Funciona el cambio de la compra');
+            },
+            error: function(error) {
+                console.error(error); 
+                location.reload(); 
+            }
+        });
+    });
+});
+
 </script>
+
+<?php footer(); ?>

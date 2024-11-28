@@ -150,8 +150,6 @@ class AbmCompraEstado
             ];
             $modEstadoAnterior = $this->modificacion($datosCompraEstadoAnterior);
             $nuevoIdEstadoTipo = $param['idcompraestadotipo'] + 1;
-            echo "nuevoidestadotipo";
-            var_dump($nuevoIdEstadoTipo);
             $datosCompraEstadoActual = [
                 'idcompra' => $param['idcompra'],
                 'idcompraestadotipo' => $nuevoIdEstadoTipo,
@@ -163,8 +161,8 @@ class AbmCompraEstado
 
         if ($modEstadoAnterior && $modEstadoActual) {
             $resp = true;
-            $compra = $this->buscar(['idcompra' => $param['idcompra']])[0];
-
+            $abmCompra = new abmCompra();
+            $compra = $abmCompra->buscar(['idcompra' => $param['idcompra']])[0];
             $correoEnviar = $this->cambioEstadoMail($compra, $param['idcompraestadotipo']);
 
             if (!$correoEnviar) {
@@ -191,10 +189,7 @@ class AbmCompraEstado
                 'cefechaini' => $compraEstado[$estadonumero]->getCeFechaIni(),
                 'cefechafin' => date('Y-m-d H:i:s')
             ];
-            var_dump($datosCompraEstadoAnterior);
             $this->modificacion($datosCompraEstadoAnterior);
-
-
             $datosCompraCancelar = [
                 'idcompra' => $param['idcompra'],
                 'idcompraestadotipo' => 4,
@@ -210,7 +205,8 @@ class AbmCompraEstado
                 $abmProducto = new AbmProducto;
                 $idProducto["idproducto"] = $item->getObjProducto()->getIdProducto();
                 $objProducto = $abmProducto->buscarProducto($idProducto)[0];
-
+                var_dump($objProducto);
+                var_dump($item->getCiCantidad());
                 $datosProducto = [
                     'idproducto' => $objProducto->getIdProducto(),
                     'pronombre' => $objProducto->getProNombre(),
@@ -328,16 +324,20 @@ class AbmCompraEstado
         $nombreEstado = $msjsEstados[$nuevoEstado];
 
         $mail = new Mail();
+        $usuario = new Usuario();
+        // $abmCompra = new abmCompra();
 
-        $usuario = $compra->getCompra()->getObjUsuario();
+        $objSession = new Session();
+        $usuario = $objSession->getUsuario();
         $destinatarioCorreo = $usuario->getUsMail();
         $nombreUsuario = $usuario->getUsNombre();
-        $asunto = 'Elixir Patagónico - Cambio Estado de Compra #' . $compra->getIdCompra();
+        $asunto = 'Elixir Patagonico - Cambio Estado de Compra #' . $compra->getIdCompra();
 
         $contenidoHtml = "<p>Estimado/a {$nombreUsuario},</p><p>El estado de tu compra #{$compra->getIdcompra()} ha sido actualizado a: <strong>{$nombreEstado}</strong>.</p>";
         $contenidoAlt = "Estimado/a {$nombreUsuario},\n\nEl estado de tu compra #{$compra->getIdcompra()} ha sido actualizado a: {$nombreEstado}.";
 
         $resultado = $mail->enviarCorreo($destinatarioCorreo, $nombreUsuario, $asunto, $contenidoHtml, $contenidoAlt);
+
 
         return $resultado['success'];
     }

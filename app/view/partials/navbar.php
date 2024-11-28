@@ -16,6 +16,11 @@ $hasAccess = '';
         $hasAccess = empty($menuRoles) || array_intersect($userRoles, $menuRoles);
         $isLogin = strtolower($item['menombre']) === 'login';
         $isLogout = strtolower($item['menombre']) === 'logout';
+        $isProdcutos = strtolower($item['menombre']) === 'productos';
+
+        if ($isProdcutos && in_array('Deposito', $userRoles)) {
+            continue;
+        }
 
         if (($isLogin && $usuario) || ($isLogout && !$usuario)) {
             continue;

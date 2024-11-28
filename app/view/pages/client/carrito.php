@@ -31,7 +31,6 @@ require_once '../../layouts/header.php';
                   <div class="content">
                     <div class="header"><?= $producto['nombre'] ?></div>
                     <div class="description">
-                      <p><?= $producto['prodetal'] ?? 'Sin descripción disponible' ?></p>
                     </div>
                   </div>
                 </div>
@@ -64,7 +63,7 @@ require_once '../../layouts/header.php';
 </div>
 <div class="ui modal">
   <div class="header">Compra Realizada</div>
-  <div class="content"> 
+  <div class="content">
     <p>¡Tu compra ha sido completada con éxito!</p>
   </div>
   <div class="actions">
@@ -127,14 +126,18 @@ require_once '../../layouts/header.php';
           idproducto: idProducto
         },
         success: function(result) {
-          $('.ui.modal').modal('show');
-          setTimeout(function() {
-            location.reload()
-          }, 2000);
-        },
+        $('.ui.modal').html(`
+          <div class="header">¡Compra Realizada!</div>
+          <div class="content">
+            <p>Tu compra se ha realizado con éxito. Gracias por elegirnos.</p>
+          </div>
+        `).modal('show');
+        setTimeout(function() {
+          location.reload()
+        }, 2000);
+},
         error: function(xhr, status, error) {
           console.error(xhr.responseText);
-          alert('No se pudo completar la compra. Intenta nuevamente.');
         }
       });
     }
@@ -144,3 +147,5 @@ require_once '../../layouts/header.php';
     }
   });
 </script>
+
+<?php footer(); ?>

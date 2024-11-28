@@ -16,6 +16,9 @@ define('BASE_PATH', $_SERVER['DOCUMENT_ROOT'] . "/" . $PROYECTO . "/");
 
 $GLOBALS['ROOT'] = BASE_PATH;
 
+// Configuración de la zona horaria en PHP
+date_default_timezone_set('America/Argentina/Buenos_Aires');
+
 // Includes requeridos
 require_once($GLOBALS['ROOT'] . 'app/utils/funcs.php');
 require_once($GLOBALS['ROOT'] . 'app/model/connection/BaseDatos.php');

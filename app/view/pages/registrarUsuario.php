@@ -53,3 +53,5 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.ph
         '../home/home.php'
     );
 </script>
+
+<?php footer(); ?>

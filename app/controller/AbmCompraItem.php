@@ -175,7 +175,7 @@ class AbmCompraItem
             $cantidadDevolver = $arregloObjCompraItem[0]->getCicantidad();
             $objAbmProducto = new AbmProducto();
             $idProductoDevolver = $arregloObjCompraItem[0]->getObjProducto()->getIdproducto();
-            $arregloObjProducto = $objAbmProducto->buscar(['idproducto' => $idProductoDevolver]);
+            $arregloObjProducto = $objAbmProducto->buscarProducto(['idproducto' => $idProductoDevolver]);
             $cantidadActual = $arregloObjProducto[0]->getProcantstock();
             $nuevaCantidad = $cantidadActual + $cantidadDevolver;
 

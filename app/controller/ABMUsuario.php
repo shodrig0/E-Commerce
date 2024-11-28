@@ -119,7 +119,6 @@ class AbmUsuario
                     strip_tags($mensaje)
                 );
             } catch (Exception $e) {
-                // errror
             }
         }
     }

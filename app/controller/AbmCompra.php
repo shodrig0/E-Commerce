@@ -20,36 +20,34 @@ class abmCompra
             if ($this->alta($datos)) {
                 $resp = true;
             }
-
         }
         return $resp;
-
     }
 
-   /**
- * Espera como parámetro un arreglo asociativo donde las claves coinciden con los nombres de las variables de instancia del objeto
- * @param array $param
- * @return Compra|null
- */
-private function cargarObjeto($param) {
-    $obj = null;
+    /**
+     * Espera como parámetro un arreglo asociativo donde las claves coinciden con los nombres de las variables de instancia del objeto
+     * @param array $param
+     * @return Compra|null
+     */
+    private function cargarObjeto($param)
+    {
+        $obj = null;
 
-    // Validar que las claves necesarias existen en el arreglo
- 
-    if (array_key_exists('idcompra', $param) && array_key_exists('cofecha', $param) && array_key_exists('idusuario', $param)) {
-        
-        $obj = new Compra();
-        $obj->setIdCompra($param['idcompra']);
-        $obj->setCoFecha($param['cofecha']);
-        $obj->setObjUsuario($param['idusuario']);
-      
-        // Intentar cargar el objeto desde la base de datos
-        $obj->cargar();
-        
+        // Validar que las claves necesarias existen en el arreglo
+
+        if (array_key_exists('idcompra', $param) && array_key_exists('cofecha', $param) && array_key_exists('idusuario', $param)) {
+
+            $obj = new Compra();
+            $obj->setIdCompra($param['idcompra']);
+            $obj->setCoFecha($param['cofecha']);
+            $obj->setObjUsuario($param['idusuario']);
+
+            // Intentar cargar el objeto desde la base de datos
+            $obj->cargar();
+        }
+
+        return $obj;
     }
-
-    return $obj;
-}
     /**
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de 
      * las variables instancias del objeto que son claves
@@ -90,7 +88,7 @@ private function cargarObjeto($param) {
         $resp = false;
         $param['idcompra'] = null;
         $obj = $this->cargarObjeto($param);
-      
+
         if ($obj != null and $obj->insertar()) {
             $resp = true;
         }
@@ -153,46 +151,6 @@ private function cargarObjeto($param) {
         return $arreglo;
     }
 
-
-
-
-    // /**
-    //  * Funcion que se usa en el area de administracion para listar las compras por estado
-    //  * Devuelve un arreglo de compras agrupadas por estado, sin incluir las compras en estado carrito.
-    //  * @return array
-    //  */
-    // public function obtenerComprasPorTodosLosEstados()
-    // {
-    //     $arr_compras = [];
-    //     $arr_porconfirmar = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_PORCONFIRMAR);
-    //     $arr_confirmadas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_CONFIRMADA);
-    //     $arr_enviadas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_ENVIADA);
-    //     $arr_canceladas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_CANCELADA);
-
-    //     $arr_compras = array("porconfirmar" => $arr_porconfirmar, "confirmadas" => $arr_confirmadas, "enviadas" => $arr_enviadas, "canceladas" => $arr_canceladas);
-    //     return $arr_compras;
-    // }
-
-
-
-
-    // /**
-    //  * Devuelve un string del ultimo estado de la compra
-    //  */
-    // public function obtenerUltimoEstadoCompra($compra)
-    // {
-    //     $arr_estados = $compra->getEstados();
-    //     $ultimo_estado = end($arr_estados);
-    //     if ($ultimo_estado == false) {
-    //         $ultimo_estado = new CompraEstado();
-    //         $ultimo_estado->setCompraEstadoTipo(new CompraEstadoTipo());
-    //         $ultimo_estado->getCompraEstadoTipo()->setIdCompraEstadoTipo(COMPRA_EN_CARRITO);
-    //     }
-    //     return $ultimo_estado;
-    // }
-
-
-
     public function obtenerTotalCompra($compra)
     {
         $total = 0;
@@ -242,8 +200,8 @@ private function cargarObjeto($param) {
         $idcompra = null;
         $session = new Session();
         $usuario = $session->getUsuario();
-        $idusuario= $usuario->getIdUsuario();
-        
+        $idusuario = $usuario->getIdUsuario();
+
         $param['idusuario'] = $idusuario;
         $param["cofecha"] = date('Y-m-d H:i:s');
 
@@ -252,39 +210,45 @@ private function cargarObjeto($param) {
             $compra = $this->buscar($param);
             if (count($compra) > 0) {
                 $idcompra = $compra[0]->getIdCompra();
-            
             }
         }
         return $idcompra;
     }
 
-   
+
     /**
      * Confirmar Compra
      * @return int
      */
-    public function realizarCompra(){
+    public function realizarCompra()
+    {
         $session = new Session;
-        $band= false;
+        $band = false;
         $carrito = $session->getCarritoSession();
-        if(count($carrito)>0){
-            $idcompra= $this->iniciarCompra();
-            
+        if (count($carrito) > 0) {
+            $idcompra = $this->iniciarCompra();
+
             $i = 0;
-            $j=0;
+            $j = 0;
             do {
                 $producto = $carrito[$i];
                 $abmProducto = new AbmProducto();
-                $objProducto= $abmProducto->buscarProducto(['idproducto' => $producto["idproducto"]])[0];
+                $objProducto = $abmProducto->buscarProducto(['idproducto' => $producto["idproducto"]])[0];
 
-                $compraItem= new AbmCompraItem();
+                $compraItem = new AbmCompraItem();
 
-                $prodCompraItem['idproducto']=$producto['idproducto'];
-                $prodCompraItem['cicantidad']=$producto['cantidadproducto'];
-                $prodCompraItem['idcompra']=$idcompra;
-                if($compraItem->alta($prodCompraItem)){
+                $prodCompraItem['idproducto'] = $producto['idproducto'];
+                $prodCompraItem['cicantidad'] = $producto['cantidadproducto'];
+                $prodCompraItem['idcompra'] = $idcompra;
+                if ($compraItem->alta($prodCompraItem)) {
+                  
                     $cantVieja = $objProducto->getProCantStock();
-                    $cantNueva= $cantVieja- $prodCompraItem['cicantidad'];
+  
+           
+
+                    $cantNueva = $cantVieja - $prodCompraItem['cicantidad'];
+   
+      
                     $objProducto->setProCantStock($cantNueva);
 
                     $datosModProd = [
@@ -293,75 +257,70 @@ private function cargarObjeto($param) {
                         'prodetalle' => $objProducto->getProDetalle(),
                         'procantstock' => $objProducto->getProCantStock(),
                         'precio' => $objProducto->getPrecio()
-                      ];
+                    ];
                     $abmProducto->modificacion($datosModProd);
                     $j++;
-                }else{
-                    $band= true;
+                } else {
+                    $band = true;
                 }
                 $i++;
-
-            }while($i<count($carrito)&& $band== false);
+            } while ($i < count($carrito) && $band == false);
             $compraExitosa = $this->verificacionCompraItems($j, $i, $idcompra);
         }
         return $compraExitosa;
     }
     /**
-   * Verifica la cantidad de productos en el carrito con su
-   * @param int $j Cantidad de productos modificados
-   * @param int $i Cantidad de productos en el carrito
-   * @param int $idcompra Id de la compra
-   * @return bool
-   */
-  private function verificacionCompraItems($j, $i, $idcompra)
-  {
-    $compraExitosa = false; // Inicializar la variable
-    $altaCompraEstado = false;
-    $session = new Session();
-    if ($j == $i) {
-      $datosCompraEstado = [
-        "idcompra" => $idcompra,
-        "idcompraestadotipo" => 1, // Compra tipo 1 = "Iniciada"
-        "cefechaini" => date('Y-m-d H:i:s'),
-        "cefechafin" => date('0000-00-00 00:00:00') //el valor anterior era null
-      ];
-      $abmCompraEstado = new AbmCompraEstado();
-      $altaCompraEstado = $abmCompraEstado->alta($datosCompraEstado);
-      if ($altaCompraEstado) {
-        $compraExitosa = true;
-        /* Vacio el carrito */
-        $carrito = [];
-        $session->setCarritoSession($carrito);
-      }
-    } else if ($j < $i || $altaCompraEstado == false) {
-      $abmCompraItem = new AbmCompraItem();
-      $arrCompraItems = $abmCompraItem->buscar(["idcompra" => $idcompra]);
-      foreach ($arrCompraItems as $compraItem) {
-        $compraItem->baja(["idcompraitem" => $compraItem->getIdCompraItem()]);
-      }
-      $compraExitosa = false;
+     * Verifica la cantidad de productos en el carrito con su
+     * @param int $j Cantidad de productos modificados
+     * @param int $i Cantidad de productos en el carrito
+     * @param int $idcompra Id de la compra
+     * @return bool
+     */
+    private function verificacionCompraItems($j, $i, $idcompra)
+    {
+        $compraExitosa = false; // Inicializar la variable
+        $altaCompraEstado = false;
+        $session = new Session();
+        if ($j == $i) {
+            $datosCompraEstado = [
+                "idcompra" => $idcompra,
+                "idcompraestadotipo" => 1, // Compra tipo 1 = "Iniciada"
+                "cefechaini" => date('Y-m-d H:i:s'),
+                "cefechafin" => date('0000-00-00 00:00:00') //el valor anterior era null
+            ];
+            $abmCompraEstado = new AbmCompraEstado();
+            $altaCompraEstado = $abmCompraEstado->alta($datosCompraEstado);
+            if ($altaCompraEstado) {
+                $compraExitosa = true;
+                /* Vacio el carrito */
+                $carrito = [];
+                $session->setCarritoSession($carrito);
+            }
+        } else if ($j < $i || $altaCompraEstado == false) {
+            $abmCompraItem = new AbmCompraItem();
+            $arrCompraItems = $abmCompraItem->buscar(["idcompra" => $idcompra]);
+            foreach ($arrCompraItems as $compraItem) {
+                $compraItem->baja(["idcompraitem" => $compraItem->getIdCompraItem()]);
+            }
+            $compraExitosa = false;
+        }
+
+        return $compraExitosa;
     }
 
-    return $compraExitosa;
-  }
-
-  function listarCompras($session){
-    $idRol = $session->getRol();
-    if($idRol == 3 || $idRol == 1){
-        $arrayCompras = $this->buscar(null);
-    }else{
-        $param['idusuario'] = $session->getUsuario()->getIdUsuario();
-        $arrayCompras = $this->buscar($param);
+    function listarCompras($session)
+    {
+        $arrayRol = $session->getRol();
+        $idRol = $arrayRol[0]['idrol'];
+     
+        if ($idRol == 3 || $idRol == 1) {
+            
+            $arrayCompras = $this->buscar("");
+         
+        } else {
+            $param['idusuario'] = $session->getUsuario()->getIdUsuario();
+            $arrayCompras = $this->buscar($param);
+        }
+        return $arrayCompras;
     }
-    return $arrayCompras;
-  }
 }
-
-
-
-
-
-
-
-
-    

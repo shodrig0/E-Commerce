@@ -19,7 +19,7 @@ class AbmCarrito
             
                 if ($carrito[$i]['cantidadproducto'] <= 0) {
                     unset($carrito[$i]);
-                    $carrito = array_values($carrito); // Reindexar el array
+                    $carrito = array_values($carrito); 
                 }
                 
                 $productoEncontrado = true;
