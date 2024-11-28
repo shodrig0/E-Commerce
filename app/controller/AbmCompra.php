@@ -171,25 +171,6 @@ class abmCompra
         return $cantItems;
     }
 
-    /*public function obtenerComprasJSON($idusuario)
-    {
-        $arr_compras = Compra::listar("idusuario = " . $idusuario->getIdUsuario());
-        $salida = [];
-
-        foreach ($arr_compras as $compra) {
-            $estado = $this->obtenerUltimoEstadoCompra($compra);
-            if ($estado->getCompraEstadoTipo()->getIdCompraEstadoTipo() != 0) {
-                $total = $this->obtenerTotalCompra($compra);
-
-                $cantItems = $this->obtenerCantItemsCompra($compra);
-                $comp = ["idcompra" => $compra->getIdCompra(), "cofecha" => $compra->getCoFecha(), "cantitems" => $cantItems, "total" => $total, "estado" => $estado->getCompraEstadoTipo()->getCetDescripcion(), "acciones" => renderBotonesAccionesCompra($compra->getIdCompra())];
-                array_push($salida, $comp);
-            }
-
-        }
-        return $salida;
-    }*/
-
 
     /**
      * Da de alta una compra
@@ -241,14 +222,12 @@ class abmCompra
                 $prodCompraItem['cicantidad'] = $producto['cantidadproducto'];
                 $prodCompraItem['idcompra'] = $idcompra;
                 if ($compraItem->alta($prodCompraItem)) {
-                  
+
                     $cantVieja = $objProducto->getProCantStock();
-  
-           
 
                     $cantNueva = $cantVieja - $prodCompraItem['cicantidad'];
-   
-      
+
+
                     $objProducto->setProCantStock($cantNueva);
 
                     $datosModProd = [
@@ -267,8 +246,39 @@ class abmCompra
             } while ($i < count($carrito) && $band == false);
             $compraExitosa = $this->verificacionCompraItems($j, $i, $idcompra);
         }
+
+        if ($compraExitosa) {
+            $abmEstadoCompra = new AbmCompraEstado();
+            $estadoInit = 1;
+            $compraEstadoDatos = [
+                'idcompra' => $idcompra,
+                'idcompraestadotipo' => $estadoInit,
+                'cefechaini' => date('Y-m-d H:i:s'),
+                'cefechafin' => null
+            ];
+            $abmEstadoCompra->alta($compraEstadoDatos);
+
+            $compra = (new AbmCompra())->buscar(['idcompra' => $idcompra])[0];
+            $estadoInicial = 'iniciada';
+
+            $mail = new Mail();
+            $usuario = $session->getUsuario();
+            $destinatarioCorreo = $usuario->getUsMail();
+            $nombreUsuario = $usuario->getUsNombre();
+
+            $asunto = 'Elixir Patagonico - Confirmación de Compra #' . $compra->getIdCompra();
+
+            $contenidoHtml = "<p>Estimado/a {$nombreUsuario},</p>
+                              <p>Tu compra #{$compra->getIdcompra()} ha sido registrada exitosamente con el estado: <strong>{$estadoInicial}</strong>.</p>
+                              <p>Gracias por confiar en nosotros.</p>";
+
+            $contenidoAlt = "Estimado/a {$nombreUsuario},\n\nTu compra #{$compra->getIdcompra()} ha sido registrada exitosamente con el estado: {$estadoInicial}.\n\nGracias por confiar en nosotros.";
+
+            $mail->enviarCorreo($destinatarioCorreo, $nombreUsuario, $asunto, $contenidoHtml, $contenidoAlt);
+        }
         return $compraExitosa;
     }
+
     /**
      * Verifica la cantidad de productos en el carrito con su
      * @param int $j Cantidad de productos modificados
@@ -312,11 +322,10 @@ class abmCompra
     {
         $arrayRol = $session->getRol();
         $idRol = $arrayRol[0]['idrol'];
-     
+
         if ($idRol == 3 || $idRol == 1) {
-            
+
             $arrayCompras = $this->buscar("");
-         
         } else {
             $param['idusuario'] = $session->getUsuario()->getIdUsuario();
             $arrayCompras = $this->buscar($param);

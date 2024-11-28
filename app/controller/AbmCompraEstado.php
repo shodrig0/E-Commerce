@@ -217,6 +217,9 @@ class AbmCompraEstado
                 $abmProducto->modificacion($datosProducto);
             }
         }
+        $compra = (new AbmCompra())->buscar(['idcompra' => $param['idcompra']])[0];
+        $nuevoEstado = 3;
+        $this->cambioEstadoMail($compra, $nuevoEstado);
 
         return $resp;
     }
@@ -320,7 +323,7 @@ class AbmCompraEstado
 
     public function cambioEstadoMail($compra, $nuevoEstado)
     {
-        $msjsEstados = [1 => 'iniciada', 2 => 'aceptada', 3 => 'enviada', 4 => 'cancelada'];
+        $msjsEstados = [1 => 'aceptada', 2 => 'enviada', 3 => 'cancelada'];
         $nombreEstado = $msjsEstados[$nuevoEstado];
 
         $mail = new Mail();

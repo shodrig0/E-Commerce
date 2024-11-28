@@ -126,18 +126,16 @@ require_once '../../layouts/header.php';
           idproducto: idProducto
         },
         success: function(result) {
-        $('.ui.modal').html(`
-          <div class="header">¡Compra Realizada!</div>
-          <div class="content">
-            <p>Tu compra se ha realizado con éxito. Gracias por elegirnos.</p>
-          </div>
-        `).modal('show');
-        setTimeout(function() {
-          location.reload()
-        }, 2000);
-},
+          alert(result.mensaje);
+          setTimeout(function() {
+            location.reload(); 
+          }, 1000);
+;
+        },
         error: function(xhr, status, error) {
-          console.error(xhr.responseText);
+          setTimeout(function() {
+          location.reload(); 
+          }, 1000);
         }
       });
     }

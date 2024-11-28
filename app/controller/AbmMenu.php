@@ -18,5 +18,4 @@ class AbmMenu {
         return $resultado; 
     }
 
-    
 }
