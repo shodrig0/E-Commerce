@@ -248,15 +248,15 @@ class abmCompra
         }
 
         if ($compraExitosa) {
-            $abmEstadoCompra = new AbmCompraEstado();
-            $estadoInit = 1;
-            $compraEstadoDatos = [
-                'idcompra' => $idcompra,
-                'idcompraestadotipo' => $estadoInit,
-                'cefechaini' => date('Y-m-d H:i:s'),
-                'cefechafin' => null
-            ];
-            $abmEstadoCompra->alta($compraEstadoDatos);
+            // $abmEstadoCompra = new AbmCompraEstado();
+            // $estadoInit = 1;
+            // $compraEstadoDatos = [
+            //     'idcompra' => $idcompra,
+            //     'idcompraestadotipo' => $estadoInit,
+            //     'cefechaini' => date('Y-m-d H:i:s'),
+            //     'cefechafin' => null
+            // ];
+            // $abmEstadoCompra->alta($compraEstadoDatos);
 
             $compra = (new AbmCompra())->buscar(['idcompra' => $idcompra])[0];
             $estadoInicial = 'iniciada';
