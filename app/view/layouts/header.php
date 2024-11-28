@@ -78,18 +78,23 @@ foreach ($rolesPagina as $carpeta => $rolesPermitidos) {
 
     <script>
         function reloj() {
-            const horaActual = new Date();
-            const hora = horaActual.getHours();
-            const minutos = horaActual.getMinutes();
-            const formato = hora >= 12 ? 'PM' : 'AM';
+            const horaActual = new Date()
+            const hora = horaActual.getHours()
+            const minutos = horaActual.getMinutes()
+            const formato = hora >= 12 ? 'PM' : 'AM'
 
-            const horaFormateada = hora % 12 || 12;
-            const minutosFormateados = minutos.toString().padStart(2, '0');
+            const horaFormateada = hora % 12 || 12
+            const minutosFormateados = minutos.toString().padStart(2, '0')
 
-            document.getElementById('relojito').textContent = `Hora: ${horaFormateada}:${minutosFormateados} ${formato}`;
+            document.getElementById('relojito').textContent = `Hora: ${horaFormateada}:${minutosFormateados} ${formato}`
         }
-        reloj();
-        setInterval(reloj, 1000);
+        reloj()
+        setInterval(reloj, 1000)
+    </script>
+
+    <script>
+        $('.ui.dropdown').dropdown();
+        const BASE_URL = "<?php echo BASE_URL; ?>";
     </script>
     <?php
     navbar($userRoles, $usuario);

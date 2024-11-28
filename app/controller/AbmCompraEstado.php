@@ -132,97 +132,16 @@ class AbmCompraEstado
         return $arreglo;
     }
 
-    /**
-     * Cancela una compra del cliente.
-     * @param array $param
-     * 
-     */
-    /*public function cancelarCompraCliente($param)
-    {
-        $arreglo["idcompra"] = $param["idcompra"];
-        $listaCompraEstadoConId = $this->buscar($arreglo);
-        $compraCancelada = false;
-        $i = 0;
-        while (!$compraCancelada && $i < count($listaCompraEstadoConId)) {
-            if ($listaCompraEstadoConId[$i]->getObjCompraEstadoTipo()->getIdcompraestadotipo() == 4) {
-                $compraCancelada = true;
-            } else {
-                $i++;
-            }
-        }
-        $arregloCompraEstado = $this->buscar(null);
-        $compraAvanzada2 = false;
-        $i = 0;
-        while ((!$compraAvanzada2) && ($i < count($arregloCompraEstado))) {
-            if (
-                $arregloCompraEstado[$i]->getObjCompraEstadoTipo()->getIdcompraestadotipo() > $param["idcompraestadotipo"]
-                && $arregloCompraEstado[$i]->getObjCompra()->getIdcompra() == $param["idcompra"]
-            ) {
-                $compraAvanzada2 = true;
-            } else {
-                $i++;
-            }
-        }
 
-        if ($param["idcompraestadotipo"] == 1) {
-            if (!$compraCancelada) {
-                if (!$compraAvanzada2) {
-                    $fechaActual = date('Y-m-d H:i:s');
-                    $param["cefechafin"] = $fechaActual;
-                    if ($this->modificacion($param)) {
-                        $param["idcompraestado"] = null;
-                        $param["idcompraestadotipo"] = 4;
-                        $param["cefechaini"] = $fechaActual;
-                        $param["cefechafin"] = $fechaActual;
-                        if ($this->alta($param)) {
-                            $objAbmCompraItem = new AbmCompraItem();
-                            $listaCompraItem = $objAbmCompraItem->buscar($arreglo);
-                            if ($listaCompraItem) {
-                                foreach ($listaCompraItem as $compraItem) {
-                                    $cantidadItems = $compraItem->getCicantidad();
-                                    $objProducto = $compraItem->getObjProducto();
-                                    $nuevoStock = $cantidadItems + $objProducto->getProcantstock();
-                                    $objAbmProducto = new AbmProducto();
-                                    $arregloParaModificar["idproducto"] = $objProducto->getIdproducto();
-                                    $arregloParaModificar["pronombre"] = $objProducto->getPronombre();
-                                    $arregloParaModificar["prodetalle"] = $objProducto->getProdetalle();
-                                    $arregloParaModificar["procantstock"] = $nuevoStock;
-                                    $arregloParaModificar["proprecio"] = $objProducto->getProprecio();
-                                    $arregloParaModificar["prodeshabilitado"] = $objProducto->getProdeshabilitado();
-                                    if ($objAbmProducto->modificacion($arregloParaModificar)) {
-                                        $respuesta["respuesta"] = "Se canceló la compra y se actualizó el stock correctamente";
-                                    } else {
-                                        $respuesta["errorMsg"] = "No se pudo actualizar el stock";
-                                    }
-                                }
-                            }
-                        } else {
-                            $respuesta["errorMsg"] = "No se pudo cancelar la compra";
-                        }
-                    } else {
-                        $respuesta["errorMsg"] = "No se pudo cancelar la compra";
-                    }
-                } else {
-                    $respuesta["errorMsg"] = "La compra ya está avanzada";
-                }
-            } else {
-                $respuesta["errorMsg"] = "La compra ya está cancelada";
-            }
-        } else {
-            $respuesta["errorMsg"] = "Solo se puede cancelar la compra si estuviera en estado 'iniciada'";
-        }
-        return $respuesta;
-    }
-*/
     public function cambiarEstado($param)
     {
         $resp = false;
-        
+
         $compraEstado = $this->buscar($param);
-        if(count($compraEstado) >=0){
-            $numeroEstado= count($compraEstado)-1;
-            $viejoIdEstadoTipo= intval($param['idcompraestadotipo']);
-            $datosCompraEstadoAnterior=[
+        if (count($compraEstado) >= 0) {
+            $numeroEstado = count($compraEstado) - 1;
+            $viejoIdEstadoTipo = intval($param['idcompraestadotipo']);
+            $datosCompraEstadoAnterior = [
                 'idcompraestado' => $compraEstado[$numeroEstado]->getidcompraestado(),
                 'idcompra' => $param['idcompra'],
                 'idcompraestadotipo' => $param['idcompraestadotipo'],
@@ -230,10 +149,10 @@ class AbmCompraEstado
                 'cefechafin' =>  date('Y-m-d H:i:s')
             ];
             $modEstadoAnterior = $this->modificacion($datosCompraEstadoAnterior);
-            $nuevoIdEstadoTipo= $param['idcompraestadotipo'] +1;
+            $nuevoIdEstadoTipo = $param['idcompraestadotipo'] + 1;
             echo "nuevoidestadotipo";
             var_dump($nuevoIdEstadoTipo);
-            $datosCompraEstadoActual =[
+            $datosCompraEstadoActual = [
                 'idcompra' => $param['idcompra'],
                 'idcompraestadotipo' => $nuevoIdEstadoTipo,
                 'cefechaini' => date('Y-m-d H:i:s'),
@@ -241,24 +160,31 @@ class AbmCompraEstado
             ];
             $modEstadoActual = $this->alta($datosCompraEstadoActual);
         }
-        
-        
-        if($modEstadoAnterior && $modEstadoActual){
+
+        if ($modEstadoAnterior && $modEstadoActual) {
             $resp = true;
+            $compra = $this->buscar(['idcompra' => $param['idcompra']])[0];
+
+            $correoEnviar = $this->cambioEstadoMail($compra, $param['idcompraestadotipo']);
+
+            if (!$correoEnviar) {
+                $resp = false;
+            }
         }
-        
+
         return $resp;
     }
-        
 
-    public function cancelarCompra($param){
+
+    public function cancelarCompra($param)
+    {
 
         $resp = false;
         $compraEstado = $this->buscar($param);
-        
-        if(count($compraEstado)>0){
-        $estadonumero = count($compraEstado)-1;
-            $datosCompraEstadoAnterior=[
+
+        if (count($compraEstado) > 0) {
+            $estadonumero = count($compraEstado) - 1;
+            $datosCompraEstadoAnterior = [
                 'idcompraestado' => $compraEstado[$estadonumero]->getidcompraestado(),
                 'idcompra' => $param['idcompra'],
                 'idcompraestadotipo' => $param['idcompraestadotipo'],
@@ -267,30 +193,30 @@ class AbmCompraEstado
             ];
             var_dump($datosCompraEstadoAnterior);
             $this->modificacion($datosCompraEstadoAnterior);
-        
-        
-            $datosCompraCancelar =[
+
+
+            $datosCompraCancelar = [
                 'idcompra' => $param['idcompra'],
                 'idcompraestadotipo' => 4,
                 'cefechaini' => date('Y-m-d H:i:s'),
                 'cefechafin' => date('Y-m-d H:i:s')
             ];
             $resp = $this->alta($datosCompraCancelar);
-            
+
             $abmCompraItem = new AbmCompraItem;
             $arrCompraItem = $abmCompraItem->buscar(['idcompra' => $param['idcompra']]);
 
-            foreach($arrCompraItem as $item){
+            foreach ($arrCompraItem as $item) {
                 $abmProducto = new AbmProducto;
                 $idProducto["idproducto"] = $item->getObjProducto()->getIdProducto();
                 $objProducto = $abmProducto->buscarProducto($idProducto)[0];
-        
+
                 $datosProducto = [
-                  'idproducto' => $objProducto->getIdProducto(),
-                  'pronombre' => $objProducto->getProNombre(),
-                  'prodetalle' => $objProducto->getProDetalle(),
-                  'procantstock' => $objProducto->getProCantStock() + $item->getCiCantidad(),
-                  'precio' => $objProducto->getPrecio(),
+                    'idproducto' => $objProducto->getIdProducto(),
+                    'pronombre' => $objProducto->getProNombre(),
+                    'prodetalle' => $objProducto->getProDetalle(),
+                    'procantstock' => $objProducto->getProCantStock() + $item->getCiCantidad(),
+                    'precio' => $objProducto->getPrecio(),
                 ];
                 $abmProducto->modificacion($datosProducto);
             }
@@ -298,93 +224,8 @@ class AbmCompraEstado
 
         return $resp;
     }
-    
-    
-    
-    /**
-     * Cancela un estado de compra.
-     * @param array $param
-     * @return array
-     */
-    /*public function cancelarCompraEstado($param)
-    {
-        $arreglo["idcompra"] = $param["idcompra"];
 
-        $listaCompraEstadoConId = $this->buscar($arreglo);
-        $compraCancelada = false;
-        $i = 0;
-        while (!$compraCancelada && $i < count($listaCompraEstadoConId)) {
-            if ($listaCompraEstadoConId[$i]->getObjCompraEstadoTipo()->getIdcompraestadotipo() == 4) {
-                $compraCancelada = true;
-            } else {
-                $i++;
-            }
-        }
-        $arregloCompraEstado = $this->buscar(null);
-        $compraAvanzada2 = false;
-        $i = 0;
-        while ((!$compraAvanzada2) && ($i < count($arregloCompraEstado))) {
-            if (
-                $arregloCompraEstado[$i]->getObjCompraEstadoTipo()->getIdcompraestadotipo() > $param["idcompraestadotipo"]
-                && $arregloCompraEstado[$i]->getObjCompra()->getIdcompra() == $param["idcompra"]
-            ) {
-                $compraAvanzada2 = true;
-            } else {
-                $i++;
-            }
-        }
 
-        if ($param["idcompraestadotipo"] <= 3 && $param["idcompraestadotipo"] > 0) {
-            if (!$compraCancelada) {
-                if (!$compraAvanzada2) {
-                    $fechaActual = date('Y-m-d H:i:s');
-                    $param["cefechafin"] = $fechaActual;
-                    if ($this->modificacion($param)) {
-                        $param["idcompraestado"] = null;
-                        $param["idcompraestadotipo"] = 4;
-                        $param["cefechaini"] = $fechaActual;
-                        $param["cefechafin"] = $fechaActual;
-                        if ($this->alta($param)) {
-                            $objAbmCompraItem = new AbmCompraItem();
-                            $listaCompraItem = $objAbmCompraItem->buscar($arreglo);
-                            if ($listaCompraItem) {
-                                foreach ($listaCompraItem as $compraItem) {
-                                    $cantidadItems = $compraItem->getCicantidad();
-                                    $objProducto = $compraItem->getObjProducto();
-                                    $nuevoStock = $cantidadItems + $objProducto->getProcantstock();
-                                    $objAbmProducto = new AbmProducto();
-                                    $arregloParaModificar["idproducto"] = $objProducto->getIdproducto();
-                                    $arregloParaModificar["pronombre"] = $objProducto->getPronombre();
-                                    $arregloParaModificar["prodetalle"] = $objProducto->getProdetalle();
-                                    $arregloParaModificar["procantstock"] = $nuevoStock;
-                                    $arregloParaModificar["proprecio"] = $objProducto->getProprecio();
-                                    $arregloParaModificar["prodeshabilitado"] = $objProducto->getProdeshabilitado();
-                                    if ($objAbmProducto->modificacion($arregloParaModificar)) {
-                                        $respuesta["respuesta"] = "Se canceló la compra y se actualizó el stock correctamente";
-                                    } else {
-                                        $respuesta["errorMsg"] = "No se pudo actualizar el stock";
-                                    }
-                                }
-                            } else {
-                                $respuesta["respuesta"] = "Se canceló la compra pero no tenía items";
-                            }
-                        } else {
-                            $respuesta["errorMsg"] = "No se pudo cancelar la compra";
-                        }
-                    } else {
-                        $respuesta["errorMsg"] = "No se pudo cancelar la compra";
-                    }
-                } else {
-                    $respuesta["errorMsg"] = "La compra ya está avanzada";
-                }
-            } else {
-                $respuesta["errorMsg"] = "La compra ya está cancelada";
-            }
-        } else {
-            $respuesta["errorMsg"] = "No se puede cancelar la compra al siguiente estado debido a que el estado 'enviada' o 'cancelada' es el último estado";
-        }
-        return $respuesta;
-    }*/
 
     /**
      * Lista todos los estados de compra.
@@ -479,5 +320,25 @@ class AbmCompraEstado
             $respuesta["errorMsg"] = "No se puede pasar la compra al siguiente estado debido a que el estado 'enviada' o 'cancelada' es el último estado";
         }
         return $respuesta;
+    }
+
+    public function cambioEstadoMail($compra, $nuevoEstado)
+    {
+        $msjsEstados = [1 => 'iniciada', 2 => 'aceptada', 3 => 'enviada', 4 => 'cancelada'];
+        $nombreEstado = $msjsEstados[$nuevoEstado];
+
+        $mail = new Mail();
+
+        $usuario = $compra->getCompra()->getObjUsuario();
+        $destinatarioCorreo = $usuario->getUsMail();
+        $nombreUsuario = $usuario->getUsNombre();
+        $asunto = 'Elixir Patagónico - Cambio Estado de Compra #' . $compra->getIdCompra();
+
+        $contenidoHtml = "<p>Estimado/a {$nombreUsuario},</p><p>El estado de tu compra #{$compra->getIdcompra()} ha sido actualizado a: <strong>{$nombreEstado}</strong>.</p>";
+        $contenidoAlt = "Estimado/a {$nombreUsuario},\n\nEl estado de tu compra #{$compra->getIdcompra()} ha sido actualizado a: {$nombreEstado}.";
+
+        $resultado = $mail->enviarCorreo($destinatarioCorreo, $nombreUsuario, $asunto, $contenidoHtml, $contenidoAlt);
+
+        return $resultado['success'];
     }
 }

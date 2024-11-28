@@ -47,6 +47,16 @@ $arrayCompras = $abmCompra->listarCompras($session);
         </tbody>
     </table>
 </div>
+<div class="ui modal">
+    <div class="header">Confirmar Acci&oacute;n</div>
+    <div class="content">
+        <p id="modal-mensaje">¿Est&aacute;s seguro de que deseas cambiar el estado de la compra?</p>
+    </div>
+    <div class="actions">
+        <div class="ui red deny button">Cancelar</div>
+        <div class="ui green approve button">Confirmar</div>
+    </div>
+</div>
 <script type="text/javascript">
     $(document).ready(function() {
         $('.boton-cancelar').click(function() {
@@ -63,7 +73,8 @@ $arrayCompras = $abmCompra->listarCompras($session);
                 method: 'POST',
                 data: data,
                 success: function(response) {
-                    alert('Funciona cancelar la compra')
+                    $('#modal-mensaje').text('¿Est$aacute;s segurx de que deseas cancelar esta compra?')
+                    $('.ui.modal').modal('show')
                 },
                 error: function(error) {
                     alert('Hubo problemas al cancelar la compra')

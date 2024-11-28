@@ -19,8 +19,8 @@ require_once '../../layouts/header.php';
         <?php
         $precioTotal = 0;
         foreach ($carrito as $producto):
-        $precioTotal += $producto['precio'] * $producto['cantidadproducto'];  
-          ?>
+          $precioTotal += $producto['precio'] * $producto['cantidadproducto'];
+        ?>
           <tr>
             <td>
               <div class="ui items">
@@ -57,19 +57,28 @@ require_once '../../layouts/header.php';
       <h2 class="ui right floated header">Total:<span class="total">$<?= number_format($precioTotal, 2) ?></span></h2>
     </div>
     <div class="ui center aligned">
-    <button type="button" class="ui green button finalizar-compra" data-id="<?= $producto['idproducto'] ?>">Finalizar Compra</button>
-    </div>
+      <button type="button" class="ui green button finalizar-compra" data-id="<?= $producto['idproducto'] ?>">Finalizar Compra</button>
     </div>
   </div>
 </div>
+</div>
+<div class="ui modal">
+  <div class="header">Compra Realizada</div>
+  <div class="content"> 
+    <p>¡Tu compra ha sido completada con éxito!</p>
+  </div>
+  <div class="actions">
+    <div class="ui green button">Cerrar</div>
+  </div>
+</div>
 <script type="text/javascript">
-  $(document).ready(function () {
-    $('.reducir-cantidad').on('click', function () {
+  $(document).ready(function() {
+    $('.reducir-cantidad').on('click', function() {
       let idProducto = $(this).data('id');
       actualizarCantidad(idProducto, -1, $(this));
     });
 
-    $('.anadir-cantidad').on('click', function () {
+    $('.anadir-cantidad').on('click', function() {
       let idProducto = $(this).data('id');
       actualizarCantidad(idProducto, 1, $(this));
     });
@@ -80,8 +89,11 @@ require_once '../../layouts/header.php';
         url: './action/actionActualizarCarrito.php',
         method: 'POST',
         dataType: 'json',
-        data: { idproducto: idProducto, cantidad: cambio },
-        success: function (response) {
+        data: {
+          idproducto: idProducto,
+          cantidad: cambio
+        },
+        success: function(response) {
           console.log(response);
           if (response.success) {
             const cantidadOrig = boton.siblings('.cantidad');
@@ -96,13 +108,13 @@ require_once '../../layouts/header.php';
             alert(response.message);
           }
         },
-        error: function (xhr, status, error) {
+        error: function(xhr, status, error) {
           console.error(xhr.responseText);
           alert('Hubo un error en el envío.');
         }
       });
     }
-    $('.finalizar-compra').on('click', function () {
+    $('.finalizar-compra').on('click', function() {
       let idProducto = $(this).data('id');
       enviarCarrito(idProducto);
     });
@@ -111,9 +123,14 @@ require_once '../../layouts/header.php';
       $.ajax({
         url: "./action/actionRealizarCompra.php",
         type: "POST",
-        data: { idproducto: idProducto },
+        data: {
+          idproducto: idProducto
+        },
         success: function(result) {
-          alert(result);
+          $('.ui.modal').modal('show');
+          setTimeout(function() {
+            location.reload()
+          }, 2000);
         },
         error: function(xhr, status, error) {
           console.error(xhr.responseText);
@@ -123,9 +140,7 @@ require_once '../../layouts/header.php';
     }
 
     function actualizarTotal(total) {
-        $('.total').text('$' + total);
+      $('.total').text('$' + total);
     }
   });
-
-
 </script>

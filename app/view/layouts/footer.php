@@ -23,7 +23,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
 <style>
     html,
     body {
-        height: 100;vh
+        height: 100vh;
         margin: 0;
         /* Elimina márgenes por defecto */
         display: flex;

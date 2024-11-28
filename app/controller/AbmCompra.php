@@ -156,40 +156,40 @@ private function cargarObjeto($param) {
 
 
 
-    /**
-     * Funcion que se usa en el area de administracion para listar las compras por estado
-     * Devuelve un arreglo de compras agrupadas por estado, sin incluir las compras en estado carrito.
-     * @return array
-     */
-    public function obtenerComprasPorTodosLosEstados()
-    {
-        $arr_compras = [];
-        $arr_porconfirmar = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_PORCONFIRMAR);
-        $arr_confirmadas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_CONFIRMADA);
-        $arr_enviadas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_ENVIADA);
-        $arr_canceladas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_CANCELADA);
+    // /**
+    //  * Funcion que se usa en el area de administracion para listar las compras por estado
+    //  * Devuelve un arreglo de compras agrupadas por estado, sin incluir las compras en estado carrito.
+    //  * @return array
+    //  */
+    // public function obtenerComprasPorTodosLosEstados()
+    // {
+    //     $arr_compras = [];
+    //     $arr_porconfirmar = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_PORCONFIRMAR);
+    //     $arr_confirmadas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_CONFIRMADA);
+    //     $arr_enviadas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_ENVIADA);
+    //     $arr_canceladas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_CANCELADA);
 
-        $arr_compras = array("porconfirmar" => $arr_porconfirmar, "confirmadas" => $arr_confirmadas, "enviadas" => $arr_enviadas, "canceladas" => $arr_canceladas);
-        return $arr_compras;
-    }
-
-
+    //     $arr_compras = array("porconfirmar" => $arr_porconfirmar, "confirmadas" => $arr_confirmadas, "enviadas" => $arr_enviadas, "canceladas" => $arr_canceladas);
+    //     return $arr_compras;
+    // }
 
 
-    /**
-     * Devuelve un string del ultimo estado de la compra
-     */
-    public function obtenerUltimoEstadoCompra($compra)
-    {
-        $arr_estados = $compra->getEstados();
-        $ultimo_estado = end($arr_estados);
-        if ($ultimo_estado == false) {
-            $ultimo_estado = new CompraEstado();
-            $ultimo_estado->setCompraEstadoTipo(new CompraEstadoTipo());
-            $ultimo_estado->getCompraEstadoTipo()->setIdCompraEstadoTipo(COMPRA_EN_CARRITO);
-        }
-        return $ultimo_estado;
-    }
+
+
+    // /**
+    //  * Devuelve un string del ultimo estado de la compra
+    //  */
+    // public function obtenerUltimoEstadoCompra($compra)
+    // {
+    //     $arr_estados = $compra->getEstados();
+    //     $ultimo_estado = end($arr_estados);
+    //     if ($ultimo_estado == false) {
+    //         $ultimo_estado = new CompraEstado();
+    //         $ultimo_estado->setCompraEstadoTipo(new CompraEstadoTipo());
+    //         $ultimo_estado->getCompraEstadoTipo()->setIdCompraEstadoTipo(COMPRA_EN_CARRITO);
+    //     }
+    //     return $ultimo_estado;
+    // }
 
 
 

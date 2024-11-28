@@ -1,10 +1,11 @@
 <?php
+ob_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/app/view/layouts/header.php';
 
 $datos = darDatosSubmitted();
 $mensaje = '';
-$redireccion = BASE_URL . "app/view/home/home.php";
+// $redireccion = BASE_URL . "app/view/home/home.php";
 
 try {
     if (empty($datos['usnombre']) || empty($datos['uspass'])) {
@@ -15,7 +16,7 @@ try {
         $password = $datos['uspass'];
 
         if ($session->iniciar($nombre, $password)) {
-            header("Location: $redireccion");
+            header("Location: " . BASE_URL . "app/view/home/home.php");
             exit();
         } else {
             $mensaje = '<div class="ui red message">Usuario o contraseña incorrectos. Intente nuevamente.</div>';
