@@ -28,13 +28,11 @@ class AbmCarrito
             $i++;
         }
     
-        // Si no se encontró el producto en el carrito, buscarlo y agregarlo
         if (!$productoEncontrado) {
             $productos = $abmProducto->buscarProducto($param);
             if (!empty($productos)) {
                 $producto = $productos[0];
                 
-                // Si la cantidad es mayor que 0, agregarlo al carrito
                 if ($param['cantidad'] > 0) {
                     $nuevoItem = [
                         'idproducto' => $producto->getIdProducto(),
@@ -47,13 +45,23 @@ class AbmCarrito
                 }
             }
         }
-        
-        // Guarda el carrito actualizado en la sesión
         $session->setCarritoSession($carrito);
         return $productoAgregado;
     }
     
+    public function obtenerCarritoConPrecios()
+    {
+        $session = new Session;
+        $carrito = $session->getCarritoSession() ?? [];
+        $precioTotal = 0;
 
+        foreach ($carrito as &$item) {
+            $item['precioTotal'] = $item['precio'] * $item['cantidadproducto'];
+            $precioTotal += $item['precioTotal'];
+        }
+
+        return ['carrito' => $carrito, 'precioTotal' => $precioTotal];
+    }
 
     public function eliminarProductoCarrito($param)
     {

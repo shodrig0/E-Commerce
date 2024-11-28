@@ -127,7 +127,7 @@ class Producto
             if ($res > -1) {
                 if ($res > 0) {
                     $row = $base->Registro();
-                    $this->setear($row["idproducto"], $row["pronombre"], $row["prodetalle"], $row["procantstock"], $row["proprecio"]);
+                    $this->setear($row["idproducto"], $row["pronombre"], $row["prodetalle"], $row["procantstock"], $row["precio"]);
                     $respuesta = true;
                 }
             }

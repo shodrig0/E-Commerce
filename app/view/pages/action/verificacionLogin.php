@@ -14,6 +14,7 @@ try {
         $password = $datos['uspass'];
 
         if ($session->iniciar($nombre, $password)) {
+            $mensaje = '<div class="ui green message">¡Bienvenido!</div>';
             exit();
         } else {
             $mensaje = '<div class="ui red message">Usuario o contraseña incorrectos. Intente nuevamente.</div>';

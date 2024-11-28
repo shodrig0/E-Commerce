@@ -13,11 +13,14 @@ require_once '../../layouts/header.php';
           <th>Producto</th>
           <th>Precio</th>
           <th>Cantidad</th>
-          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <?php foreach ($carrito as $producto): ?>
+        <?php
+        $precioTotal = 0;
+        foreach ($carrito as $producto):
+        $precioTotal += $producto['precio'] * $producto['cantidadproducto'];  
+          ?>
           <tr>
             <td>
               <div class="ui items">
@@ -28,7 +31,7 @@ require_once '../../layouts/header.php';
                   <div class="content">
                     <div class="header"><?= $producto['nombre'] ?></div>
                     <div class="description">
-                      <p><?= $producto['descripcion'] ?? 'Sin descripción disponible' ?></p>
+                      <p><?= $producto['prodetal'] ?? 'Sin descripción disponible' ?></p>
                     </div>
                   </div>
                 </div>
@@ -46,26 +49,20 @@ require_once '../../layouts/header.php';
                 <button class="ui button anadir-cantidad" data-id="<?= $producto['idproducto'] ?>">+</button>
               </div>
             </td>
-            <td>
-              <button class="ui red button" (<?= $producto['idproducto']; ?>)">
-                <i class="trash alternate icon"></i> Eliminar
-                </a>
-            </td>
           </tr>
         <?php endforeach; ?>
       </tbody>
     </table>
     <div class="ui clearing segment">
-      <h2 class="ui right floated header">Total: $<?= number_format($precioTotal, 2) ?></h2>
+      <h2 class="ui right floated header">Total:<span class="total">$<?= number_format($precioTotal, 2) ?></span></h2>
     </div>
     <div class="ui center aligned">
-      <button class="ui green button">
-        <i class="shopping cart icon"></i> Finalizar Compra
-      </button>
+    <button type="button" class="ui green button finalizar-compra" data-id="<?= $producto['idproducto'] ?>">Finalizar Compra</button>
+    </div>
     </div>
   </div>
 </div>
-<script>
+<script type="text/javascript">
   $(document).ready(function () {
     $('.reducir-cantidad').on('click', function () {
       let idProducto = $(this).data('id');
@@ -77,11 +74,12 @@ require_once '../../layouts/header.php';
       actualizarCantidad(idProducto, 1, $(this));
     });
 
+
     function actualizarCantidad(idProducto, cambio, boton) {
       $.ajax({
         url: './action/actionActualizarCarrito.php',
         method: 'POST',
-        dataType: 'json', 
+        dataType: 'json',
         data: { idproducto: idProducto, cantidad: cambio },
         success: function (response) {
           console.log(response);
@@ -93,15 +91,41 @@ require_once '../../layouts/header.php';
             } else {
               cantidadOrig.text(nuevaCantidad);
             }
+            actualizarTotal(response.precioTotal);
           } else {
             alert(response.message);
           }
         },
         error: function (xhr, status, error) {
-          console.error(xhr.responseText); // Agrega un log para depurar la respuesta del servidor
+          console.error(xhr.responseText);
           alert('Hubo un error en el envío.');
         }
       });
     }
-  })
+    $('.finalizar-compra').on('click', function () {
+      let idProducto = $(this).data('id');
+      enviarCarrito(idProducto);
+    });
+
+    function enviarCarrito(idProducto) {
+      $.ajax({
+        url: "./action/actionRealizarCompra.php",
+        type: "POST",
+        data: { idproducto: idProducto },
+        success: function(result) {
+          alert(result);
+        },
+        error: function(xhr, status, error) {
+          console.error(xhr.responseText);
+          alert('No se pudo completar la compra. Intenta nuevamente.');
+        }
+      });
+    }
+
+    function actualizarTotal(total) {
+        $('.total').text('$' + total);
+    }
+  });
+
+
 </script>

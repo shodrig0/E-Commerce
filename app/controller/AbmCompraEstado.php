@@ -18,7 +18,7 @@ class AbmCompraEstado
             $objCompraEstadoTipo = new CompraEstadoTipo();
             $objCompraEstadoTipo->setIdcompraestadotipo($param["idcompraestadotipo"]);
             $objCompraEstadoTipo->cargar();
-            $obj->setear($param['idcompraestado'], $objCompra, $objCompraEstadoTipo, $param["cefechaini"], $param["cefechafin"]);
+            $obj->cargar($param['idcompraestado'], $objCompra, $objCompraEstadoTipo, $param["cefechaini"], $param["cefechafin"]);
         }
         return $obj;
     }
@@ -33,7 +33,7 @@ class AbmCompraEstado
         $obj = null;
         if (isset($param['idcompraestado'])) {
             $obj = new CompraEstado();
-            $obj->setear($param['idcompraestado'], null, null, null, null);
+            $obj->cargar($param['idcompraestado'], null, null, null, null);
         }
         return $obj;
     }
@@ -135,9 +135,9 @@ class AbmCompraEstado
     /**
      * Cancela una compra del cliente.
      * @param array $param
-     * @return array
+     * 
      */
-    public function cancelarCompraCliente($param)
+    /*public function cancelarCompraCliente($param)
     {
         $arreglo["idcompra"] = $param["idcompra"];
         $listaCompraEstadoConId = $this->buscar($arreglo);
@@ -213,36 +213,100 @@ class AbmCompraEstado
         }
         return $respuesta;
     }
-
+*/
     public function cambiarEstado($param)
     {
         $resp = false;
-        if ($this->seteadosCamposClaves($param)) {
-            $objCompraEstado = $this->cargarObjeto($param);
-            if ($objCompraEstado != null) {
-                // Instanciar el objeto CompraEstadoTipo
-                $objCompraEstadoTipo = new CompraEstadoTipo();
-                $objCompraEstadoTipo->setIdcompraestadotipo($param['idcompraestadotipo']);
-                $objCompraEstadoTipo->cargar();
-
-                // Asignar el objeto CompraEstadoTipo al objeto CompraEstado
-                $objCompraEstado->setObjCompraEstadoTipo($objCompraEstadoTipo);
-                $objCompraEstado->setCefechaini($param['cefechaini']);
-                $objCompraEstado->setCefechafin($param['cefechafin']);
-                if ($objCompraEstado->modificar()) {
-                    $resp = true;
-                }
-            }
+        
+        $compraEstado = $this->buscar($param);
+        if(count($compraEstado) >=0){
+            $numeroEstado= count($compraEstado)-1;
+            $viejoIdEstadoTipo= intval($param['idcompraestadotipo']);
+            $datosCompraEstadoAnterior=[
+                'idcompraestado' => $compraEstado[$numeroEstado]->getidcompraestado(),
+                'idcompra' => $param['idcompra'],
+                'idcompraestadotipo' => $param['idcompraestadotipo'],
+                'cefechaini' => $compraEstado[$numeroEstado]->getCeFechaIni(),
+                'cefechafin' =>  date('Y-m-d H:i:s')
+            ];
+            $modEstadoAnterior = $this->modificacion($datosCompraEstadoAnterior);
+            $nuevoIdEstadoTipo= $param['idcompraestadotipo'] +1;
+            echo "nuevoidestadotipo";
+            var_dump($nuevoIdEstadoTipo);
+            $datosCompraEstadoActual =[
+                'idcompra' => $param['idcompra'],
+                'idcompraestadotipo' => $nuevoIdEstadoTipo,
+                'cefechaini' => date('Y-m-d H:i:s'),
+                'cefechafin' =>   date('0000-00-00 00:00:00')
+            ];
+            $modEstadoActual = $this->alta($datosCompraEstadoActual);
         }
+        
+        
+        if($modEstadoAnterior && $modEstadoActual){
+            $resp = true;
+        }
+        
         return $resp;
     }
+        
 
+    public function cancelarCompra($param){
+
+        $resp = false;
+        $compraEstado = $this->buscar($param);
+        
+        if(count($compraEstado)>0){
+        $estadonumero = count($compraEstado)-1;
+            $datosCompraEstadoAnterior=[
+                'idcompraestado' => $compraEstado[$estadonumero]->getidcompraestado(),
+                'idcompra' => $param['idcompra'],
+                'idcompraestadotipo' => $param['idcompraestadotipo'],
+                'cefechaini' => $compraEstado[$estadonumero]->getCeFechaIni(),
+                'cefechafin' => date('Y-m-d H:i:s')
+            ];
+            var_dump($datosCompraEstadoAnterior);
+            $this->modificacion($datosCompraEstadoAnterior);
+        
+        
+            $datosCompraCancelar =[
+                'idcompra' => $param['idcompra'],
+                'idcompraestadotipo' => 4,
+                'cefechaini' => date('Y-m-d H:i:s'),
+                'cefechafin' => date('Y-m-d H:i:s')
+            ];
+            $resp = $this->alta($datosCompraCancelar);
+            
+            $abmCompraItem = new AbmCompraItem;
+            $arrCompraItem = $abmCompraItem->buscar(['idcompra' => $param['idcompra']]);
+
+            foreach($arrCompraItem as $item){
+                $abmProducto = new AbmProducto;
+                $idProducto["idproducto"] = $item->getObjProducto()->getIdProducto();
+                $objProducto = $abmProducto->buscarProducto($idProducto)[0];
+        
+                $datosProducto = [
+                  'idproducto' => $objProducto->getIdProducto(),
+                  'pronombre' => $objProducto->getProNombre(),
+                  'prodetalle' => $objProducto->getProDetalle(),
+                  'procantstock' => $objProducto->getProCantStock() + $item->getCiCantidad(),
+                  'precio' => $objProducto->getPrecio(),
+                ];
+                $abmProducto->modificacion($datosProducto);
+            }
+        }
+
+        return $resp;
+    }
+    
+    
+    
     /**
      * Cancela un estado de compra.
      * @param array $param
      * @return array
      */
-    public function cancelarCompraEstado($param)
+    /*public function cancelarCompraEstado($param)
     {
         $arreglo["idcompra"] = $param["idcompra"];
 
@@ -320,7 +384,7 @@ class AbmCompraEstado
             $respuesta["errorMsg"] = "No se puede cancelar la compra al siguiente estado debido a que el estado 'enviada' o 'cancelada' es el último estado";
         }
         return $respuesta;
-    }
+    }*/
 
     /**
      * Lista todos los estados de compra.

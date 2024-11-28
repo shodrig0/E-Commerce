@@ -1,11 +1,5 @@
 <?php
 require_once '../../../../../config.php';
-require_once '../../../../model/Producto.php';
-require_once '../../../../controller/AbmProducto.php';
-
-require_once '../../../../../config.php';
-require_once '../../../../model/Producto.php';
-require_once '../../../../controller/AbmProducto.php';
 
 $datos = darDatosSubmitted();
 $objAbmProducto = new AbmProducto();
@@ -14,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idEnviado = $_POST['idProducto'];
     $idProducto = intval($idEnviado);
     $param = ['idproducto' => $idProducto];
-    $objProducto = $objAbmProducto->buscar($param);
+    $objProducto = $objAbmProducto->buscarProducto($param);
 
 
     if ($objProducto !== null) {

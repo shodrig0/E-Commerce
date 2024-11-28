@@ -36,17 +36,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/E-Commerce/config.php';
 
 <div class="ui top attached tabular menu">
     <a class="item active" data-tab="agregar"><i class="plus icon"></i> Agregar Producto</a>
-    <a class="item" data-tab="quitar"><i class="trash icon"></i> Quitar Producto</a>
     <a class="item" data-tab="modificar"><i class="edit icon"></i> Modificar Producto</a>
 </div>
 
 <div class="ui bottom attached active tab segment" data-tab="agregar">
     <div id="agregarContent">
-        Cargando contenido...
-    </div>
-</div>
-<div class="ui bottom attached tab segment" data-tab="quitar">
-    <div id="quitarContent">
         Cargando contenido...
     </div>
 </div>
@@ -65,8 +59,6 @@ $(document).ready(function() {
             let url;
             if (tabName === 'agregar') {
                 url = 'agregarProducto.php';
-            } else if (tabName === 'quitar') {
-                url = 'borrarProducto.php';
             } else if (tabName === 'modificar') {
                 url = 'modificarProducto.php';
             }

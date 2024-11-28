@@ -29,9 +29,13 @@ async function manejarFormSubmit(selectorForm, urlAction, redireccionUrl) {
                     $('#contModal').html(response);
                     $('#modalResponse').modal('show');
 
-                    if (redireccionUrl) {
+                    if (redireccionUrl !== "./") {
                         setTimeout(function () {
                             window.location.href = redireccionUrl;
+                        }, 4000);
+                    } else {
+                        setTimeout(function () {
+                            location.reload();
                         }, 4000);
                     }
                 },

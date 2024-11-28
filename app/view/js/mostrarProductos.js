@@ -1,8 +1,7 @@
 $(document).ready(function () {
-
   function cargarProductos() {
     console.log("Recargando productos desde el servidor...");
-    $("#galeriaProductos").empty(); 
+    $("#galeriaProductos").empty();
     obtenerProductosDelServidor();
   }
 
@@ -27,7 +26,7 @@ $(document).ready(function () {
   }
 
   function mostrarProductos(productos) {
-    $("#galeriaProductos").empty(); 
+    $("#galeriaProductos").empty();
     productos.forEach(function (producto) {
       const elementoProducto = crearElementoProducto(producto);
       $("#galeriaProductos").append(elementoProducto);
@@ -55,6 +54,9 @@ $(document).ready(function () {
     let precio = $("<h3>")
       .addClass("ui green text")
       .text(`$${producto.precio}`);
+    let descripcion = $("<p>")
+      .addClass("ui text small")
+      .text(producto.prodetalle || "Sin descripción disponible.");
 
     let masContenido = $("<div>").addClass("extra content");
     let selectCantidad = $("<select>")
@@ -71,7 +73,7 @@ $(document).ready(function () {
         agregarAlCarrito(producto.idproducto, selectCantidad.val());
       });
 
-    infoProducto.append(titulo, precio, selectCantidad);
+    infoProducto.append(titulo, precio, descripcion, selectCantidad);
     masContenido.append(boton);
     card.append(imgContainer, infoProducto, masContenido);
     divProducto.append(card);
@@ -81,18 +83,43 @@ $(document).ready(function () {
 
   function agregarAlCarrito(idproducto, cantidad) {
     $.ajax({
-      url: BASE_URL + "app/view/pages/client/action/actionAgregarProductoCarrito.php",
+      url:
+        BASE_URL +
+        "app/view/pages/client/action/actionAgregarProductoCarrito.php",
       method: "POST",
-      data: { 
+      data: {
         idproducto: idproducto,
-        cantidad: cantidad
+        cantidad: cantidad,
       },
       dataType: "json",
-      success: function(response) {
-        alert(response.message)
-      }
-    })
+      success: function (response) {
+        console.log("Respuesta completa del servidor:", response);
+        console.log("Success:", response.success);
+        if (response.success) {
+          mostrarModalConfirmacion(response.producto, response.precioTotal);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error(xhr.responseText);
+        alert("Hubo un error en el envío.");
+      },
+    });
   }
 
+  function mostrarModalConfirmacion(producto, precioTotal) {
+    $("#productoNombre").text("Producto: " + producto.nombre);
+    $("#productoCantidad").text("Cantidad: " + producto.cantidadproducto);
+    $("#productoPrecio").text("Precio: $" + producto.precio);
+    $("#precioTotal").text("Total: $" + precioTotal);
+
+    $("#modalConfirmacion").modal("show");
+  }
+  $("#irAlCarrito").on("click", function () {
+    window.location.href = BASE_URL + "app/view/pages/client/carrito.php";
+  });
+
+  $(".ui.red.button").on("click", function () {
+    $("#modalConfirmacion").modal("hide");
+  });
   cargarProductos();
 });

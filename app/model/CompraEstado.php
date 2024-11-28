@@ -125,8 +125,8 @@ class CompraEstado
     {
         $base = new BaseDatos();
         $resp = false;
-        $sql = "INSERT INTO compraestado ( idcompra, idcompraestadotipo, cefechaini)
-				VALUES ('" . $this->getCompra()->getIdCompra() . "','" . $this->getCompraEstadoTipo()->getIdCompraEstadoTipo() . "', '" . $this->getCeFechaIni() . "')";
+        $sql = "INSERT INTO compraestado ( idcompra, idcompraestadotipo, cefechaini, cefechafin)
+				VALUES ('" . $this->getCompra()->getIdCompra() . "','" . $this->getCompraEstadoTipo()->getIdCompraEstadoTipo() . "', '" . $this->getCeFechaIni() . "', '".$this->getCeFechaFin()."')";
 
         if ($base->Iniciar()) {
             $idUser = $base->Ejecutar($sql);
@@ -196,7 +196,7 @@ class CompraEstado
                     //$compra->buscar();
                     $compraEstadoTipo = new CompraEstadoTipo();
                     $compraEstadoTipo->setIdCompraEstadoTipo($row['idcompraestadotipo']);
-                    $compraEstadoTipo->buscar();
+                    $compraEstadoTipo->cargar();
                     $obj->cargar($row['idcompraestado'], $compra, $compraEstadoTipo, $row['cefechaini'], $row['cefechafin']);
                     array_push($arreglo, $obj);
                 }
@@ -210,94 +210,5 @@ class CompraEstado
         return $arreglo;
     }
 
-
-
-
-
-
-    /**
-     * Devuelve un arreglo de compras que poseen ese estado enviado por parametro como estado actual.
-     */
-    public static function obtenerComprasPorEstado($estado_code)
-    {
-        $arr_compras = [];
-        $bd = new BaseDatos();
-        $sql = "SELECT * FROM compraestado ce, compra c WHERE ce.idcompra = c.idcompra AND ce.idcompraestadotipo = $estado_code AND ce.cefechafin IS NULL";
-
-        $res = $bd->Ejecutar($sql);
-        if ($res > 0) {
-            while ($row = $bd->Registro()) {
-                $obj = new Compra();
-                $usr = new Usuario();
-                $usr->setIdUsuario($row['idusuario']);
-                $usr->buscar();
-                $items = CompraItem::listar("idcompra = " . $row['idcompra']);
-                $estados = CompraEstado::listar("idcompra = " . $row['idcompra']);
-                $obj->cargar($row['idcompra'], $row['cofecha'], $usr, $items, $estados);
-                array_push($arr_compras, $obj);
-            }
-        }
-
-        return $arr_compras;
-
-    }
-
-
-    public static function obtenerComprasPorEstadoSerializadas($estado_code)
-    {
-        $arr_compras = [];
-        $bd = new BaseDatos();
-        $sql = "SELECT * FROM compraestado ce, compra c WHERE ce.idcompra = c.idcompra AND ce.idcompraestadotipo = $estado_code AND ce.cefechafin IS NULL";
-
-        $res = $bd->Ejecutar($sql);
-        $compra = [];
-        if ($res > 0) {
-            while ($row = $bd->Registro()) {
-
-                $usr = new Usuario();
-                $usr->setIdUsuario($row['idusuario']);
-                $usr->buscar();
-                $compra['idcompra'] = $row['idcompra'];
-                $compra['usuario'] = $usr->getUsNombre();
-                $compra['items'] = CompraEstado::obtenerCantidadItems($row['idcompra']);
-                $estados = CompraEstado::listar("idcompra = " . $row['idcompra'] . " AND cefechafin IS NULL");
-                $compra['estado'] = array('id' => $estados[0]->getCompraEstadoTipo()->getIdCompraEstadoTipo(), 'descripcion' => $estados[0]->getCompraEstadoTipo()->getCetDescripcion());
-                // $obj->cargar($row['idcompra'], $row['cofecha'], $usr, $items, $estados);
-                array_push($arr_compras, $compra);
-            }
-        }
-
-        return $arr_compras;
-
-    }
-
-
-    public static function obtenerCantidadItems($idCompra)
-    {
-        $bd = new BaseDatos();
-        $sql = "SELECT SUM(ci.cicantidad) as cantidad FROM compraitem ci WHERE ci.idcompra = $idCompra";
-        $res = $bd->Ejecutar($sql);
-        $cantidad = 0;
-        if ($res > 0) {
-            $cantidad = intval($bd->Registro()['cantidad']);
-        }
-        return $cantidad;
-    }
-
-
-    public function jsonSerialize()
-    {
-
-        $compraEstadoTipo = null;
-        if ($this->getCompraEstadoTipo() != null) {
-            $compraEstadoTipo = $this->getCompraEstadoTipo()->jsonSerialize();
-        }
-
-        return [
-            'idCompraEstado' => $this->getIdCompraEstado(),
-            'compraEstadoTipo' => $compraEstadoTipo,
-            'ceFechaIni' => $this->getCeFechaIni(),
-            'ceFechaFin' => $this->getCeFechaFin()
-        ];
-    }
+    
 }
