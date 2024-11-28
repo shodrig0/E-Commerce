@@ -194,7 +194,7 @@ class AbmCompraEstado
                 'idcompra' => $param['idcompra'],
                 'idcompraestadotipo' => 4,
                 'cefechaini' => date('Y-m-d H:i:s'),
-                'cefechafin' => date('Y-m-d H:i:s')
+                'cefechafin' => null
             ];
             $resp = $this->alta($datosCompraCancelar);
 

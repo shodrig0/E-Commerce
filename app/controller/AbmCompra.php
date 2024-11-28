@@ -266,7 +266,7 @@ class abmCompra
             $destinatarioCorreo = $usuario->getUsMail();
             $nombreUsuario = $usuario->getUsNombre();
 
-            $asunto = 'Elixir Patagonico - Confirmación de Compra #' . $compra->getIdCompra();
+            $asunto = 'Elixir Patagonico - Confirmacion de Compra #' . $compra->getIdCompra();
 
             $contenidoHtml = "<p>Estimado/a {$nombreUsuario},</p>
                               <p>Tu compra #{$compra->getIdcompra()} ha sido registrada exitosamente con el estado: <strong>{$estadoInicial}</strong>.</p>
