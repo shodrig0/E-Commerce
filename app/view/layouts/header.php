@@ -49,33 +49,6 @@ foreach ($rolesPagina as $carpeta => $rolesPermitidos) {
     <script src="<?php echo BASE_URL ?>app/view/js/shop_handler.js"></script>
     <link rel="stylesheet" href="<?php echo BASE_URL ?>app/view/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        .carrito-desplegable {
-            width: 600px;
-            background: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            transform: translateX(100%);
-            height: 100vh;
-            overflow-y: auto;
-            z-index: 1050;
-            right: 0;
-            top: 0;
-            position: fixed;
-        }
-
-        .carrito-desplegable.mostrado {
-            transform: translateX(0);
-        }
-
-        .cerrarCarrito {
-            background: transparent;
-            border: none;
-            font-size: 1em;
-            cursor: pointer;
-            color: #333;
-        }
-    </style>
 </head>
 
 <body>
@@ -97,76 +70,27 @@ foreach ($rolesPagina as $carpeta => $rolesPermitidos) {
                         style="height: 42px;">
                 </a>
             </div>
-            <div class="two wide column"
-                style="text-align: right; display: flex; justify-content: flex-end; align-items: center; gap: 1em; padding-right: 1em;">
-                <?php if (!$usuario): ?>
-                    <div class="ui buttons">
-                        <a href="<?php echo BASE_URL ?>app/view/pages/login.php" class="ui vertical animated button">
-                            <div class="hidden content">Login</div>
-                            <div class="visible content">
-                                <i class="user circle outline icon"></i>
-                            </div>
-                        </a>
-                    </div>
-                <?php else: ?>
-                    <div class="ui dropdown item" style="display: flex; align-items: center; gap: 0.5em; cursor: pointer;">
-                        <i class="user circle icon" style="font-size: 1.5em;"></i>
-                        <span style="font-weight: bold;"><?php echo htmlspecialchars($usuario->getUsNombre()); ?></span>
-                        <i class="dropdown icon"></i>
-                        <div class="menu">
-                            <a href="<?php echo BASE_URL ?>app/view/pages/perfil.php" class="item"><i
-                                    class="ui id badge outline icon"></i>Ver Perfil</a>
-                            <a href="#" class="accion-btns item" data-action="cerrarSesion"><i
-                                    class="ui logout icon"></i>Cerrar Sesión</a>
-                        </div>
-                    </div>
-                <?php endif; ?>
-                <div class="ui buttons">
-                        <a href="<?php echo BASE_URL ?>app/view/pages/client/carrito.php" class="ui vertical animated button">
-                            <div class="hidden content">Carro</div>
-                            <div class="visible content">
-                                <i class="shopping cart icon"></i>
-                            </div>
-                        </a>
-                    </div>
+            <div class="two wide column" style="text-align: right;">
+                <h3 id="relojito"></h3>
             </div>
-            
-
-            <div id="modalCerrarSesion" class="ui small modal">
-                <div class="header">
-                    <i class="sign out alternate icon"></i> Cerrar Sesión
-                </div>
-                <div class="content">
-                    <p>¿Estás seguro de que deseas cerrar sesión?</p>
-                </div>
-                <div class="actions">
-                    <button class="ui red button" id="cancelCerrarSesion">Cancelar</button>
-                    <button class="ui green button" id="confirmCerrarSesion">Confirmar</button>
-                </div>
-            </div>
-            <div class="ui basic modal" id="modalResultado">
-                <div class="ui icon header" id="modalResultadoIcon">
-                </div>
-                <div class="content">
-                    <p id="modalResultadoMensaje"></p>
-                </div>
-            </div>
-            <div id="confirmarModal" class="ui modal">
-                <div class="header">Confirmar eliminación</div>
-                <div class="content">
-                    <p>¿Estás seguro de que deseas eliminar este usuario?</p>
-                </div>
-                <div class="actions">
-                    <div class="ui button" onclick="$('#confirmarModal').modal('hide');">Cancelar</div>
-                    <div id="confirmarBaja" class="ui red button">Confirmar</div>
-                </div>
-            </div>
-
-            <script>
-                $('.ui.dropdown').dropdown();
-                const BASE_URL = "<?php echo BASE_URL; ?>";
-            </script>
+        </div>
     </header>
+
+    <script>
+        function reloj() {
+            const horaActual = new Date();
+            const hora = horaActual.getHours();
+            const minutos = horaActual.getMinutes();
+            const formato = hora >= 12 ? 'PM' : 'AM';
+
+            const horaFormateada = hora % 12 || 12;
+            const minutosFormateados = minutos.toString().padStart(2, '0');
+
+            document.getElementById('relojito').textContent = `Hora: ${horaFormateada}:${minutosFormateados} ${formato}`;
+        }
+        reloj();
+        setInterval(reloj, 1000);
+    </script>
     <?php
     navbar($userRoles, $usuario);
     ?>

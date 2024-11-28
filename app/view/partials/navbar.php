@@ -15,9 +15,12 @@ $hasAccess = '';
             : [];
         $hasAccess = empty($menuRoles) || array_intersect($userRoles, $menuRoles);
         $isLogin = strtolower($item['menombre']) === 'login';
-        if ($isLogin && $usuario) {
+        $isLogout = strtolower($item['menombre']) === 'logout';
+
+        if (($isLogin && $usuario) || ($isLogout && !$usuario)) {
             continue;
         }
+
         if ($hasAccess): ?>
             <?php if (!empty($item['subitems'])): ?>
                 <div class="ui simple dropdown item">
@@ -26,7 +29,6 @@ $hasAccess = '';
                     <div class="menu">
                         <?php foreach ($item['subitems'] as $subitem): ?>
                             <?php
-
                             $subitemRoles = isset($subitem['roles']) && !empty($subitem['roles'])
                                 ? array_map('trim', explode(',', $subitem['roles']))
                                 : [];
@@ -48,6 +50,7 @@ $hasAccess = '';
         <?php endif; ?>
     <?php endforeach; ?>
 </nav>
+
 
 <style>
     .custom-menu {
